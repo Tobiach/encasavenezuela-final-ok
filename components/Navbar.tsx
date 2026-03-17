@@ -92,7 +92,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <img
                 src={LOGO_ENCASA_IMAGE}
                 alt="EnCasa Venezuela"
-                className="h-16 w-auto max-w-200px] object-contain relative z-10 group-hover:scale-110 transition-transform duration-500"
+                className="h-24 w-auto max-w-200px] object-contain relative z-10 group-hover:scale-110 transition-transform duration-500"
               />
             </div>
             <span className="text-2xl font-black tracking-tighter text-venezuela-brown uppercase">
