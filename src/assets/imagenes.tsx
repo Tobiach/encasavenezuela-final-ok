@@ -16,12 +16,12 @@ export const BANNER_IMAGES = {
 // Product Images
 export const IMG_FLIPS = getSupabaseImageUrl('imagenes_productos/flips_dulcedeleche_1.png');
 export const IMG_CERELAC = getSupabaseImageUrl('imagenes_productos/cerelac.png');
-export const IMG_SAVOY_CARRE = getSupabaseImageUrl('imagenes_productos/chocolate_savoy_carre.png');
-export const IMG_DONA_AREPA = getSupabaseImageUrl('imagenes_productos/harina_dona_arepa.png');
+export const IMG_SAVOY_CARRE = getSupabaseImageUrl('chocolate_savoy_carre1.png');
+export const IMG_DONA_AREPA = getSupabaseImageUrl('harina_dona_arepa.png');
 export const IMG_PIRULIN = getSupabaseImageUrl('imagenes_productos/pirulin.png');
-export const IMG_MALTA_58 = getSupabaseImageUrl('imagenes_productos/lata_de_58_malta_artesanal.png');
+export const IMG_MALTA_58 = getSupabaseImageUrl('malta 58.png');
 export const IMG_REKO_MALTA = getSupabaseImageUrl('imagenes_productos/re-ko_malta.png');
-export const IMG_REKOLITA = getSupabaseImageUrl('imagenes_productos/re-kolita.png');
+export const IMG_REKOLITA = getSupabaseImageUrl('re-kolita_white.png');
 export const IMG_RON_1796 = getSupabaseImageUrl('imagenes_productos/botella_de_ron_santa_teresa_1796.png');
 export const IMG_CRICRI = getSupabaseImageUrl('imagenes_productos/savoy_cricri.png');
 export const IMG_SAMBA = getSupabaseImageUrl('imagenes_productos/savoy_samba.png');
