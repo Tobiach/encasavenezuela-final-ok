@@ -1,6 +1,6 @@
 import { getSupabaseImageUrl } from '../../lib/supabaseImageUrl';
 
-export const LOGO_ENCASA_IMAGE = getSupabaseImageUrl('assets/logo_encasavenezuela.png');
+export const LOGO_ENCASA_IMAGE = getSupabaseImageUrl('assets/logo_encasavenezuela.png.png');
 
 // Hero Banners
 export const HERO_SLIDE_1 = getSupabaseImageUrl('assets/hero/banner_1.png');
