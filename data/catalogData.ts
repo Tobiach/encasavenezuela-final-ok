@@ -1,5 +1,6 @@
 import { Product } from '../types';
 import { getImageUrl } from '../lib/supabase';
+import { IMG_REKOLITA, IMG_MALTA_58, IMG_SAVOY_CARRE } from '../src/assets/imagenes';
 
 export const allProducts: Product[] = [
   { 
@@ -14,9 +15,9 @@ export const allProducts: Product[] = [
     usageInfo: "Cereal a base de trigo y leche, el sabor de la infancia.",
     availableInStoreIds: ['real-5', 'real-8', 'real-12']
   },
-  { 
-    id: 3, name: "Chocolate Savoy Carré", price: 2500, category: "Golosinas", 
-    img: getImageUrl("chocolate_savoy_carre.png"),
+  {
+    id: 3, name: "Chocolate Savoy Carré", price: 2500, category: "Golosinas",
+    img: IMG_SAVOY_CARRE,
     usageInfo: "Chocolate premium con avellanas enteras.",
     availableInStoreIds: ['real-2', 'real-7', 'real-9']
   },
@@ -32,9 +33,9 @@ export const allProducts: Product[] = [
     usageInfo: "Barquillas rellenas de chocolate y avellana.",
     availableInStoreIds: ['real-5', 'real-7', 'real-9']
   },
-  { 
-    id: 6, name: "Malta +58 (Lata 473 ml)", price: 2300, category: "Bebidas", 
-    img: getImageUrl("lata_de_58_malta_artesanal.png"),
+  {
+    id: 6, name: "Malta +58 (Lata 473 ml)", price: 2300, category: "Bebidas",
+    img: IMG_MALTA_58,
     usageInfo: "Bebida de malta con el auténtico sabor venezolano.",
     availableInStoreIds: ['real-1', 'real-6', 'real-10']
   },
@@ -44,9 +45,9 @@ export const allProducts: Product[] = [
     usageInfo: "Malta refrescante y nutritiva para cualquier hora.",
     availableInStoreIds: ['real-2', 'real-5', 'real-12']
   },
-  { 
-    id: 8, name: "Re-Kolita (Lata 355ml)", price: 1000, category: "Bebidas", 
-    img: getImageUrl("re-kolita.png"),
+  {
+    id: 8, name: "Re-Kolita (Lata 355ml)", price: 1000, category: "Bebidas",
+    img: IMG_REKOLITA,
     usageInfo: "Refresco sabor a colita, dulce y burbujeante.",
     availableInStoreIds: ['real-1', 'real-7', 'real-11']
   },
