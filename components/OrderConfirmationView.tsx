@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, MessageSquare, Send, Sparkles, ShoppingBag, Zap } from 'lucide-react';
+import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, Sparkles, ShoppingBag, Zap } from 'lucide-react';
 import { Product, PartnerStore, User as UserType } from '../types';
 import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
 import { supabase } from '../lib/supabase';
@@ -122,7 +122,6 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
     let orderId: string | undefined;
 
     try {
-      // Tracking (si existe)
       try {
         const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
         const encasaTrack = win.encasaTrack;
@@ -138,18 +137,15 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
         console.error("Tracking error:", e);
       }
 
-      // 1) Guardar pedido en Supabase (guest permitido => user_id puede ser null)
       try {
         const storeId = uniqueStoreIds[0] ?? null;
-
-        // Si estás logueado en Supabase Auth, tomamos user_id. Si no, null (guest)
         const { data: authData } = await supabase.auth.getUser();
         const supaUserId = authData?.user?.id ?? null;
 
         const { data: orderRow, error: orderErr } = await supabase
           .from('orders')
           .insert({
-            user_id: supaUserId,                 // null = guest
+            user_id: supaUserId,
             store_id: storeId,
             total,
             status: 'pending',
@@ -182,33 +178,27 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
         if (itemsErr) throw itemsErr;
 
       } catch (dbErr) {
-        // No rompemos conversión: igual mandamos WhatsApp.
         console.error("DB insert failed (orders/order_items):", dbErr);
       }
 
-      // 2) Registrar compra internamente (local) sin bloquear
       try {
         onFinalizePurchase?.(total);
       } catch (e) {
         console.error("onFinalizePurchase error:", e);
       }
 
-      // 3) Abrir WhatsApp con Order ID si existe
       const message = buildWhatsAppMessage(orderId);
       openWhatsApp(message);
 
-      // Opcional: limpiar carrito local al confirmar
       try { onClearCart?.(); } catch (e) {
         console.error("onClearCart error:", e);
       }
 
     } catch (e) {
       console.error("handleConfirmOrder fatal:", e);
-      // Si algo reventó, igual abrimos WhatsApp para no perder la venta
       const message = buildWhatsAppMessage(undefined);
       openWhatsApp(message);
     } finally {
-      // Nunca queda “Procesando…”
       setTimeout(() => setIsSubmitting(false), 300);
     }
   };
@@ -303,7 +293,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
-                  onClick={() => setFormData(p => ({...p, paymentMethod: 'Efectivo'}))}
+                  onClick={() => setFormData(p => ({ ...p, paymentMethod: 'Efectivo' }))}
                   className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${formData.paymentMethod === 'Efectivo' ? 'bg-ven-yellow/10 border-ven-yellow text-venezuela-brown' : 'bg-black/5 border-transparent text-gray-500'}`}
                 >
                   <Banknote size={24} />
@@ -311,7 +301,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFormData(p => ({...p, paymentMethod: 'Transferencia'}))}
+                  onClick={() => setFormData(p => ({ ...p, paymentMethod: 'Transferencia' }))}
                   className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${formData.paymentMethod === 'Transferencia' ? 'bg-ven-blue/10 border-ven-blue text-venezuela-brown' : 'bg-black/5 border-transparent text-gray-500'}`}
                 >
                   <Wallet size={24} />
@@ -339,19 +329,6 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                 ))}
               </div>
             </div>
-
-            <div className="pt-4 border-t border-black/5">
-              <div className="relative">
-                <MessageSquare className="absolute left-4 top-4 text-gray-500" size={18} />
-                <textarea
-                  name="note"
-                  value={formData.note}
-                  onChange={handleInputChange}
-                  placeholder="Nota adicional (Ej: El timbre no funciona)"
-                  className="w-full bg-white border border-black/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:border-ven-yellow transition-all text-sm h-24 resize-none text-venezuela-brown placeholder:text-gray-400"
-                />
-              </div>
-            </div>
           </div>
 
           {/* Sugerencia IA */}
@@ -375,27 +352,41 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
             </div>
           </div>
 
-          {/* Resumen Final */}
-          <div className="bg-black/5 rounded-[32px] border border-black/5 p-8 space-y-4">
-            <div className="flex justify-between items-center text-gray-500 font-bold uppercase text-[10px] tracking-widest">
-              <span>Subtotal</span><span>${subtotal}</span>
+          {/* Resumen Final - Diseño Premium */}
+          <div className="bg-gradient-to-br from-white to-gray-50 rounded-[32px] border-2 border-ven-yellow/20 p-8 space-y-6 shadow-2xl shadow-yellow-500/10">
+            <div className="flex justify-between items-center pb-4">
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">Subtotal</span>
+              <span className="text-2xl font-black text-venezuela-brown">${subtotal}</span>
             </div>
-            <div className="flex justify-between items-center text-gray-500 font-bold uppercase text-[10px] tracking-widest">
-              <span>Propina</span><span className="text-ven-yellow">${tipAmount}</span>
+
+            <div className="flex justify-between items-center pb-4 border-t border-black/5 pt-4">
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">Propina</span>
+              <span className="text-2xl font-black text-ven-yellow">${tipAmount}</span>
             </div>
-            <div className="pt-4 border-t border-black/10 flex justify-between items-end">
-              <div>
-                <p className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] mb-1">Total</p>
-                <p className="text-4xl font-black text-venezuela-brown tracking-tighter">${total}</p>
+
+            <div className="pt-6 border-t-2 border-ven-yellow/30">
+              <div className="flex justify-between items-end mb-6">
+                <div>
+                  <p className="text-xs text-gray-500 font-black uppercase tracking-[0.3em] mb-2">Total a Pagar</p>
+                  <p className="text-5xl md:text-6xl font-black text-venezuela-brown tracking-tighter leading-none">${total}</p>
+                </div>
               </div>
+
               <button
                 onClick={handleConfirmOrder}
                 disabled={isSubmitting || isMultiStore || hasInvalidItems}
-                className="bg-gradient-to-r from-[#FFCC00] to-[#F58220] text-white px-8 py-4 rounded-2xl font-black uppercase text-sm tracking-widest shadow-xl shadow-yellow-500/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50 disabled:grayscale"
+                className="w-full bg-gradient-to-r from-ven-yellow via-venezuela-orange to-ven-yellow bg-[length:200%_100%] bg-[position:0%_0%] hover:bg-[position:100%_0%] text-white px-8 py-6 rounded-[24px] font-black uppercase text-base md:text-lg tracking-widest shadow-2xl shadow-yellow-500/40 hover:shadow-yellow-500/60 hover:scale-[1.02] active:scale-95 transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale group relative overflow-hidden"
               >
-                {isSubmitting ? 'Procesando...' : (isMultiStore || hasInvalidItems) ? 'Corregir Carrito' : 'Confirmar vía WhatsApp'}
-                <Send size={18} />
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <Send size={24} className="relative z-10 group-hover:rotate-12 transition-transform" />
+                <span className="relative z-10">
+                  {isSubmitting ? 'Procesando...' : (isMultiStore || hasInvalidItems) ? 'Corregir Carrito' : 'Confirmar vía WhatsApp'}
+                </span>
               </button>
+
+              <p className="text-center text-[10px] text-gray-400 font-medium mt-4 tracking-wide">
+                🔒 Pago seguro directo con el local
+              </p>
             </div>
           </div>
 
@@ -406,4 +397,3 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
 };
 
 export default OrderConfirmationView;
-
