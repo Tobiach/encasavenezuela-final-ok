@@ -43,7 +43,7 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
       {/* Fondo decorativo */}
       <div className="absolute top-0 right-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-ven-yellow/5 blur-[80px] md:blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
       <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-ven-blue/5 blur-[80px] rounded-full translate-y-1/2 -translate-x-1/2"></div>
-      
+
       <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center md:grid md:grid-cols-[0.7fr_1.3fr] md:items-center md:text-left gap-10 relative z-10">
         <div className="space-y-6 md:space-y-8 w-full">
           <div className="flex flex-col items-center md:items-start">
@@ -55,23 +55,21 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
             </h1>
             <p className="text-gray-700 text-base md:text-2xl mt-6 max-w-lg leading-tight font-bold">
               Hogar, tradición y sabor venezolano al alcance de un click.
-              <span className="block mt-4 font-black flex justify-center md:justify-start gap-2 text-lg md:text-xl">
-                <span className="text-ven-yellow bg-ven-yellow/10 px-2 py-0.5 rounded-lg border border-ven-yellow/20">Sabores </span>
-                <span className="text-ven-blue bg-ven-blue/10 px-2 py-0.5 rounded-lg border border-ven-blue/20">100% </span>
-                <span className="text-ven-red bg-ven-red/10 px-2 py-0.5 rounded-lg border border-ven-red/20">nuestros</span>
+              <span className="block mt-4 font-black text-lg md:text-xl">
+                <span className="text-ven-yellow">Sabores</span> <span className="text-ven-blue">100%</span> <span className="text-ven-red">nuestros</span>
               </span>
             </p>
           </div>
 
           <div className="flex flex-col gap-3 w-full sm:flex-row sm:justify-center md:justify-start">
-            <button 
+            <button
               onClick={onCatalogClick}
               className="bg-gradient-to-r from-ven-yellow to-venezuela-orange text-white w-full sm:w-auto px-8 py-4 md:py-5 rounded-[24px] flex items-center justify-center gap-3 text-base md:text-lg font-black shadow-[0_10px_30px_rgba(212,175,55,0.3)] transition-all active:scale-95 uppercase tracking-widest"
             >
               <ShoppingBag size={20} />
               VER CATÁLOGO
             </button>
-            <button 
+            <button
               onClick={onLearnMoreClick}
               className="border border-black/10 bg-black/5 hover:bg-black/10 text-venezuela-brown w-full sm:w-auto px-8 py-4 md:py-5 rounded-[24px] flex items-center justify-center gap-3 text-base md:text-lg font-bold transition-all uppercase tracking-wider"
             >
@@ -86,26 +84,26 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
           <div className="relative rounded-[40px] overflow-hidden border-4 border-ven-yellow/30 shadow-2xl group z-0 aspect-[16/9]">
             <div className="absolute inset-0 bg-gradient-to-br from-ven-yellow/20 via-transparent to-ven-red/20 z-10 pointer-events-none"></div>
             {HERO_SLIDES.map((slide, index) => (
-              <div 
+              <div
                 key={index}
                 className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
               >
-                <img 
-                  src={slide.image} 
-                  alt={slide.title} 
+                <img
+                  src={slide.image}
+                  alt={slide.title}
                   className="w-full h-full object-cover transition-transform duration-[5s] ease-linear scale-100 group-hover:scale-110"
                 />
               </div>
             ))}
 
             {/* Controles del carrusel (visibles en hover) */}
-            <button 
+            <button
               onClick={prevSlide}
               className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <ChevronLeft size={24} />
             </button>
-            <button 
+            <button
               onClick={nextSlide}
               className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
