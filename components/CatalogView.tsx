@@ -8,7 +8,7 @@ import { allProducts } from '../data/catalogData';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 
-// MODO DEMO: Si es true, todos los locales muestran todos los productos
+/// MODO DEMO: Si es true, todos los locales muestran todos los productos
 const DEMO_MODE = true;
 
 const categoryIcons: Record<string, React.ElementType> = {
@@ -19,7 +19,8 @@ const categoryIcons: Record<string, React.ElementType> = {
   'Bebidas': Beaker,
   'Golosinas': Sparkles,
   'Salsas': Utensils,
-  'Almacén': Package
+  'Almacén': Package,
+  'Tequeños y Quesos': Pizza
 };
 
 interface CatalogViewProps {
