@@ -1,0 +1,7 @@
+{
+  "name": "Copy 2 - 2.2 - v1 - MVP EnCasa Venezuela - WEB PUBLICA (12/02/26)",
+  "description": "Marketplace cultural venezolano en Argentina. Plataforma para explorar productos, agregar al carrito y confirmar pedidos por WhatsApp. En esta etapa el foco es validar con locales reales, priorizando conversión, simplicidad y captura de pedidos antes de optimizaciones avanzadas.\n",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-venezuela-dark: #f2efed;
+  --color-venezuela-darker: #e8e4e1;
+  --color-venezuela-brown: #1A110D;
+  
+  --color-venezuela-orange: #F58220;
+  --color-venezuela-orange-dark: #E86D00;
+  --color-venezuela-orange-deep: #D66A00;
+  
+  --color-ven-yellow: #D4AF37;
+  --color-ven-blue: #003399;
+  --color-ven-red: #CF142B;
+  
+  --color-ven-yellow-light: #E5C76B;
+  --color-ven-blue-light: #0047D6;
+}
+
+:root {
+  font-family: "Outfit", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #1A110D;
+  background-color: #f2efed;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #f2efed;
+  color: #1A110D;
+}
+
+@layer base {
+  /* Botón Principal - Ahora con degradado Amarillo-Naranja (Bandera) */
+  .btn-primary {
+    @apply bg-gradient-to-r from-ven-yellow to-venezuela-orange text-white rounded-[24px] font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(212,175,55,0.2)] transition-all active:scale-95 hover:brightness-110;
+  }
+
+  /* Botón Secundario */
+  .btn-secondary {
+    @apply bg-black/5 border border-black/10 text-venezuela-brown rounded-[24px] font-bold uppercase tracking-wider transition-all hover:bg-black/10 active:scale-95;
+  }
+
+  /* Botón Azul (Bandera) */
+  .btn-blue {
+    @apply bg-ven-blue text-white rounded-[24px] font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(0,51,153,0.15)] transition-all active:scale-95 hover:bg-ven-blue-light;
+  }
+
+  /* Cards */
+  .card-premium {
+    @apply bg-white border border-black/5 rounded-[24px] shadow-sm backdrop-blur-sm transition-all hover:border-black/10 hover:shadow-md;
+  }
+
+  /* Inputs */
+  .input-premium {
+    @apply bg-white border border-black/10 rounded-[20px] px-4 py-3 text-venezuela-brown placeholder:text-gray-400 focus:outline-none focus:border-[#F58220] transition-all;
+  }
+}
+
+#root {
+  width: 100%;
+}
