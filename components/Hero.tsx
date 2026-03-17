@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ShoppingBag, ChevronLeft, ChevronRight, Share2, Check } from 'lucide-react';
+import { ArrowRight, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { HERO_SLIDE_1, HERO_SLIDE_2, HERO_SLIDE_3 } from '../src/assets/imagenes';
 
 interface HeroProps {
@@ -28,15 +27,6 @@ const HERO_SLIDES = [
 
 const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [showShareTooltip, setShowShareTooltip] = useState(false);
-
-  const handleShare = () => {
-    const url = window.location.origin + window.location.pathname + window.location.hash;
-    navigator.clipboard.writeText(url).then(() => {
-      setShowShareTooltip(true);
-      setTimeout(() => setShowShareTooltip(false), 2000);
-    });
-  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -88,21 +78,6 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
               CONOCER MÁS
               <ArrowRight size={20} className="text-ven-yellow" />
             </button>
-            
-            <div className="relative w-full sm:w-auto">
-              <button 
-                onClick={handleShare}
-                className="bg-white border-2 border-ven-yellow/20 text-venezuela-brown w-full sm:w-auto px-8 py-4 md:py-5 rounded-[24px] flex items-center justify-center gap-3 text-base md:text-lg font-black transition-all active:scale-95 uppercase tracking-widest hover:border-ven-yellow shadow-sm"
-              >
-                {showShareTooltip ? <Check size={20} className="text-green-500" /> : <Share2 size={20} className="text-ven-yellow" />}
-                {showShareTooltip ? '¡COPIADO!' : 'COMPARTIR'}
-              </button>
-              {showShareTooltip && (
-                <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-venezuela-brown text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-300 whitespace-nowrap z-20">
-                  ¡Link copiado, pana!
-                </div>
-              )}
-            </div>
           </div>
         </div>
 
@@ -148,8 +123,6 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
               ))}
             </div>
           </div>
-          
-          {/* Stickers flotantes eliminados */}
         </div>
       </div>
       <style>{`
