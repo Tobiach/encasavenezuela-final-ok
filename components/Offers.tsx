@@ -44,19 +44,18 @@ const Offers: React.FC = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-16">
           {offerProducts.map((product: Product & { discount: number; oldPrice: number }) => (
             <div 
               key={product.id}
               onClick={() => navigate('/catalog', { state: { category: product.category } })}
-              className="group bg-white border-2 border-black/5 rounded-[40px] p-5 hover:border-ven-yellow transition-all duration-500 cursor-pointer relative flex flex-col shadow-xl hover:-translate-y-2"
-            >
+className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:border-ven-yellow transition-all duration-500 cursor-pointer relative flex flex-col shadow-xl hover:-translate-y-2"            >
               <div className="absolute top-5 left-5 z-20 bg-ven-red text-white px-3 py-1.5 rounded-xl text-[11px] font-black shadow-2xl flex items-center gap-1.5 border border-white/20">
                 <Tag size={12} fill="currentColor" />
                 -{product.discount}%
               </div>
 
-              <div className="aspect-[4/5] rounded-[32px] overflow-hidden mb-5 relative border border-black/5">
+              <div className="aspect-[3/4] rounded-[24px] overflow-hidden mb-4 relative border border-black/5">
                 <img 
                   src={product.img} 
                   alt={product.name} 
