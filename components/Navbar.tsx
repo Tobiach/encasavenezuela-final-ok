@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, MessageSquareQuote, ChevronRight, ArrowLeft, Share2, Check } from 'lucide-react';
+import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, ChevronRight, ArrowLeft, Share2, Check } from 'lucide-react';
 import { Product, User } from '../types';
 import { useNavigate } from 'react-router-dom';
 import { LOGO_ENCASA_IMAGE } from '../src/assets/imagenes';
@@ -31,7 +31,6 @@ const Navbar: React.FC<NavbarProps> = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [bump, setBump] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'Efectivo' | 'Transferencia'>('Efectivo');
-  const [orderNote, setOrderNote] = useState('');
   const [showShareTooltip, setShowShareTooltip] = useState(false);
   const navigate = useNavigate();
 
@@ -47,14 +46,6 @@ const Navbar: React.FC<NavbarProps> = ({
   }, [cartCount]);
 
   const finalizeOrder = () => {
-    // ELIMINADO: Bloqueo de login obligatorio
-    // if (!user) {
-    //   alert("¡Hola Pana! Por favor, crea tu perfil para finalizar tu pedido.");
-    //   navigate('/auth');
-    //   setIsCartOpen(false);
-    //   return;
-    // }
-   
     setIsCartOpen(false);
     navigate('/checkout');
   };
@@ -82,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/5 py-5 px-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
-          {/* LOGO + BRAND (FIXED) */}
+          {/* LOGO + BRAND */}
           <div
             onClick={() => { onNavHome(); closeMenus(); }}
             className="flex items-center gap-4 cursor-pointer group"
@@ -92,7 +83,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <img
                 src={LOGO_ENCASA_IMAGE}
                 alt="EnCasa Venezuela"
-                className="h-24 w-auto max-w-200px] object-contain relative z-10 group-hover:scale-110 transition-transform duration-500"
+                className="h-24 w-auto max-w-[300px] object-contain relative z-10 group-hover:scale-110 transition-transform duration-500"
               />
             </div>
             <span className="text-2xl font-black tracking-tighter text-venezuela-brown uppercase">
@@ -359,19 +350,6 @@ const Navbar: React.FC<NavbarProps> = ({
                       ))}
                     </div>
                   </div>
-
-                  {/* Nota */}
-                  <div className="space-y-3">
-                    <p className="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em] flex items-center gap-2 ml-2">
-                      <MessageSquareQuote size={14} /> Nota para el local
-                    </p>
-                    <textarea 
-                      placeholder="Ej: El timbre no anda, llamame..."
-                      className="w-full bg-white border border-black/10 rounded-[28px] p-5 text-sm text-venezuela-brown focus:outline-none focus:border-ven-yellow h-24 transition-all placeholder:text-gray-400 resize-none"
-                      value={orderNote}
-                      onChange={(e) => setOrderNote(e.target.value)}
-                    ></textarea>
-                  </div>
                 </>
               )}
             </div>
@@ -385,9 +363,6 @@ const Navbar: React.FC<NavbarProps> = ({
                        <p className="text-[9px] text-gray-600 font-black uppercase tracking-[0.2em]">Total a Pagar</p>
                     </div>
                     <p className="text-3xl font-black text-venezuela-brown tracking-tighter leading-none">${cartTotal}</p>
-                  </div>
-                  <div className="text-right">
-                    {/* Loyalty points hidden as per request */}
                   </div>
                 </div>
 
