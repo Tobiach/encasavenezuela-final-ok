@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { categories } from '../data/catalogData';
 
-const CategoriesCompact: React.FC = () => {
+const CategoriesNew: React.FC = () => {
   const navigate = useNavigate();
   const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleCategoryClick = (categoryName: string) => {
     navigate('/catalog', { state: { category: categoryName } });
@@ -63,10 +72,22 @@ const CategoriesCompact: React.FC = () => {
             <div 
               key={`${cat.name}-${idx}`}
               onClick={() => handleCategoryClick(cat.name)}
-              className="inline-block min-w-[100px] md:min-w-[260px] group cursor-pointer flex-shrink-0"
-              style={{ scrollSnapAlign: 'start' }}
+              style={{
+                width: isMobile ? '80px' : 'auto',
+                minWidth: isMobile ? '80px' : '260px',
+                flexShrink: 0,
+                scrollSnapAlign: 'start'
+              }}
+              className="group cursor-pointer"
             >
-              <div className="relative aspect-square md:aspect-[4/5] rounded-[20px] md:rounded-[48px] overflow-hidden border border-black/10 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1)] md:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] mb-3 md:mb-6 group-hover:border-ven-yellow/40 transition-all duration-700 group-hover:-translate-y-3 group-hover:shadow-[0_40px_80px_-20px_rgba(255,204,0,0.2)]">
+              <div 
+                style={{
+                  width: isMobile ? '80px' : '100%',
+                  height: isMobile ? '80px' : 'auto',
+                  aspectRatio: isMobile ? '1' : '4/5'
+                }}
+                className="relative rounded-[20px] md:rounded-[48px] overflow-hidden border border-black/10 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1)] md:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] mb-3 md:mb-6 group-hover:border-ven-yellow/40 transition-all duration-700 group-hover:-translate-y-3 group-hover:shadow-[0_40px_80px_-20px_rgba(255,204,0,0.2)]"
+              >
                 <img 
                   src={cat.image} 
                   alt={cat.name} 
@@ -137,4 +158,4 @@ const CategoriesCompact: React.FC = () => {
   );
 };
 
-export default CategoriesCompact;
+export default CategoriesNew;
