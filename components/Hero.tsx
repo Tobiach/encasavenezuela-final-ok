@@ -82,7 +82,7 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
         <div className="relative w-full max-w-[500px] md:max-w-none px-4">
           {/* Contenedor de Carrusel */}
           <div className="relative rounded-[40px] overflow-hidden border-4 border-ven-yellow/30 shadow-2xl group z-0 aspect-[16/9]">
-            <div className="absolute inset-0 bg-gradient-to-br from-ven-yellow/20 via-transparent to-ven-red/20 z-10 pointer-events-none"></div>
+            {/* Filtro removido para mejor visibilidad */}
             {HERO_SLIDES.map((slide, index) => (
               <div
                 key={index}
