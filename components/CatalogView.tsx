@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
@@ -17,7 +16,7 @@ const categoryIcons: Record<string, React.ElementType> = {
   'Lácteos': Pizza,
   'Congelados': IceCream,
   'Bebidas': Beaker,
-  'Golosinas': Sparkles,
+  'Chucherías': Sparkles,
   'Salsas': Utensils,
   'Almacén': Package,
   'Tequeños y Quesos': Pizza
@@ -114,7 +113,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
 }, [category, searchTerm, selectedStore]);
 
 
-  const categories = ['Todos', 'Harinas', 'Lácteos', 'Congelados', 'Bebidas', 'Golosinas', 'Salsas', 'Almacén'];
+  const categories = ['Todos', 'Harinas', 'Lácteos', 'Congelados', 'Bebidas', 'Chucherías', 'Salsas', 'Almacén'];
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
@@ -132,15 +131,17 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
         />
       )}
 
-      {/* Header Dinámico */}
-      <div className="flex flex-col gap-6 mb-8 md:mb-12">
+      {/* Header Dinámico - STICKY cuando hay local seleccionado */}
+      <div 
+        className={`flex flex-col gap-6 mb-8 md:mb-12 ${selectedStore ? 'sticky top-0 z-40 bg-venezuela-dark pt-4 pb-6 -mx-4 px-4 md:-mx-6 md:px-6 shadow-lg' : ''}`}
+      >
         <div className="flex items-center gap-4">
           <button 
             onClick={() => {
               if (selectedStore) {
                 onSelectStore(null);
               } else {
-                navigate(-1); // Volver realmente a la sección anterior
+                navigate(-1);
               }
             }}
             className="p-3 bg-white/5 rounded-2xl text-gray-400 hover:bg-ven-yellow hover:text-venezuela-dark transition-all shadow-lg active:scale-90"
@@ -335,7 +336,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
                     <div className="aspect-square shrink-0 rounded-[24px] overflow-hidden mb-5 relative border border-black/5">
                       <img src={product.img} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                       <div className="absolute top-3 right-3">
-                        <span className="bg-ven-blue/80 backdrop-blur-md text-[9px] font-black text-white px-3 py-1.5 rounded-xl uppercase tracking-widest border border-white/20 shadow-lg">
+                        <span className="bg-transparent border-2 border-ven-blue text-ven-blue text-[9px] font-black px-3 py-1.5 rounded-xl uppercase tracking-widest">
                           {product.category}
                         </span>
                       </div>
@@ -353,7 +354,6 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
                         onClick={(e) => {
   e.stopPropagation();
 
-  // tracking seguro (si existe, trackea; si no, no rompe)
   try {
     const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
     win.encasaTrack?.("add_to_cart", {
@@ -366,7 +366,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
       ts: Date.now(),
     });
   } catch (err) {
-    // no hacemos nada: NO debe bloquear el carrito
+    // silencio
   }
 
   onAddToCart(product, selectedStore?.id);

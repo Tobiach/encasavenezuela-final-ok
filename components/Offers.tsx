@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tag, ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -9,10 +8,9 @@ import { Product } from '../types';
 const Offers: React.FC = () => {
   const navigate = useNavigate();
   
-  // Seleccionamos algunos productos para mostrar como ofertas (simuladas con descuento)
   const offerProducts = allProducts.slice(0, 4).map((p: Product) => ({
     ...p,
-    discount: Math.floor(Math.random() * 15) + 10, // 10-25% discount
+    discount: Math.floor(Math.random() * 15) + 10,
     oldPrice: Math.round(p.price * 1.2)
   }));
 
@@ -20,7 +18,6 @@ const Offers: React.FC = () => {
 
   return (
     <section className="py-16 bg-venezuela-dark relative overflow-hidden">
-      {/* Decoración de fondo */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-ven-yellow/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-ven-blue/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
 
@@ -52,15 +49,14 @@ const Offers: React.FC = () => {
             <div 
               key={product.id}
               onClick={() => navigate('/catalog', { state: { category: product.category } })}
-              className="group bg-white border-2 border-black/5 rounded-[40px] p-6 hover:border-ven-yellow transition-all duration-500 cursor-pointer relative flex flex-col shadow-xl hover:-translate-y-2"
+              className="group bg-white border-2 border-black/5 rounded-[40px] p-5 hover:border-ven-yellow transition-all duration-500 cursor-pointer relative flex flex-col shadow-xl hover:-translate-y-2"
             >
-              {/* Badge de Descuento */}
               <div className="absolute top-5 left-5 z-20 bg-ven-red text-white px-3 py-1.5 rounded-xl text-[11px] font-black shadow-2xl flex items-center gap-1.5 border border-white/20">
                 <Tag size={12} fill="currentColor" />
                 -{product.discount}%
               </div>
 
-              <div className="aspect-square rounded-[32px] overflow-hidden mb-6 relative border border-black/5">
+              <div className="aspect-[4/5] rounded-[32px] overflow-hidden mb-5 relative border border-black/5">
                 <img 
                   src={product.img} 
                   alt={product.name} 
@@ -70,7 +66,7 @@ const Offers: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
 
-              <div className="space-y-1.5 mb-5">
+              <div className="space-y-1.5 mb-4">
                 <span className="text-[10px] font-black text-ven-yellow uppercase tracking-[0.2em] bg-ven-yellow/10 px-2 py-0.5 rounded-lg border border-ven-yellow/20">
                   {product.category}
                 </span>
@@ -96,7 +92,6 @@ const Offers: React.FC = () => {
           ))}
         </div>
 
-        {/* Marquee de Promociones (Carousel de izquierda a derecha) */}
         <div className="relative pt-16 border-t border-black/5 overflow-hidden">
           <div className="flex items-center gap-4 mb-10">
             <div className="w-10 h-10 bg-ven-yellow rounded-xl flex items-center justify-center text-white shadow-xl">
@@ -115,13 +110,13 @@ const Offers: React.FC = () => {
                   <div 
                     key={`${promo.id}-${idx}`}
                     onClick={() => navigate(`/promotion/${promo.id}`)}
-                    className="inline-block min-w-[260px] bg-white border-2 border-black/5 rounded-[40px] p-5 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:-translate-y-2"
+                    className="inline-block min-w-[240px] bg-white border-2 border-black/5 rounded-[40px] p-4 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:-translate-y-2"
                   >
-                    <div className="relative aspect-square rounded-[32px] overflow-hidden mb-5 border border-black/5 bg-white">
+                    <div className="relative aspect-[4/5] rounded-[32px] overflow-hidden mb-4 border border-black/5 bg-white">
                       <img 
                         src={promo.img} 
                         alt={promo.name} 
-                        className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500 object-center"
+                        className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute top-3 left-3 flex flex-col gap-1.5">
