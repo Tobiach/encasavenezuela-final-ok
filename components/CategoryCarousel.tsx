@@ -25,10 +25,10 @@ const CategoryCarousel: React.FC = () => {
   const doubleCategories = [...categories, ...categories];
 
   return (
-    <section className="py-8 md:py-12 bg-venezuela-dark border-b border-black/5 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 mb-8 flex items-center justify-between">
+    <section className="py-6 md:py-12 bg-venezuela-dark border-b border-black/5 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 mb-6 md:mb-8 flex items-center justify-between">
         <div className="flex flex-col">
-          <h2 className="text-xl md:text-3xl font-black uppercase tracking-tighter text-venezuela-brown">
+          <h2 className="text-lg md:text-3xl font-black uppercase tracking-tighter text-venezuela-brown">
             Explora nuestras <span className="text-ven-yellow">categorías</span>
           </h2>
           <div className="h-1 w-12 bg-ven-yellow mt-2 rounded-full" />
@@ -58,15 +58,15 @@ const CategoryCarousel: React.FC = () => {
           scrollSnapType: 'x proximity'
         }}
       >
-        <div className="flex gap-4 md:gap-10 px-6 py-8 md:animate-marquee">
+        <div className="flex gap-3 md:gap-10 px-4 md:px-6 py-4 md:py-8 md:animate-marquee">
           {doubleCategories.map((cat, idx) => (
             <div 
               key={`${cat.name}-${idx}`}
               onClick={() => handleCategoryClick(cat.name)}
-              className="inline-block min-w-[140px] md:min-w-[260px] group cursor-pointer flex-shrink-0"
+              className="inline-block min-w-[110px] md:min-w-[260px] group cursor-pointer flex-shrink-0"
               style={{ scrollSnapAlign: 'start' }}
             >
-              <div className="relative aspect-[3/4] md:aspect-[4/5] rounded-[32px] md:rounded-[48px] overflow-hidden border border-black/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] mb-6 group-hover:border-ven-yellow/40 transition-all duration-700 group-hover:-translate-y-3 group-hover:shadow-[0_40px_80px_-20px_rgba(255,204,0,0.2)]">
+              <div className="relative aspect-[2/3] md:aspect-[4/5] rounded-[20px] md:rounded-[48px] overflow-hidden border border-black/10 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1)] md:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] mb-3 md:mb-6 group-hover:border-ven-yellow/40 transition-all duration-700 group-hover:-translate-y-3 group-hover:shadow-[0_40px_80px_-20px_rgba(255,204,0,0.2)]">
                 <img 
                   src={cat.image} 
                   alt={cat.name} 
@@ -76,20 +76,20 @@ const CategoryCarousel: React.FC = () => {
                 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-700" />
                 
-                <div className="absolute inset-0 flex flex-col items-center justify-end p-8">
-                   <div className="w-full bg-white/20 backdrop-blur-3xl border border-white/30 px-4 py-6 rounded-[32px] opacity-0 group-hover:opacity-100 transition-all translate-y-10 group-hover:translate-y-0 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.2)] flex flex-col items-center gap-1.5 transform scale-90 group-hover:scale-100 duration-500">
-                      <div className="w-8 h-1 bg-ven-yellow rounded-full mb-1 opacity-60" />
-                      <span className="text-[12px] font-black text-white uppercase tracking-[0.4em]">Explorar</span>
-                      <p className="text-[9px] text-ven-yellow font-black uppercase tracking-widest opacity-90">{cat.subtitle || 'Ver productos'}</p>
+                <div className="absolute inset-0 flex flex-col items-center justify-end p-3 md:p-8">
+                   <div className="w-full bg-white/20 backdrop-blur-3xl border border-white/30 px-2 py-3 md:px-4 md:py-6 rounded-[20px] md:rounded-[32px] opacity-0 group-hover:opacity-100 transition-all translate-y-10 group-hover:translate-y-0 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.2)] flex flex-col items-center gap-1 md:gap-1.5 transform scale-90 group-hover:scale-100 duration-500">
+                      <div className="w-6 md:w-8 h-0.5 md:h-1 bg-ven-yellow rounded-full mb-0.5 md:mb-1 opacity-60" />
+                      <span className="text-[9px] md:text-[12px] font-black text-white uppercase tracking-[0.3em] md:tracking-[0.4em]">Explorar</span>
+                      <p className="text-[7px] md:text-[9px] text-ven-yellow font-black uppercase tracking-widest opacity-90">{cat.subtitle || 'Ver'}</p>
                    </div>
                 </div>
               </div>
               
-              <div className="text-center space-y-1">
-                <h3 className="text-xs md:text-sm font-black text-venezuela-brown uppercase tracking-[0.3em] group-hover:text-ven-yellow transition-colors duration-500">
+              <div className="text-center space-y-0.5 md:space-y-1">
+                <h3 className="text-[9px] md:text-sm font-black text-venezuela-brown uppercase tracking-[0.2em] md:tracking-[0.3em] group-hover:text-ven-yellow transition-colors duration-500">
                   {cat.name}
                 </h3>
-                <p className="text-[9px] font-bold text-gray-600 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-700">
+                <p className="text-[7px] md:text-[9px] font-bold text-gray-600 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-700">
                   {cat.subtitle}
                 </p>
               </div>
