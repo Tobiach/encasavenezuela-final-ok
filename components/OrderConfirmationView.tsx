@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, Sparkles, ShoppingBag, Zap } from 'lucide-react';
+import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, Sparkles, ShoppingBag, Zap, MessageSquare } from 'lucide-react';
 import { Product, PartnerStore, User as UserType } from '../types';
 import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
 import { supabase } from '../lib/supabase';
@@ -327,6 +327,19 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                     {tip.featured && tipAmount !== tip.value && <span className="block text-[6px] mt-1 text-ven-yellow">Recomendado</span>}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-black/5">
+              <div className="relative">
+                <MessageSquare className="absolute left-4 top-4 text-gray-500" size={18} />
+                <textarea
+                  name="note"
+                  value={formData.note}
+                  onChange={handleInputChange}
+                  placeholder="Nota adicional (Ej: El timbre no funciona)"
+                  className="w-full bg-white border border-black/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:border-ven-yellow transition-all text-sm h-24 resize-none text-venezuela-brown placeholder:text-gray-400"
+                />
               </div>
             </div>
           </div>
