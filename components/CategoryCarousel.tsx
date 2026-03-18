@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -23,12 +22,6 @@ const CategoryCarousel: React.FC = () => {
     }
   };
 
-  // Duplicamos las categorías para el efecto de scroll infinito visual si fuera necesario, 
-  // pero para un carrusel con botones manuales y scroll automático suave, 
-  // usaremos una animación de CSS pura para el "marquee" si se prefiere, 
-  // o un scroll continuo mejorado.
-  
-  // El usuario pide el movimiento que usan las grandes empresas (Marquee infinito suave)
   const doubleCategories = [...categories, ...categories];
 
   return (
@@ -41,8 +34,8 @@ const CategoryCarousel: React.FC = () => {
           <div className="h-1 w-12 bg-ven-yellow mt-2 rounded-full" />
         </div>
         
-        {/* Botones de navegación manual (opcionales con marquee pero solicitados) */}
-        <div className="flex gap-2">
+        {/* Botones solo visibles en desktop */}
+        <div className="hidden md:flex gap-2">
           <button 
             onClick={() => scroll('left')}
             className="p-2.5 rounded-full border border-black/10 hover:bg-black/5 text-gray-500 transition-all active:scale-90 bg-black/5 z-10"
@@ -58,19 +51,22 @@ const CategoryCarousel: React.FC = () => {
         </div>
       </div>
 
-      {/* Contenedor del Marquee */}
+      {/* Contenedor con scroll horizontal táctil en mobile */}
       <div 
         ref={scrollRef}
-        className="relative flex overflow-x-hidden no-scrollbar"
+        className="relative flex overflow-x-auto overflow-y-hidden no-scrollbar scroll-smooth touch-pan-x"
+        style={{ 
+          WebkitOverflowScrolling: 'touch',
+          scrollSnapType: 'x proximity'
+        }}
       >
-        <div 
-          className="flex gap-6 md:gap-10 animate-marquee whitespace-nowrap py-8"
-        >
+        <div className="flex gap-6 md:gap-10 px-6 py-8 md:animate-marquee md:whitespace-nowrap">
           {doubleCategories.map((cat, idx) => (
             <div 
               key={`${cat.name}-${idx}`}
               onClick={() => handleCategoryClick(cat.name)}
-              className="inline-block min-w-[180px] md:min-w-[260px] group cursor-pointer"
+              className="inline-block min-w-[180px] md:min-w-[260px] group cursor-pointer flex-shrink-0"
+              style={{ scrollSnapAlign: 'start' }}
             >
               <div className="relative aspect-[4/5] rounded-[48px] overflow-hidden border border-black/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] mb-6 group-hover:border-ven-yellow/40 transition-all duration-700 group-hover:-translate-y-3 group-hover:shadow-[0_40px_80px_-20px_rgba(255,204,0,0.2)]">
                 <img 
@@ -80,10 +76,8 @@ const CategoryCarousel: React.FC = () => {
                   referrerPolicy="no-referrer"
                 />
                 
-                {/* Overlay Gradiente Premium - Más vibrante */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-700" />
                 
-                {/* Glassmorphism Badge - Refined */}
                 <div className="absolute inset-0 flex flex-col items-center justify-end p-8">
                    <div className="w-full bg-white/20 backdrop-blur-3xl border border-white/30 px-4 py-6 rounded-[32px] opacity-0 group-hover:opacity-100 transition-all translate-y-10 group-hover:translate-y-0 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.2)] flex flex-col items-center gap-1.5 transform scale-90 group-hover:scale-100 duration-500">
                       <div className="w-8 h-1 bg-ven-yellow rounded-full mb-1 opacity-60" />
@@ -111,16 +105,39 @@ const CategoryCarousel: React.FC = () => {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .animate-marquee {
-          display: flex;
-          width: max-content;
-          animation: marquee 30s linear infinite;
+        
+        /* Animación marquee solo en desktop */
+        @media (min-width: 768px) {
+          .md\\:animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 30s linear infinite;
+          }
         }
-        /* Pausar solo si el usuario realmente quiere interactuar con un click largo o similar, 
-           pero el usuario pidió que el mouse NO influya, así que no agregamos hover:pause */
+        
+        /* Mobile: scroll manual con touch */
+        @media (max-width: 767px) {
+          .md\\:animate-marquee {
+            animation: none;
+            width: auto;
+          }
+        }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar { 
+          -ms-overflow-style: none; 
+          scrollbar-width: none; 
+        }
+
+        /* Smooth scroll en iOS */
+        .scroll-smooth {
+          scroll-behavior: smooth;
+        }
+
+        /* Touch gestures optimizados */
+        .touch-pan-x {
+          touch-action: pan-x;
+        }
       `}</style>
     </section>
   );
