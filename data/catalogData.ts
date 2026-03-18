@@ -4,7 +4,7 @@ import { IMG_REKOLITA, IMG_MALTA_58, IMG_SAVOY_CARRE } from '../src/assets/image
 
 export const allProducts: Product[] = [
   { 
-    id: 1, name: "Cereales Flips Dulce de Leche (220g)", price: 3500, category: "Golosinas", 
+    id: 1, name: "Cereales Flips Dulce de Leche (220g)", price: 3500, category: "Chucherías", 
     img: getImageUrl("flips_dulcedeleche_1.png"),
     usageInfo: "Cereal relleno sabor a dulce de leche, ideal para merendar.",
     availableInStoreIds: ['real-1', 'real-5', 'real-11']
@@ -16,7 +16,7 @@ export const allProducts: Product[] = [
     availableInStoreIds: ['real-5', 'real-8', 'real-12']
   },
   {
-    id: 3, name: "Chocolate Savoy Carré", price: 2500, category: "Golosinas",
+    id: 3, name: "Chocolate Savoy Carré", price: 2500, category: "Chucherías",
     img: IMG_SAVOY_CARRE,
     usageInfo: "Chocolate premium con avellanas enteras.",
     availableInStoreIds: ['real-2', 'real-7', 'real-9']
@@ -28,7 +28,7 @@ export const allProducts: Product[] = [
     availableInStoreIds: ['real-4', 'real-5', 'real-11']
   },
   { 
-    id: 5, name: "Pirulín (155g)", price: 2800, category: "Golosinas", 
+    id: 5, name: "Pirulín (155g)", price: 2800, category: "Chucherías", 
     img: getImageUrl("caja_de_pirulin.png"),
     usageInfo: "Barquillas rellenas de chocolate y avellana.",
     availableInStoreIds: ['real-5', 'real-7', 'real-9']
@@ -58,19 +58,19 @@ export const allProducts: Product[] = [
     availableInStoreIds: ['real-3', 'real-8', 'real-9']
   },
   { 
-    id: 10, name: "Chocolate Savoy Cri Cri", price: 1500, category: "Golosinas", 
+    id: 10, name: "Chocolate Savoy Cri Cri", price: 1500, category: "Chucherías", 
     img: getImageUrl("savoy_cricri.png"),
     usageInfo: "Chocolate con arroz tostado crujiente.",
     availableInStoreIds: ['real-1', 'real-5', 'real-10']
   },
   { 
-    id: 11, name: "Samba de Fresa", price: 1200, category: "Golosinas", 
+    id: 11, name: "Samba de Fresa", price: 1200, category: "Chucherías", 
     img: getImageUrl("savoy_samba.png"),
     usageInfo: "Galleta cubierta de chocolate con relleno de fresa.",
     availableInStoreIds: ['real-2', 'real-6', 'real-11']
   },
   { 
-    id: 12, name: "Galleta Susy", price: 1200, category: "Golosinas", 
+    id: 12, name: "Galleta Susy", price: 1200, category: "Chucherías", 
     img: getImageUrl("susy.png"),
     usageInfo: "Galleta tipo wafer rellena de crema de chocolate.",
     availableInStoreIds: ['real-4', 'real-7', 'real-12']
@@ -144,5 +144,5 @@ export const categories = [
   { name: "Enlatados", subtitle: "Conservas de calidad", image: getImageUrl("enlatado_diablitos1.png") },
   { name: "Snacks", subtitle: "Para picar entre horas", image: getImageUrl("snacks1.png") },
   { name: "Almacén", subtitle: "Lo esencial de la despensa", image: getImageUrl("abarrotes_1.png") },
-  { name: "Golosinas", subtitle: "Dulces recuerdos", image: getImageUrl("golosinas_1.png") },
+  { name: "Chucherías", subtitle: "Dulces recuerdos", image: getImageUrl("golosinas_1.png") },
 ];
