@@ -311,7 +311,7 @@ REGLAS DE ORO:
             </div>
           </div>
 
-          <div ref={scrollRef} className="flex-grow overflow-y-auto p-5 md:p-8 space-y-6 scrollbar-hide pb-28 md:pb-10">
+          <div ref={scrollRef} className="flex-grow overflow-y-auto p-5 md:p-8 space-y-6 scrollbar-hide pb-28 md:pb-10 bg-gradient-to-b from-[#2D1618] to-[#1A0D0E]">
             {messages.map((m, i) => (
               <div
                 key={i}
@@ -321,7 +321,7 @@ REGLAS DE ORO:
                   className={`max-w-[88%] md:max-w-[85%] p-5 md:p-7 rounded-[32px] text-[14px] md:text-[16px] leading-relaxed shadow-xl font-medium ${
                     m.role === 'user'
                       ? 'bg-gradient-to-r from-ven-yellow to-venezuela-orange text-white rounded-tr-none'
-                      : 'bg-white/10 text-gray-100 border border-white/10 rounded-tl-none backdrop-blur-2xl'
+                      : 'bg-[#3D1F22]/80 text-gray-100 border border-ven-yellow/20 rounded-tl-none backdrop-blur-2xl'
                   }`}
                 >
                   <p className="whitespace-pre-wrap">{m.text}</p>
@@ -383,7 +383,7 @@ REGLAS DE ORO:
             )}
           </div>
 
-          <div className="p-5 md:p-10 bg-black/60 backdrop-blur-xl border-t border-white/10 space-y-4 shrink-0 pb-8 md:pb-10">
+          <div className="p-5 md:p-10 bg-gradient-to-t from-[#1A0D0E] to-[#2D1618]/90 backdrop-blur-xl border-t border-ven-yellow/20 space-y-4 shrink-0 pb-8 md:pb-10">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -396,7 +396,7 @@ REGLAS DE ORO:
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Pregúntame tips de cocina, pana..."
-                className="flex-grow bg-white/5 border border-white/10 rounded-[24px] py-4.5 px-6 focus:outline-none focus:border-ven-yellow transition-all text-sm md:text-base text-white placeholder:text-gray-500 shadow-inner"
+                className="flex-grow bg-white border border-white/20 rounded-[24px] py-4.5 px-6 focus:outline-none focus:border-ven-yellow focus:ring-2 focus:ring-ven-yellow/20 transition-all text-sm md:text-base text-venezuela-brown placeholder:text-gray-500 shadow-lg"
               />
               <button
                 type="submit"
