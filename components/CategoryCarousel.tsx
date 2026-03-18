@@ -65,10 +65,10 @@ const CategoryCarousel: React.FC = () => {
             <div 
               key={`${cat.name}-${idx}`}
               onClick={() => handleCategoryClick(cat.name)}
-              className="inline-block min-w-[180px] md:min-w-[260px] group cursor-pointer flex-shrink-0"
+              className="inline-block min-w-[140px] md:min-w-[260px] group cursor-pointer flex-shrink-0"
               style={{ scrollSnapAlign: 'start' }}
             >
-              <div className="relative aspect-[4/5] rounded-[48px] overflow-hidden border border-black/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] mb-6 group-hover:border-ven-yellow/40 transition-all duration-700 group-hover:-translate-y-3 group-hover:shadow-[0_40px_80px_-20px_rgba(255,204,0,0.2)]">
+              <div className="relative aspect-[3/4] md:aspect-[4/5] rounded-[32px] md:rounded-[48px] overflow-hidden border border-black/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] mb-6 group-hover:border-ven-yellow/40 transition-all duration-700 group-hover:-translate-y-3 group-hover:shadow-[0_40px_80px_-20px_rgba(255,204,0,0.2)]">
                 <img 
                   src={cat.image} 
                   alt={cat.name} 
