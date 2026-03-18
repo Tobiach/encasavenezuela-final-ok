@@ -25,7 +25,7 @@ const CategoryCarousel: React.FC = () => {
   const doubleCategories = [...categories, ...categories];
 
   return (
-    <section className="py-12 bg-venezuela-dark border-b border-black/5 overflow-hidden">
+    <section className="py-8 md:py-12 bg-venezuela-dark border-b border-black/5 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-8 flex items-center justify-between">
         <div className="flex flex-col">
           <h2 className="text-xl md:text-3xl font-black uppercase tracking-tighter text-venezuela-brown">
@@ -34,7 +34,6 @@ const CategoryCarousel: React.FC = () => {
           <div className="h-1 w-12 bg-ven-yellow mt-2 rounded-full" />
         </div>
         
-        {/* Botones solo en desktop */}
         <div className="hidden md:flex gap-2">
           <button 
             onClick={() => scroll('left')}
@@ -51,7 +50,6 @@ const CategoryCarousel: React.FC = () => {
         </div>
       </div>
 
-      {/* MOBILE: Scroll manual táctil | DESKTOP: Animación marquee */}
       <div 
         ref={scrollRef}
         className="relative overflow-x-auto md:overflow-x-hidden overflow-y-hidden no-scrollbar scroll-smooth touch-pan-x"
@@ -60,15 +58,15 @@ const CategoryCarousel: React.FC = () => {
           scrollSnapType: 'x proximity'
         }}
       >
-        <div className="flex gap-6 md:gap-10 px-6 py-8 md:animate-marquee">
+        <div className="flex gap-4 md:gap-10 px-6 py-8 md:animate-marquee">
           {doubleCategories.map((cat, idx) => (
             <div 
               key={`${cat.name}-${idx}`}
               onClick={() => handleCategoryClick(cat.name)}
-              className="inline-block min-w-[180px] md:min-w-[260px] group cursor-pointer flex-shrink-0"
+              className="inline-block min-w-[140px] md:min-w-[260px] group cursor-pointer flex-shrink-0"
               style={{ scrollSnapAlign: 'start' }}
             >
-              <div className="relative aspect-[4/5] rounded-[48px] overflow-hidden border border-black/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] mb-6 group-hover:border-ven-yellow/40 transition-all duration-700 group-hover:-translate-y-3 group-hover:shadow-[0_40px_80px_-20px_rgba(255,204,0,0.2)]">
+              <div className="relative aspect-[3/4] md:aspect-[4/5] rounded-[32px] md:rounded-[48px] overflow-hidden border border-black/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] mb-6 group-hover:border-ven-yellow/40 transition-all duration-700 group-hover:-translate-y-3 group-hover:shadow-[0_40px_80px_-20px_rgba(255,204,0,0.2)]">
                 <img 
                   src={cat.image} 
                   alt={cat.name} 
@@ -106,7 +104,6 @@ const CategoryCarousel: React.FC = () => {
           100% { transform: translateX(-50%); }
         }
         
-        /* Desktop: animación marquee */
         @media (min-width: 768px) {
           .md\\:animate-marquee {
             display: flex;
@@ -115,7 +112,6 @@ const CategoryCarousel: React.FC = () => {
           }
         }
         
-        /* Mobile: sin animación, scroll manual */
         @media (max-width: 767px) {
           .md\\:animate-marquee {
             animation: none;
