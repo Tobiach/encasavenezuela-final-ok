@@ -5,7 +5,7 @@ import Hero from '../components/Hero';
 import Features from '../components/Features';
 import Promotions from '../components/Promotions';
 import PromotionDetailView from '../components/PromotionDetailView';
-import CategoriesCompact from '../components/CategoriesCompact';
+import CategoriesNew from '../components/CategoriesNew';
 import Testimonials from '../components/Testimonials';
 import PartnerStores from '../components/PartnerStores';
 import Footer from '../components/Footer';
@@ -477,7 +477,7 @@ const handlePurchase = (total: number) => {
         <Route path="/" element={
           <main className="animate-in fade-in duration-700">
             <Hero onCatalogClick={() => navigate('/catalog')} onLearnMoreClick={() => document.getElementById('how-it-works')?.scrollIntoView({behavior: 'smooth'})} />
-            <div id="categories"><CategoriesCompact /></div>
+            <div id="categories"><CategoriesNew /></div>
             <Offers />
             <ContextRecommendations onAddToCart={handleAddToCart} />
             <div id="partner-stores">
