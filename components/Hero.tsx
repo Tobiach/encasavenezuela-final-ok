@@ -14,9 +14,9 @@ const HERO_SLIDES = [
     badge: "Cachapas tradicionales"
   },
   {
-    image: HERO_SLIDE_2,
-    title: "Arepas rellenas con amor",
-    badge: "Arepas artesanales"
+    image: "https://weerwaqwrdngbikqaxng.supabase.co/storage/v1/object/public/imagenes/assets/hero/banner_adomicilio.png",
+    title: "Productos venezolanos a domicilio",
+    badge: "Delivery rápido"
   },
   {
     image: HERO_SLIDE_3,
