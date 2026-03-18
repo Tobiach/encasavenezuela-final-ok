@@ -17,7 +17,7 @@ interface ProductDetailViewProps {
   onClose: () => void;
   onAddToCart: (p: Product, storeId?: string) => void;
   onSelectStore: (store: PartnerStore) => void;
-  storeId?: string; // ID del local actual para contexto AI
+  storeId?: string;
 }
 
 const ProductDetailView: React.FC<ProductDetailViewProps> = ({
@@ -48,7 +48,6 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({
     return LOCALES_VENEZOLANOS.filter((s) => product.availableInStoreIds?.includes(s.id));
   }, [product]);
 
-  // Filtrado de productos por local para la IA
   const contextualProducts = useMemo(() => {
     if (!storeId) return allProducts;
     return allProducts.filter((p) => p.availableInStoreIds?.includes(storeId));
@@ -112,7 +111,6 @@ REGLAS DE ORO:
     };
 
     initialGreeting();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.id, storeId]);
 
   useEffect(() => {
@@ -191,44 +189,44 @@ REGLAS DE ORO:
           <X size={20} />
         </button>
 
-        <div className="w-full md:w-[40%] flex flex-col overflow-y-auto no-scrollbar scroll-smooth bg-venezuela-dark border-r border-white/5 shrink-0 h-[40vh] md:h-full">
+        <div className="w-full md:w-[40%] flex flex-col overflow-y-auto no-scrollbar scroll-smooth bg-gradient-to-b from-venezuela-dark to-black border-r border-white/5 shrink-0 h-[40vh] md:h-full">
           <div className="relative h-[25vh] md:h-auto md:aspect-square shrink-0 overflow-hidden bg-black/40 flex items-center justify-center">
             <img src={product.img} alt={product.name} className="max-w-full max-h-full object-contain md:object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-venezuela-dark via-transparent to-transparent opacity-30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50" />
           </div>
 
-          <div className="p-5 md:p-8 space-y-4 md:space-y-6">
-            <div className="space-y-1 text-center md:text-left">
+          <div className="p-5 md:p-8 space-y-4 md:space-y-6 bg-gradient-to-b from-black/60 to-venezuela-dark">
+            <div className="space-y-2 text-center md:text-left">
               <div className="flex justify-center md:justify-start">
-                <span className="text-[8px] md:text-[10px] font-black text-venezuela-orange uppercase tracking-[0.3em] mb-1">
+                <span className="text-[10px] md:text-[11px] font-black text-ven-yellow bg-ven-yellow/10 px-3 py-1 rounded-full uppercase tracking-[0.25em] border border-ven-yellow/20">
                   {product.category}
                 </span>
               </div>
-              <h1 className="text-xl md:text-3xl font-black text-white uppercase tracking-tight leading-tight line-clamp-2">
+              <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight leading-tight">
                 {product.name}
               </h1>
-              <p className="text-2xl md:text-3xl font-black text-venezuela-orange tracking-tighter">
+              <p className="text-3xl md:text-5xl font-black bg-gradient-to-r from-ven-yellow via-venezuela-orange to-ven-yellow bg-clip-text text-transparent tracking-tighter">
                 ${product.price}
               </p>
               {product.usageInfo && (
-                <p className="text-[10px] md:text-[12px] text-gray-500 italic leading-relaxed mt-2 font-medium">
+                <p className="text-xs md:text-sm text-gray-300 leading-relaxed mt-3 font-medium bg-white/5 p-3 rounded-xl border border-white/10">
                   {product.usageInfo}
                 </p>
               )}
             </div>
 
             <div className="pt-2 flex flex-col gap-3 md:gap-4">
-              <div className="flex items-center justify-between bg-white/5 p-1.5 rounded-xl border border-white/5">
+              <div className="flex items-center justify-between bg-white/10 p-1.5 rounded-xl border border-white/10">
                 <button
                   onClick={() => setQty(Math.max(1, qty - 1))}
-                  className="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-lg transition-all text-gray-400"
+                  className="w-10 h-10 flex items-center justify-center hover:bg-ven-yellow/20 rounded-lg transition-all text-white"
                 >
                   <Minus size={14} />
                 </button>
                 <span className="text-base font-black text-white">{qty}</span>
                 <button
                   onClick={() => setQty(qty + 1)}
-                  className="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-lg transition-all text-gray-400"
+                  className="w-10 h-10 flex items-center justify-center hover:bg-ven-yellow/20 rounded-lg transition-all text-white"
                 >
                   <Plus size={14} />
                 </button>
@@ -243,7 +241,7 @@ REGLAS DE ORO:
                 className={`w-full py-4 rounded-2xl font-black text-[10px] md:text-[12px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-2xl ${
                   addedStatus
                     ? 'bg-green-500 text-white'
-                    : 'bg-gradient-to-r from-[#F58220] to-[#E86D00] text-white shadow-orange-500/20 active:scale-95'
+                    : 'bg-gradient-to-r from-ven-yellow to-venezuela-orange text-white shadow-yellow-500/40 active:scale-95 hover:shadow-yellow-500/60'
                 }`}
               >
                 {addedStatus ? <Check size={16} strokeWidth={4} /> : <ShoppingCart size={16} />}
@@ -251,18 +249,17 @@ REGLAS DE ORO:
               </button>
             </div>
 
-            {/* SECCIÓN DISPONIBLE EN LOCALES */}
             {!storeId && (
-              <div className="space-y-4 pt-6 border-t border-white/5">
-                <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] flex items-center gap-2">
-                  <MapPin size={14} className="text-venezuela-orange" /> Dónde conseguirlo
+              <div className="space-y-4 pt-6 border-t border-white/10">
+                <p className="text-[10px] font-black text-ven-yellow uppercase tracking-[0.3em] flex items-center gap-2">
+                  <MapPin size={14} className="text-ven-yellow" /> Dónde conseguirlo
                 </p>
                 <div className="space-y-3">
                   {availableStores.length > 0 ? (
                     availableStores.map((store) => (
                       <div
                         key={store.id}
-                        className="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-center justify-between hover:border-venezuela-orange/30 transition-all group"
+                        className="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center justify-between hover:border-ven-yellow/40 transition-all group"
                       >
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl overflow-hidden bg-black/20">
@@ -274,19 +271,19 @@ REGLAS DE ORO:
                           </div>
                           <div>
                             <p className="text-[11px] font-black text-white uppercase tracking-tight">{store.name}</p>
-                            <p className="text-[9px] text-gray-500 font-bold uppercase">{store.neighborhood}</p>
+                            <p className="text-[9px] text-gray-400 font-bold uppercase">{store.neighborhood}</p>
                           </div>
                         </div>
                         <button
                           onClick={() => onSelectStore(store)}
-                          className="text-[10px] font-black text-venezuela-orange uppercase tracking-widest hover:underline active:scale-95 transition-all"
+                          className="text-[10px] font-black text-ven-yellow uppercase tracking-widest hover:underline active:scale-95 transition-all"
                         >
                           Ver local
                         </button>
                       </div>
                     ))
                   ) : (
-                    <p className="text-[11px] text-gray-500 italic">
+                    <p className="text-[11px] text-gray-400 italic">
                       No hay locales registrados para este producto aún.
                     </p>
                   )}
@@ -299,15 +296,15 @@ REGLAS DE ORO:
         <div className="w-full md:w-[60%] flex-grow h-full flex flex-col bg-venezuela-dark relative overflow-hidden border-t md:border-t-0 border-white/5">
           <div className="p-3 md:p-5 border-b border-white/5 flex items-center justify-between bg-black/40 backdrop-blur-md shrink-0">
             <div className="flex items-center gap-2 md:gap-3">
-              <div className="w-8 h-8 md:w-12 md:h-12 bg-gradient-to-br from-[#F58220] to-[#E86D00] rounded-lg md:rounded-xl flex items-center justify-center text-white shadow-xl">
+              <div className="w-8 h-8 md:w-12 md:h-12 bg-gradient-to-br from-ven-yellow to-venezuela-orange rounded-lg md:rounded-xl flex items-center justify-center text-white shadow-xl">
                 <ChefHat size={16} className="md:hidden" />
                 <ChefHat size={20} className="hidden md:block" />
               </div>
               <div className="min-w-0">
                 <h3 className="font-black text-white uppercase tracking-tight text-xs md:text-base">
-                  Pana <span className="text-venezuela-orange">Chef AI</span>
+                  Pana <span className="text-ven-yellow">Chef AI</span>
                 </h3>
-                <p className="text-[6px] md:text-[8px] text-gray-500 font-bold uppercase tracking-widest">
+                <p className="text-[6px] md:text-[8px] text-gray-400 font-bold uppercase tracking-widest">
                   {storeId ? `Asesorando para ${currentStore?.name}` : 'Asesoría Cultural'}
                 </p>
               </div>
@@ -323,8 +320,8 @@ REGLAS DE ORO:
                 <div
                   className={`max-w-[88%] md:max-w-[85%] p-5 md:p-7 rounded-[32px] text-[14px] md:text-[16px] leading-relaxed shadow-xl font-medium ${
                     m.role === 'user'
-                      ? 'bg-gradient-to-r from-[#F58220] to-[#E86D00] text-white rounded-tr-none'
-                      : 'bg-white/5 text-gray-200 border border-white/5 rounded-tl-none backdrop-blur-2xl'
+                      ? 'bg-gradient-to-r from-ven-yellow to-venezuela-orange text-white rounded-tr-none'
+                      : 'bg-white/10 text-gray-100 border border-white/10 rounded-tl-none backdrop-blur-2xl'
                   }`}
                 >
                   <p className="whitespace-pre-wrap">{m.text}</p>
@@ -332,7 +329,7 @@ REGLAS DE ORO:
 
                 {m.suggestedProducts && m.suggestedProducts.length > 0 && (
                   <div className="mt-4 w-full max-w-[300px] space-y-3 animate-in slide-in-from-left-3 duration-600">
-                    <p className="text-[10px] font-black text-venezuela-orange uppercase tracking-widest mb-1 ml-2">
+                    <p className="text-[10px] font-black text-ven-yellow uppercase tracking-widest mb-1 ml-2">
                       Sugerencias del Chef:
                     </p>
                     {m.suggestedProducts.map((p) => (
@@ -347,14 +344,14 @@ REGLAS DE ORO:
                           <p className="text-[11px] font-black text-white truncate uppercase tracking-tight">
                             {p.name}
                           </p>
-                          <p className="text-[10px] text-venezuela-orange font-bold uppercase tracking-tighter">${p.price}</p>
+                          <p className="text-[10px] text-ven-yellow font-bold uppercase tracking-tighter">${p.price}</p>
                         </div>
                         <button
                           onClick={() => handleAddSuggested(p)}
                           className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
                             addedItems[p.id]
                               ? 'bg-green-500 text-white'
-                              : 'bg-gradient-to-r from-[#F58220] to-[#E86D00] text-white hover:scale-110 active:scale-90 shadow-lg shadow-orange-500/20'
+                              : 'bg-gradient-to-r from-ven-yellow to-venezuela-orange text-white hover:scale-110 active:scale-90 shadow-lg shadow-yellow-500/20'
                           }`}
                         >
                           {addedItems[p.id] ? <Check size={16} strokeWidth={4} /> : <Plus size={20} strokeWidth={3} />}
@@ -369,8 +366,8 @@ REGLAS DE ORO:
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-white/5 p-5 rounded-[32px] border border-white/5 rounded-tl-none flex items-center gap-4 backdrop-blur-md">
-                  <Loader2 size={16} className="animate-spin text-venezuela-orange" />
-                  <span className="text-[11px] text-gray-500 font-black uppercase tracking-widest italic">
+                  <Loader2 size={16} className="animate-spin text-ven-yellow" />
+                  <span className="text-[11px] text-gray-300 font-black uppercase tracking-widest italic">
                     El Pana está cocinando...
                   </span>
                 </div>
@@ -399,12 +396,12 @@ REGLAS DE ORO:
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Pregúntame tips de cocina, pana..."
-                className="flex-grow bg-white/5 border border-white/10 rounded-[24px] py-4.5 px-6 focus:outline-none focus:border-venezuela-orange transition-all text-sm md:text-base text-white placeholder:text-gray-700 shadow-inner"
+                className="flex-grow bg-white/5 border border-white/10 rounded-[24px] py-4.5 px-6 focus:outline-none focus:border-ven-yellow transition-all text-sm md:text-base text-white placeholder:text-gray-500 shadow-inner"
               />
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-r from-[#F58220] to-[#E86D00] rounded-[22px] flex items-center justify-center text-white shadow-2xl shadow-orange-500/40 disabled:opacity-10 transition-all shrink-0 active:scale-95 hover:scale-105"
+                className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-r from-ven-yellow to-venezuela-orange rounded-[22px] flex items-center justify-center text-white shadow-2xl shadow-yellow-500/40 disabled:opacity-10 transition-all shrink-0 active:scale-95 hover:scale-105"
               >
                 <Send size={22} />
               </button>
@@ -417,4 +414,3 @@ REGLAS DE ORO:
 };
 
 export default ProductDetailView;
-
