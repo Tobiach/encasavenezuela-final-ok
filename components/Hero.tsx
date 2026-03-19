@@ -14,7 +14,7 @@ const HERO_SLIDES = [
     badge: "Cachapas tradicionales"
   },
   {
-    image: "https://weerwaqwrdngbikqaxng.supabase.co/storage/v1/object/public/imagenes/assets/hero/banner_adomicilio.png",
+    image: HERO_SLIDE_2,
     title: "Productos venezolanos a domicilio",
     badge: "Delivery rápido"
   },
@@ -82,7 +82,6 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
         <div className="relative w-full max-w-[500px] md:max-w-none px-4">
           {/* Contenedor de Carrusel */}
           <div className="relative rounded-[40px] overflow-hidden border-4 border-ven-yellow/30 shadow-2xl group z-0 aspect-[16/9]">
-            {/* Filtro removido para mejor visibilidad */}
             {HERO_SLIDES.map((slide, index) => (
               <div
                 key={index}
