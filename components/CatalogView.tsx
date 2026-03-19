@@ -46,7 +46,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
   const displayedStores = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     let baseStores = LOCALES_VENEZOLANOS;
-    
+
     // 1. Filtrar por Categoría (si viene de la navegación de categorías)
     if (category !== 'Todos') {
       const storesWithCategory = new Set(
@@ -62,17 +62,17 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
       // 1. Encontrar IDs de locales que tienen productos que coinciden con la búsqueda
       const matchingProductStoreIds = new Set(
         allProducts
-          .filter(p => 
-            p.name.toLowerCase().includes(term) || 
+          .filter(p =>
+            p.name.toLowerCase().includes(term) ||
             p.category.toLowerCase().includes(term) ||
             (p.usageInfo && p.usageInfo.toLowerCase().includes(term))
           )
           .flatMap(p => p.availableInStoreIds || [])
       );
-      
+
       // 2. Filtrar locales: que tengan el producto O que el nombre/barrio del local coincida
-      baseStores = baseStores.filter(s => 
-        matchingProductStoreIds.has(s.id) || 
+      baseStores = baseStores.filter(s =>
+        matchingProductStoreIds.has(s.id) ||
         s.name.toLowerCase().includes(term) ||
         s.neighborhood?.toLowerCase().includes(term) ||
         s.location.toLowerCase().includes(term)
@@ -92,34 +92,33 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
   }, []);
 
   const filteredProducts = useMemo(() => {
-  return allProducts.filter(p => {
-    const matchesCat = category === 'Todos' || p.category === category;
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return allProducts.filter(p => {
+      const matchesCat = category === 'Todos' || p.category === category;
+      const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-    // Lógica de filtrado por Local + DEMO_MODE + Regla Legacy
-    let matchesStore = true;
-    if (!DEMO_MODE && selectedStore) {
-      const hasStoreIds = p.availableInStoreIds && p.availableInStoreIds.length > 0;
-      if (hasStoreIds && p.availableInStoreIds) {
-        matchesStore = p.availableInStoreIds.includes(selectedStore.id);
-      } else {
-        // REGLA LEGACY: Si no tiene IDs o está vacío, se muestra siempre (compatibilidad)
-        matchesStore = true;
+      // Lógica de filtrado por Local + DEMO_MODE + Regla Legacy
+      let matchesStore = true;
+      if (!DEMO_MODE && selectedStore) {
+        const hasStoreIds = p.availableInStoreIds && p.availableInStoreIds.length > 0;
+        if (hasStoreIds && p.availableInStoreIds) {
+          matchesStore = p.availableInStoreIds.includes(selectedStore.id);
+        } else {
+          // REGLA LEGACY: Si no tiene IDs o está vacío, se muestra siempre (compatibilidad)
+          matchesStore = true;
+        }
       }
-    }
 
-    return matchesCat && matchesSearch && matchesStore;
-  });
-}, [category, searchTerm, selectedStore]);
-
+      return matchesCat && matchesSearch && matchesStore;
+    });
+  }, [category, searchTerm, selectedStore]);
 
   const categories = ['Todos', 'Harinas', 'Lácteos', 'Congelados', 'Bebidas', 'Chucherías', 'Salsas', 'Almacén'];
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
       {viewingProduct && (
-        <ProductDetailView 
-          product={viewingProduct} 
+        <ProductDetailView
+          product={viewingProduct}
           allProducts={allProducts}
           onClose={() => setViewingProduct(null)}
           onAddToCart={onAddToCart}
@@ -132,11 +131,11 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
       )}
 
       {/* Header Dinámico - STICKY cuando hay local seleccionado */}
-      <div 
+      <div
         className={`flex flex-col gap-6 mb-8 md:mb-12 ${selectedStore ? 'sticky top-0 z-40 bg-venezuela-dark pt-4 pb-6 -mx-4 px-4 md:-mx-6 md:px-6 shadow-lg' : ''}`}
       >
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => {
               if (selectedStore) {
                 onSelectStore(null);
@@ -157,14 +156,14 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
             </p>
           </div>
         </div>
-        
+
         <div className="relative">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={selectedStore ? "¿Qué buscas en este local?" : "¿Qué se te antoja hoy? (Harina, Malta, etc.)"} 
+            placeholder={selectedStore ? "¿Qué buscas en este local?" : "¿Qué se te antoja hoy? (Harina, Malta, etc.)"}
             className="w-full bg-white border border-black/10 rounded-[24px] py-4.5 pl-14 pr-6 focus:outline-none focus:border-ven-yellow transition-all text-sm shadow-inner text-venezuela-brown"
           />
         </div>
@@ -179,11 +178,10 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
                 <button
                   key={cat}
                   onClick={() => setCategory(cat)}
-                  className={`flex items-center gap-2.5 shrink-0 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border-2 ${
-                    isActive 
-                      ? 'bg-gradient-to-r from-ven-yellow to-venezuela-orange border-ven-yellow text-white shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105' 
+                  className={`flex items-center gap-2.5 shrink-0 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border-2 ${isActive
+                      ? 'bg-gradient-to-r from-ven-yellow to-venezuela-orange border-ven-yellow text-white shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105'
                       : 'bg-black/5 border-black/5 text-gray-600 hover:bg-black/10'
-                  }`}
+                    }`}
                 >
                   <Icon size={12} className={isActive ? 'text-white' : 'text-ven-yellow'} />
                   {cat}
@@ -228,7 +226,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
                       <div className="mb-3">
                         <h3 className="text-lg md:text-xl font-black text-venezuela-brown leading-tight mb-2 group-hover:text-venezuela-orange transition-colors truncate uppercase tracking-tight">{store.name}</h3>
 
-                        {/* 🆕 INFO DE UBICACIÓN Y COBERTURA */}
+                        {/* INFO DE UBICACIÓN Y COBERTURA */}
                         <div className="space-y-1.5">
                           <div className="flex items-center gap-2 text-gray-600">
                             <MapPin size={12} className="text-ven-red shrink-0" />
@@ -287,7 +285,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
                     <div className="p-5 flex-grow flex flex-col">
                       <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-2 text-sm md:text-base group-hover:text-venezuela-orange transition-colors">{store.name}</h3>
 
-                      {/* 🆕 INFO DE UBICACIÓN */}
+                      {/* INFO DE UBICACIÓN */}
                       <div className="space-y-1.5 mb-3">
                         <div className="flex items-center gap-1.5 text-[9px] font-black text-gray-500 uppercase tracking-widest">
                           <MapPin size={10} className="text-ven-red shrink-0" /> {store.neighborhood}
@@ -297,7 +295,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
                         </div>
                       </div>
 
-                      {/* 🆕 BADGE DE COBERTURA */}
+                      {/* BADGE DE COBERTURA */}
                       <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-lg px-2 py-1.5 mb-auto">
                         <p className="text-[8px] font-black text-ven-yellow uppercase tracking-widest text-center">
                           🚚 {store.coverageArea || 'CABA'}
@@ -331,14 +329,13 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
                 const Icon = categoryIcons[cat] || LayoutGrid;
                 const isActive = category === cat;
                 return (
-                  <button 
+                  <button
                     key={cat}
                     onClick={() => setCategory(cat)}
-                    className={`flex items-center gap-4 w-full text-left px-6 py-5 rounded-[24px] text-[11px] font-black uppercase tracking-widest transition-all border-2 ${
-                      isActive 
-                        ? 'bg-gradient-to-br from-ven-yellow to-venezuela-orange border-ven-yellow/50 text-white shadow-2xl shadow-venezuela-orange/20 translate-x-2' 
+                    className={`flex items-center gap-4 w-full text-left px-6 py-5 rounded-[24px] text-[11px] font-black uppercase tracking-widest transition-all border-2 ${isActive
+                        ? 'bg-gradient-to-br from-ven-yellow to-venezuela-orange border-ven-yellow/50 text-white shadow-2xl shadow-venezuela-orange/20 translate-x-2'
                         : 'bg-black/5 border-transparent hover:bg-black/10 text-gray-600 hover:text-venezuela-brown'
-                    }`}
+                      }`}
                   >
                     <div className={`p-2 rounded-xl ${isActive ? 'bg-white/10' : 'bg-black/5'}`}>
                       <Icon size={16} className={isActive ? 'text-white' : 'text-ven-yellow'} />
@@ -351,6 +348,34 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
           </div>
 
           <div className="md:col-span-3">
+            {/* HEADER STICKY DE CATEGORÍA */}
+            {category !== 'Todos' && (
+              <div className="sticky top-0 z-30 bg-venezuela-dark/95 backdrop-blur-xl border-b-2 border-ven-yellow/30 -mx-4 px-4 md:-mx-0 md:px-6 py-4 mb-6 rounded-b-[24px] shadow-xl">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {(() => {
+                      const Icon = categoryIcons[category] || LayoutGrid;
+                      return <Icon size={24} className="text-ven-yellow" />;
+                    })()}
+                    <div>
+                      <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-venezuela-brown">
+                        {category}
+                      </h2>
+                      <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">
+                        {filteredProducts.length} productos disponibles
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setCategory('Todos')}
+                    className="text-[10px] font-black text-ven-yellow uppercase tracking-widest hover:underline"
+                  >
+                    Ver todas →
+                  </button>
+                </div>
+              </div>
+            )}
+
             {filteredProducts.length === 0 ? (
               <div className="text-center py-20 bg-black/5 rounded-[40px] border border-black/5 flex flex-col items-center gap-4">
                 <Package className="text-gray-400" size={48} />
@@ -359,8 +384,8 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
             ) : (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {filteredProducts.map(product => (
-                  <div 
-                    key={product.id} 
+                  <div
+                    key={product.id}
                     onClick={() => setViewingProduct(product)}
                     className="bg-white rounded-[32px] border-2 border-black/5 p-4 group flex flex-col h-[350px] md:h-[450px] overflow-hidden hover:border-ven-yellow transition-all duration-300 cursor-pointer shadow-xl hover:-translate-y-2"
                   >
@@ -381,27 +406,27 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
                         <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Precio</span>
                         <span className="text-venezuela-brown font-black text-xl md:text-2xl tracking-tighter">${product.price}</span>
                       </div>
-                      <button 
+                      <button
                         onClick={(e) => {
-  e.stopPropagation();
+                          e.stopPropagation();
 
-  try {
-    const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
-    win.encasaTrack?.("add_to_cart", {
-      productId: product.id,
-      productName: product.name,
-      price: product.price,
-      category: product.category,
-      storeId: selectedStore?.id || (product as { storeId?: string }).storeId || null,
-      source: "catalog",
-      ts: Date.now(),
-    });
-  } catch (err) {
-    // silencio
-  }
+                          try {
+                            const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
+                            win.encasaTrack?.("add_to_cart", {
+                              productId: product.id,
+                              productName: product.name,
+                              price: product.price,
+                              category: product.category,
+                              storeId: selectedStore?.id || (product as { storeId?: string }).storeId || null,
+                              source: "catalog",
+                              ts: Date.now(),
+                            });
+                          } catch (err) {
+                            // silencio
+                          }
 
-  onAddToCart(product, selectedStore?.id);
-}}
+                          onAddToCart(product, selectedStore?.id);
+                        }}
                         className="bg-gradient-to-br from-ven-yellow to-venezuela-orange text-white p-3 md:p-4 rounded-2xl shadow-xl shadow-venezuela-orange/20 active:scale-90 transition-all hover:brightness-110 border border-white/20"
                       >
                         <Plus size={22} strokeWidth={4} />
