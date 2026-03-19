@@ -20,7 +20,7 @@ export async function askGeminiWorker(args: {
   const { system, prompt, history = [] } = args;
 
   // Usamos process.env.GEMINI_API_KEY según las directrices de la plataforma
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   
   if (!apiKey) {
     console.error("GEMINI_API_KEY no está configurada.");
