@@ -3,9 +3,9 @@ import { getSupabaseImageUrl } from '../../lib/supabaseImageUrl';
 export const LOGO_ENCASA_IMAGE = getSupabaseImageUrl('assets/logo_encasavenezuela.png.png');
 
 // Hero Banners
-export const HERO_SLIDE_1 = getSupabaseImageUrl('assets/hero/banner_1.png');
-export const HERO_SLIDE_2 = getSupabaseImageUrl('assets/hero/banner_2.png');
-export const HERO_SLIDE_3 = getSupabaseImageUrl('assets/hero/banner_3.png');
+export const HERO_SLIDE_1 = getSupabaseImageUrl('assets/hero/banner_1_v3.png');
+export const HERO_SLIDE_2 = getSupabaseImageUrl('assets/hero/banner_2_v3.png');
+export const HERO_SLIDE_3 = getSupabaseImageUrl('assets/hero/banner_3_v3.png');
 
 export const BANNER_IMAGES = {
     banner1: HERO_SLIDE_1,
