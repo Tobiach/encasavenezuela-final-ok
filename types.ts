@@ -13,6 +13,9 @@ export interface PartnerStore {
   isPreparedFood?: boolean;
   plan: 'basic' | 'premium';
   reviews: string[];
+  deliveryTime?: string;
+  coverageArea?: string;
+  deliveryRadius?: string;
 }
 
 export interface Product {

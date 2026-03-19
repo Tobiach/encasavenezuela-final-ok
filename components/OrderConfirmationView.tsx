@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, Sparkles, ShoppingBag, Zap, MessageSquare, AlertCircle } from 'lucide-react';
-import { Product, PartnerStore, User as UserType } from '../types';
+import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, Sparkles, ShoppingBag, Zap, MessageSquare, AlertCircle, Clock } from 'lucide-react'; import { Product, PartnerStore, User as UserType } from '../types';
 import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
 import { supabase } from '../lib/supabase';
 
@@ -293,19 +292,42 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
 
             <div className="pt-4 border-t border-black/5">
               <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] mb-4">Detalles del Local</p>
-              <div className={`rounded-2xl p-4 flex items-center gap-4 border transition-all ${(isMultiStore || hasInvalidItems) ? 'bg-red-500/10 border-red-500/50' : 'bg-black/5 border-black/5'}`}>
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${(isMultiStore || hasInvalidItems) ? 'bg-red-500/20 text-red-500' : 'bg-ven-yellow/20 text-ven-yellow'}`}>
-                  <ShoppingBag size={24} />
+              <div className={`rounded-2xl p-4 flex flex-col gap-4 border transition-all ${(isMultiStore || hasInvalidItems) ? 'bg-red-500/10 border-red-500/50' : 'bg-black/5 border-black/5'}`}>
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${(isMultiStore || hasInvalidItems) ? 'bg-red-500/20 text-red-500' : 'bg-ven-yellow/20 text-ven-yellow'}`}>
+                    <ShoppingBag size={24} />
+                  </div>
+                  <div>
+                    <p className={`text-xs font-black uppercase tracking-tight ${(isMultiStore || hasInvalidItems) ? 'text-red-500' : 'text-venezuela-brown'}`}>
+                      {isMultiStore ? 'Pedido Multi-Local Detectado' : hasInvalidItems ? 'Productos sin Local' : (store?.name || 'Marketplace EnCasa')}
+                    </p>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                      {isMultiStore ? 'Elegí productos de un solo local' : hasInvalidItems ? 'Elegí un local para estos productos' : (store?.neighborhood || 'CABA')}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className={`text-xs font-black uppercase tracking-tight ${(isMultiStore || hasInvalidItems) ? 'text-red-500' : 'text-venezuela-brown'}`}>
-                    {isMultiStore ? 'Pedido Multi-Local Detectado' : hasInvalidItems ? 'Productos sin Local' : (store?.name || 'Marketplace EnCasa')}
-                  </p>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                    {isMultiStore ? 'Elegí productos de un solo local' : hasInvalidItems ? 'Elegí un local para estos productos' : (store?.neighborhood || 'CABA')}
-                  </p>
-                </div>
+
+                {/* 🆕 INFO DE COBERTURA Y TIEMPO */}
+                {!isMultiStore && !hasInvalidItems && store && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-white/50 p-3 rounded-xl flex items-center gap-2">
+                      <Clock size={14} className="text-ven-yellow shrink-0" />
+                      <div>
+                        <p className="text-[8px] text-gray-500 font-black uppercase tracking-wide">Tiempo</p>
+                        <p className="text-[10px] text-venezuela-brown font-black">{store.deliveryTime || '30-45 min'}</p>
+                      </div>
+                    </div>
+                    <div className="bg-white/50 p-3 rounded-xl flex items-center gap-2">
+                      <MapPin size={14} className="text-ven-red shrink-0" />
+                      <div>
+                        <p className="text-[8px] text-gray-500 font-black uppercase tracking-wide">Cobertura</p>
+                        <p className="text-[10px] text-venezuela-brown font-black">{store.coverageArea || 'CABA'}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
+
               {(isMultiStore || hasInvalidItems) && (
                 <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl">
                   <p className="text-[10px] text-red-400 font-medium leading-relaxed">

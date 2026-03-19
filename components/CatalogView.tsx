@@ -208,36 +208,53 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
               </div>
               <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4">
                 {premiumStores.map(store => (
-                    <div 
-                      key={`premium-${store.id}`}
-                      onClick={() => onSelectStore(store)}
-                      className="group min-w-[280px] md:min-w-[320px] bg-white rounded-[32px] border-2 border-venezuela-orange/30 overflow-hidden transition-all duration-300 hover:border-venezuela-orange hover:-translate-y-2 cursor-pointer flex flex-col shadow-2xl relative"
-                    >
-                      <div className="absolute top-4 left-4 z-10 bg-venezuela-orange text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase flex items-center gap-1.5 shadow-2xl border border-white/20">
-                        <Zap size={10} fill="currentColor" /> RECOMENDADO
-                      </div>
-                      <div className="relative aspect-video overflow-hidden">
-                          <img src={store.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
-                          <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/10">
-                            <Star size={10} className="fill-ven-yellow text-ven-yellow" />
-                            <span className="text-[10px] font-black text-white">{store.rating.toFixed(1)}</span>
-                          </div>
-                      </div>
-                      <div className="p-6 flex flex-col flex-grow">
-                          <div className="mb-3">
-                            <h3 className="text-lg md:text-xl font-black text-venezuela-brown leading-tight mb-1 group-hover:text-venezuela-orange transition-colors truncate uppercase tracking-tight">{store.name}</h3>
-                            <div className="flex items-center gap-2 text-gray-600">
-                              <Clock size={14} className="text-venezuela-orange" />
-                              <span className="text-[10px] md:text-xs font-black uppercase tracking-widest">30-45 min • Retiro</span>
-                            </div>
-                          </div>
-                          <div className="mt-auto pt-4 border-t border-black/5 flex items-center justify-between">
-                            <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-500 uppercase tracking-widest"><MapPin size={12} className="text-ven-red" /> {store.location}</div>
-                            <ChevronRight size={20} className="text-venezuela-orange group-hover:translate-x-1 transition-all" />
-                          </div>
+                  <div
+                    key={`premium-${store.id}`}
+                    onClick={() => onSelectStore(store)}
+                    className="group min-w-[280px] md:min-w-[320px] bg-white rounded-[32px] border-2 border-venezuela-orange/30 overflow-hidden transition-all duration-300 hover:border-venezuela-orange hover:-translate-y-2 cursor-pointer flex flex-col shadow-2xl relative"
+                  >
+                    <div className="absolute top-4 left-4 z-10 bg-venezuela-orange text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase flex items-center gap-1.5 shadow-2xl border border-white/20">
+                      <Zap size={10} fill="currentColor" /> RECOMENDADO
+                    </div>
+                    <div className="relative aspect-video overflow-hidden">
+                      <img src={store.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/10">
+                        <Star size={10} className="fill-ven-yellow text-ven-yellow" />
+                        <span className="text-[10px] font-black text-white">{store.rating.toFixed(1)}</span>
                       </div>
                     </div>
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="mb-3">
+                        <h3 className="text-lg md:text-xl font-black text-venezuela-brown leading-tight mb-2 group-hover:text-venezuela-orange transition-colors truncate uppercase tracking-tight">{store.name}</h3>
+
+                        {/* 🆕 INFO DE UBICACIÓN Y COBERTURA */}
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <MapPin size={12} className="text-ven-red shrink-0" />
+                            <span className="text-[10px] font-black uppercase tracking-wide">{store.neighborhood}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Clock size={12} className="text-ven-yellow shrink-0" />
+                            <span className="text-[10px] font-bold">{store.deliveryTime || '30-45 min'}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-auto pt-4 border-t border-black/5">
+                        <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-xl px-3 py-2 mb-3">
+                          <p className="text-[9px] font-black text-ven-yellow uppercase tracking-widest text-center">
+                            🚚 {store.coverageArea || 'CABA completa'}
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                            <MapPin size={12} className="text-ven-red" /> {store.location}
+                          </div>
+                          <ChevronRight size={20} className="text-venezuela-orange group-hover:translate-x-1 transition-all" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -251,27 +268,41 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
             {displayedStores.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 {displayedStores.map(store => (
-                  <div 
+                  <div
                     key={store.id}
                     onClick={() => onSelectStore(store)}
                     className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-2 cursor-pointer flex flex-col shadow-xl ${store.plan === 'premium' ? 'border-venezuela-orange/40 shadow-venezuela-orange/10' : 'border-black/5 hover:border-ven-yellow/40'}`}
                   >
                     <div className="aspect-video overflow-hidden relative">
-                        <img src={store.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40"></div>
-                        <div className="absolute top-2 left-2 flex flex-col gap-1">
-                          {store.plan === 'premium' && (
-                            <div className="bg-venezuela-orange text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase flex items-center gap-1 shadow-lg border border-white/20">
-                              <Zap size={8} fill="currentColor" /> Premium
-                            </div>
-                          )}
-                        </div>
+                      <img src={store.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40"></div>
+                      <div className="absolute top-2 left-2 flex flex-col gap-1">
+                        {store.plan === 'premium' && (
+                          <div className="bg-venezuela-orange text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase flex items-center gap-1 shadow-lg border border-white/20">
+                            <Zap size={8} fill="currentColor" /> Premium
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="p-5 flex-grow">
-                        <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-1 text-sm md:text-base group-hover:text-venezuela-orange transition-colors">{store.name}</h3>
+                    <div className="p-5 flex-grow flex flex-col">
+                      <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-2 text-sm md:text-base group-hover:text-venezuela-orange transition-colors">{store.name}</h3>
+
+                      {/* 🆕 INFO DE UBICACIÓN */}
+                      <div className="space-y-1.5 mb-3">
                         <div className="flex items-center gap-1.5 text-[9px] font-black text-gray-500 uppercase tracking-widest">
-                          <MapPin size={12} className="text-ven-red" /> {store.neighborhood}
+                          <MapPin size={10} className="text-ven-red shrink-0" /> {store.neighborhood}
                         </div>
+                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-500">
+                          <Clock size={10} className="text-ven-yellow shrink-0" /> {store.deliveryTime || '30-45 min'}
+                        </div>
+                      </div>
+
+                      {/* 🆕 BADGE DE COBERTURA */}
+                      <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-lg px-2 py-1.5 mb-auto">
+                        <p className="text-[8px] font-black text-ven-yellow uppercase tracking-widest text-center">
+                          🚚 {store.coverageArea || 'CABA'}
+                        </p>
+                      </div>
                     </div>
                     <div className="px-5 pb-5 mt-auto">
                       <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-venezuela-orange group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-venezuela-orange group-hover:text-white transition-all shadow-sm group-hover:shadow-lg">

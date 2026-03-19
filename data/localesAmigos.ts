@@ -1,4 +1,3 @@
-
 import { PartnerStore } from '../types';
 import { getImageUrl } from '../lib/supabase';
 
@@ -17,7 +16,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     type: 'comida',
     isPreparedFood: true,
     plan: 'premium',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-2',
@@ -33,7 +35,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     type: 'comida',
     isPreparedFood: true,
     plan: 'basic',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-3',
@@ -49,7 +54,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     type: 'comida',
     isPreparedFood: true,
     plan: 'premium',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-4',
@@ -65,7 +73,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     type: 'comida',
     isPreparedFood: true,
     plan: 'premium',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-5',
@@ -80,7 +91,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     tags: ['Market', 'Importados'],
     type: 'productos',
     plan: 'premium',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-6',
@@ -96,7 +110,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     type: 'comida',
     isPreparedFood: true,
     plan: 'basic',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-7',
@@ -111,7 +128,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     tags: ['Market', 'Importados'],
     type: 'productos',
     plan: 'basic',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-8',
@@ -126,7 +146,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     tags: ['Market', 'Víveres'],
     type: 'productos',
     plan: 'basic',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-9',
@@ -141,7 +164,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     tags: ['Market', 'Antojos'],
     type: 'productos',
     plan: 'basic',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-10',
@@ -157,7 +183,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     type: 'comida',
     isPreparedFood: true,
     plan: 'premium',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-11',
@@ -172,7 +201,10 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     tags: ['Market', 'Golosinas'],
     type: 'productos',
     plan: 'premium',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   },
   {
     id: 'real-12',
@@ -188,6 +220,9 @@ export const LOCALES_VENEZOLANOS: PartnerStore[] = [
     type: 'comida',
     isPreparedFood: true,
     plan: 'premium',
-    reviews: []
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'CABA completa',
+    deliveryRadius: 'Todo CABA'
   }
 ];
