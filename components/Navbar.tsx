@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, ChevronRight, ArrowLeft, Share2, Check } from 'lucide-react';
+import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, ChevronRight, ArrowLeft, Share2, Check, AlertCircle } from 'lucide-react';
 import { Product, User } from '../types';
 import { useNavigate } from 'react-router-dom';
 import { LOGO_ENCASA_IMAGE } from '../src/assets/imagenes';
@@ -8,7 +8,7 @@ interface NavbarProps {
   onNavHome: () => void;
   onNavLoyalty: () => void;
   points: number;
-  cart: {product: Product, qty: number}[];
+  cart: { product: Product, qty: number }[];
   onUpdateQty: (id: number, delta: number) => void;
   onRemoveItem: (id: number) => void;
   onFinalizePurchase: (total: number) => void;
@@ -20,6 +20,8 @@ interface NavbarProps {
   user: User | null;
   onLogout: () => void;
 }
+
+const MINIMUM_ORDER = 5999;
 
 const Navbar: React.FC<NavbarProps> = ({
   onNavHome, cart,
@@ -37,6 +39,8 @@ const Navbar: React.FC<NavbarProps> = ({
   const cartCount = cart.reduce((acc, curr) => acc + curr.qty, 0);
   const subtotal = cart.reduce((acc, curr) => acc + (curr.product.price * curr.qty), 0);
   const cartTotal = subtotal;
+  const remainingForMinimum = Math.max(0, MINIMUM_ORDER - cartTotal);
+  const meetsMinimum = cartTotal >= MINIMUM_ORDER;
 
   useEffect(() => {
     if (cartCount === 0) return;
@@ -46,6 +50,9 @@ const Navbar: React.FC<NavbarProps> = ({
   }, [cartCount]);
 
   const finalizeOrder = () => {
+    if (!meetsMinimum) {
+      return;
+    }
     setIsCartOpen(false);
     navigate('/checkout');
   };
@@ -72,7 +79,7 @@ const Navbar: React.FC<NavbarProps> = ({
     <>
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/5 py-5 px-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          
+
           {/* LOGO + BRAND */}
           <div
             onClick={() => { onNavHome(); closeMenus(); }}
@@ -94,7 +101,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden lg:flex items-center gap-10">
             <button onClick={onNavHome} className="text-[11px] font-black uppercase tracking-[0.2em] text-venezuela-brown hover:text-ven-yellow transition-colors border-b-2 border-transparent hover:border-ven-yellow pb-1">Inicio</button>
             <button onClick={() => navigate('/partners')} className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-600 hover:text-venezuela-brown transition-colors border-b-2 border-transparent hover:border-venezuela-brown pb-1">Locales</button>
-            <button 
+            <button
               onClick={() => {
                 if (window.location.hash === '#/') {
                   document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
@@ -104,7 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
                   }, 100);
                 }
-              }} 
+              }}
               className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-600 hover:text-venezuela-brown transition-colors border-b-2 border-transparent hover:border-venezuela-brown pb-1"
             >
               Cómo Comprar
@@ -118,7 +125,7 @@ const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <div className="relative">
-              <button 
+              <button
                 onClick={handleShare}
                 className="p-3 bg-venezuela-dark border-2 border-black/5 rounded-2xl text-venezuela-brown hover:border-ven-yellow transition-all flex items-center gap-2 group"
                 title="Compartir link"
@@ -146,8 +153,8 @@ const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <div className="flex items-center gap-3">
-              <button 
-                onClick={() => user ? onLogout() : navigate('/auth')} 
+              <button
+                onClick={() => user ? onLogout() : navigate('/auth')}
                 className="flex items-center gap-3 bg-venezuela-dark px-5 py-3 rounded-2xl border-2 border-black/5 hover:border-ven-yellow transition-all shadow-sm group"
               >
                 <UserCircle size={22} className={user ? "text-ven-yellow" : "text-gray-600 group-hover:text-ven-yellow transition-colors"} />
@@ -179,7 +186,7 @@ const Navbar: React.FC<NavbarProps> = ({
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-3 bg-black/5 border border-black/10 rounded-xl text-venezuela-brown">
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            <button 
+            <button
               onClick={handleShare}
               className="p-3 bg-ven-yellow/10 border border-ven-yellow/20 rounded-xl text-ven-yellow active:scale-90 transition-all"
             >
@@ -202,7 +209,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <span className="text-3xl font-black uppercase tracking-tighter text-venezuela-brown">Locales</span>
               <span className="text-2xl">📦</span>
             </button>
-            <button 
+            <button
               onClick={() => {
                 closeMenus();
                 if (window.location.hash === '#/') {
@@ -213,7 +220,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
                   }, 100);
                 }
-              }} 
+              }}
               className="w-full text-left py-5 border-b border-black/10 flex items-center justify-between group active:scale-[0.98] transition-all"
             >
               <span className="text-3xl font-black uppercase tracking-tighter text-venezuela-brown">Cómo Comprar</span>
@@ -263,7 +270,7 @@ const Navbar: React.FC<NavbarProps> = ({
               </button>
 
               {user && (
-                <button 
+                <button
                   onClick={() => { onLogout(); closeMenus(); }}
                   className="w-full py-5 rounded-[28px] border border-red-500/30 text-red-500 font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500/10 transition-all"
                 >
@@ -279,10 +286,10 @@ const Navbar: React.FC<NavbarProps> = ({
       {isCartOpen && (
         <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-md flex justify-end">
           <div className="w-full max-w-md bg-venezuela-dark border-l border-black/5 flex flex-col shadow-2xl animate-in slide-in-from-right duration-500">
-            {/* Header Rediseñado */}
+            {/* Header */}
             <div className="p-8 border-b border-black/5 flex items-center gap-4 bg-black/5">
-              <button 
-                onClick={() => setIsCartOpen(false)} 
+              <button
+                onClick={() => setIsCartOpen(false)}
                 className="p-3 bg-black/5 hover:bg-black/10 rounded-2xl transition-all text-venezuela-brown active:scale-90 flex items-center justify-center"
                 title="Volver"
               >
@@ -294,6 +301,17 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
               <button onClick={() => setIsCartOpen(false)} className="p-3 bg-black/5 hover:bg-black/10 rounded-2xl transition-all text-venezuela-brown active:scale-90"><X size={20} /></button>
             </div>
+
+            {/* Mensaje de Monto Mínimo */}
+            {cart.length > 0 && !meetsMinimum && (
+              <div className="mx-6 mt-6 p-4 bg-ven-yellow/10 border-2 border-ven-yellow/30 rounded-2xl flex items-start gap-3">
+                <AlertCircle size={20} className="text-ven-yellow shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-black text-ven-yellow uppercase tracking-tight">Monto mínimo: ${MINIMUM_ORDER}</p>
+                  <p className="text-[10px] text-gray-600 font-medium mt-1">Te faltan <span className="font-black text-ven-yellow">${remainingForMinimum}</span> para completar tu pedido</p>
+                </div>
+              </div>
+            )}
 
             <div className="flex-grow overflow-y-auto p-6 space-y-8 scroll-smooth scrollbar-thin">
               {cart.length === 0 ? (
@@ -319,8 +337,8 @@ const Navbar: React.FC<NavbarProps> = ({
                               <button onClick={() => onUpdateQty(item.product.id, 1)} className="w-8 h-8 flex items-center justify-center hover:bg-ven-yellow hover:text-ven-blue rounded-lg text-venezuela-brown transition-all"><Plus size={12} /></button>
                             </div>
                             <div className="flex items-center gap-3">
-                               <span className="text-sm font-black text-ven-yellow">${item.product.price * item.qty}</span>
-                               <button onClick={() => onRemoveItem(item.product.id)} className="p-2 text-gray-400 hover:text-ven-red transition-all"><Trash2 size={16} /></button>
+                              <span className="text-sm font-black text-ven-yellow">${item.product.price * item.qty}</span>
+                              <button onClick={() => onRemoveItem(item.product.id)} className="p-2 text-gray-400 hover:text-ven-red transition-all"><Trash2 size={16} /></button>
                             </div>
                           </div>
                         </div>
@@ -336,7 +354,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         { id: 'Efectivo', icon: <Banknote size={24} />, desc: 'Contra entrega' },
                         { id: 'Transferencia', icon: <Wallet size={24} />, desc: 'Vía CBU/Alias' }
                       ].map(method => (
-                        <button 
+                        <button
                           key={method.id}
                           onClick={() => setPaymentMethod(method.id as 'Efectivo' | 'Transferencia')}
                           className={`flex flex-col items-center gap-2.5 p-5 rounded-[32px] border-2 transition-all relative overflow-hidden active:scale-95 ${paymentMethod === method.id ? 'bg-ven-yellow/10 border-ven-yellow text-venezuela-brown shadow-[0_0_20px_rgba(255,204,0,0.1)]' : 'bg-black/5 border-transparent text-gray-400 opacity-60'}`}
@@ -360,9 +378,14 @@ const Navbar: React.FC<NavbarProps> = ({
                 <div className="flex justify-between items-end mb-4 relative z-10">
                   <div>
                     <div className="flex items-center gap-2 mb-0.5">
-                       <p className="text-[9px] text-gray-600 font-black uppercase tracking-[0.2em]">Total a Pagar</p>
+                      <p className="text-[9px] text-gray-600 font-black uppercase tracking-[0.2em]">Total a Pagar</p>
                     </div>
                     <p className="text-3xl font-black text-venezuela-brown tracking-tighter leading-none">${cartTotal}</p>
+                    {!meetsMinimum && (
+                      <p className="text-[10px] text-ven-yellow font-black uppercase tracking-tight mt-1">
+                        Faltan ${remainingForMinimum}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -370,22 +393,28 @@ const Navbar: React.FC<NavbarProps> = ({
                   La disponibilidad se confirma al momento del pedido con el local.
                 </p>
 
-                <button 
+                <button
                   onClick={finalizeOrder}
-                  className="w-full bg-gradient-to-r from-[#FFCC00] to-[#F58220] hover:scale-[1.01] py-4.5 rounded-[28px] font-black text-sm tracking-[0.05em] shadow-[0_10px_30px_rgba(255,204,0,0.25)] flex items-center justify-center gap-3 active:scale-[0.98] transition-all text-white relative overflow-hidden group"
+                  disabled={!meetsMinimum}
+                  className={`w-full py-4.5 rounded-[28px] font-black text-sm tracking-[0.05em] flex items-center justify-center gap-3 transition-all text-white relative overflow-hidden group ${meetsMinimum
+                      ? 'bg-gradient-to-r from-[#FFCC00] to-[#F58220] hover:scale-[1.01] shadow-[0_10px_30px_rgba(255,204,0,0.25)] active:scale-[0.98]'
+                      : 'bg-gray-400 cursor-not-allowed opacity-50'
+                    }`}
                 >
-                  <span className="uppercase z-10">Finalizar Pedido</span>
-                  <ExternalLink size={18} className="z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                  <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                  <span className="uppercase z-10">
+                    {meetsMinimum ? 'Finalizar Pedido' : `Mínimo $${MINIMUM_ORDER}`}
+                  </span>
+                  {meetsMinimum && <ExternalLink size={18} className="z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
+                  {meetsMinimum && <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>}
                 </button>
-                
+
                 <p className="text-center mt-4 text-[8px] text-gray-600 font-black uppercase tracking-[0.3em] opacity-40">Seguro vía WhatsApp 🇻🇪</p>
               </div>
             )}
           </div>
         </div>
       )}
-      
+
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
