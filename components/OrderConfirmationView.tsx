@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, Sparkles, ShoppingBag, Zap, MessageSquare } from 'lucide-react';
+import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, Sparkles, ShoppingBag, Zap, MessageSquare, AlertCircle } from 'lucide-react';
 import { Product, PartnerStore, User as UserType } from '../types';
 import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
 import { supabase } from '../lib/supabase';
@@ -13,6 +13,7 @@ interface OrderConfirmationViewProps {
 }
 
 const WHATSAPP_NUMBER = '5491134552996';
+const MINIMUM_ORDER = 5999;
 
 const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   cart, user, onFinalizePurchase, onClearCart
@@ -35,6 +36,8 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
 
   const subtotal = useMemo(() => cart.reduce((acc, curr) => acc + (curr.product.price * curr.qty), 0), [cart]);
   const total = subtotal + tipAmount;
+  const meetsMinimum = subtotal >= MINIMUM_ORDER;
+  const remainingForMinimum = Math.max(0, MINIMUM_ORDER - subtotal);
 
   const { isMultiStore, store, uniqueStoreIds, hasInvalidItems } = useMemo(() => {
     const storeIds = cart.map(i => i.product.storeId).filter(Boolean) as string[];
@@ -109,6 +112,11 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
 
     if (!formData.name || !formData.phone || !formData.address) {
       alert("Por favor completa los campos requeridos.");
+      return;
+    }
+
+    if (!meetsMinimum) {
+      alert(`El monto mínimo de compra es $${MINIMUM_ORDER}. Te faltan $${remainingForMinimum}.`);
       return;
     }
 
@@ -221,6 +229,28 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
             Formulario de Envío EnCasa 🇻🇪
           </p>
         </div>
+
+        {/* Alerta de Monto Mínimo */}
+        {!meetsMinimum && (
+          <div className="mb-6 p-5 bg-ven-yellow/10 border-2 border-ven-yellow/30 rounded-[24px] flex items-start gap-4">
+            <AlertCircle size={24} className="text-ven-yellow shrink-0 mt-1" />
+            <div>
+              <p className="text-sm font-black text-ven-yellow uppercase tracking-tight mb-2">
+                ⚠️ Monto mínimo de compra: ${MINIMUM_ORDER}
+              </p>
+              <p className="text-xs text-gray-600 font-medium leading-relaxed">
+                Tu pedido actual es de <span className="font-black text-venezuela-brown">${subtotal}</span>.
+                Te faltan <span className="font-black text-ven-yellow">${remainingForMinimum}</span> para alcanzar el monto mínimo.
+              </p>
+              <button
+                onClick={() => navigate('/catalog')}
+                className="mt-3 text-[10px] font-black text-ven-yellow uppercase tracking-widest hover:underline"
+              >
+                ← Agregar más productos
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="space-y-6">
           {/* Formulario */}
@@ -365,7 +395,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
             </div>
           </div>
 
-          {/* Resumen Final - Diseño Premium */}
+          {/* Resumen Final */}
           <div className="bg-gradient-to-br from-white to-gray-50 rounded-[32px] border-2 border-ven-yellow/20 p-8 space-y-6 shadow-2xl shadow-yellow-500/10">
             <div className="flex justify-between items-center pb-4">
               <span className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">Subtotal</span>
@@ -382,18 +412,35 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                 <div>
                   <p className="text-xs text-gray-500 font-black uppercase tracking-[0.3em] mb-2">Total a Pagar</p>
                   <p className="text-5xl md:text-6xl font-black text-venezuela-brown tracking-tighter leading-none">${total}</p>
+                  {!meetsMinimum && (
+                    <p className="text-sm font-black text-ven-yellow uppercase tracking-tight mt-3">
+                      Faltan ${remainingForMinimum} para el mínimo
+                    </p>
+                  )}
                 </div>
               </div>
 
               <button
                 onClick={handleConfirmOrder}
-                disabled={isSubmitting || isMultiStore || hasInvalidItems}
-                className="w-full bg-gradient-to-r from-ven-yellow via-venezuela-orange to-ven-yellow bg-[length:200%_100%] bg-[position:0%_0%] hover:bg-[position:100%_0%] text-white px-8 py-6 rounded-[24px] font-black uppercase text-base md:text-lg tracking-widest shadow-2xl shadow-yellow-500/40 hover:shadow-yellow-500/60 hover:scale-[1.02] active:scale-95 transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale group relative overflow-hidden"
+                disabled={isSubmitting || isMultiStore || hasInvalidItems || !meetsMinimum}
+                className={`w-full px-8 py-6 rounded-[24px] font-black uppercase text-base md:text-lg tracking-widest shadow-2xl hover:scale-[1.02] active:scale-95 transition-all duration-300 flex items-center justify-center gap-3 group relative overflow-hidden ${(isSubmitting || isMultiStore || hasInvalidItems || !meetsMinimum)
+                    ? 'bg-gray-400 cursor-not-allowed opacity-50 text-white'
+                    : 'bg-gradient-to-r from-ven-yellow via-venezuela-orange to-ven-yellow bg-[length:200%_100%] bg-[position:0%_0%] hover:bg-[position:100%_0%] text-white shadow-yellow-500/40 hover:shadow-yellow-500/60'
+                  }`}
               >
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                {!(isSubmitting || isMultiStore || hasInvalidItems || !meetsMinimum) && (
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                )}
                 <Send size={24} className="relative z-10 group-hover:rotate-12 transition-transform" />
                 <span className="relative z-10">
-                  {isSubmitting ? 'Procesando...' : (isMultiStore || hasInvalidItems) ? 'Corregir Carrito' : 'Confirmar vía WhatsApp'}
+                  {isSubmitting
+                    ? 'Procesando...'
+                    : (isMultiStore || hasInvalidItems)
+                      ? 'Corregir Carrito'
+                      : !meetsMinimum
+                        ? `Mínimo $${MINIMUM_ORDER}`
+                        : 'Confirmar vía WhatsApp'
+                  }
                 </span>
               </button>
 
