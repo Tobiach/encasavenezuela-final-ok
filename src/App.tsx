@@ -10,7 +10,7 @@ import Testimonials from '../components/Testimonials';
 import PartnerStores from '../components/PartnerStores';
 import Footer from '../components/Footer';
 import CatalogView from '../components/CatalogView';
-import { allProducts } from '../data/catalogData';
+import { useProducts } from '../lib/hooks/useProducts';
 import LoyaltyView from '../components/LoyaltyView';
 import HowItWorks from '../components/HowItWorks';
 import Faq from '../components/Faq';
@@ -95,6 +95,7 @@ const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { stores } = useStores();
+  const { allProducts } = useProducts();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 

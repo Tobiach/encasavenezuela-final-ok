@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { categories } from '../data/catalogData';
+import { categories } from '../lib/hooks/useProducts';
 
 const CategoriesNew: React.FC = () => {
   const navigate = useNavigate();

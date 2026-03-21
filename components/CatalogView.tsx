@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
 import ProductDetailView from './ProductDetailView';
-import { allProducts } from '../data/catalogData';
+import { useProducts } from '../lib/hooks/useProducts';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 
@@ -31,6 +31,7 @@ interface CatalogViewProps {
 const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selectedStore, onSelectStore }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { allProducts } = useProducts();
   const [category, setCategory] = useState(location.state?.category || 'Todos');
   const [searchTerm, setSearchTerm] = useState('');
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
@@ -85,7 +86,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
       if (a.plan !== 'premium' && b.plan === 'premium') return 1;
       return 0;
     });
-  }, [stores, searchTerm, category]);
+  }, [stores, searchTerm, category, allProducts]);
 
   const premiumStores = useMemo(() => {
     return stores.filter(s => s.plan === 'premium');
@@ -110,7 +111,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
 
       return matchesCat && matchesSearch && matchesStore;
     });
-  }, [category, searchTerm, selectedStore]);
+  }, [category, searchTerm, selectedStore, allProducts]);
 
   const categories = ['Todos', 'Harinas', 'Lácteos', 'Congelados', 'Bebidas', 'Chucherías', 'Salsas', 'Almacén'];
 

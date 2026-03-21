@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { categories } from '../data/catalogData';
+import { categories } from '../lib/hooks/useProducts';
 
 interface CategoriesProps {
   onCategorySelect: () => void;

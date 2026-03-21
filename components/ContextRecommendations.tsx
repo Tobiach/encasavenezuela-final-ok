@@ -3,7 +3,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Coffee, Sun, Moon, Sparkles, Plus, UtensilsCrossed, Store } from 'lucide-react';
 import { Product } from '../types';
 import { useStores } from '../lib/hooks/useStores';
-import { allProducts } from '../data/catalogData';
+import { useProducts } from '../lib/hooks/useProducts';
 
 interface ContextRecommendationsProps {
   onAddToCart: (p: Product, storeId?: string) => void;
@@ -11,6 +11,7 @@ interface ContextRecommendationsProps {
 
 const ContextRecommendations: React.FC<ContextRecommendationsProps> = ({ onAddToCart }) => {
   const { stores } = useStores();
+  const { allProducts } = useProducts();
   const [rotationIndex, setRotationIndex] = useState(0);
 
   useEffect(() => {
@@ -72,7 +73,7 @@ const ContextRecommendations: React.FC<ContextRecommendationsProps> = ({ onAddTo
       icon: <Moon className="text-ven-blue" />,
       items: selectedItems
     };
-  }, [currentStore]);
+  }, [currentStore, allProducts]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">

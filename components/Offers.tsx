@@ -1,13 +1,14 @@
 import React from 'react';
 import { Tag, ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { allProducts, promoCombos } from '../data/catalogData';
+import { useProducts } from '../lib/hooks/useProducts';
 import { useStores } from '../lib/hooks/useStores';
 import { Product } from '../types';
 
 const Offers: React.FC = () => {
   const navigate = useNavigate();
   const { stores } = useStores();
+  const { allProducts, promoCombos } = useProducts();
   
   const offerProducts = allProducts.slice(0, 4).map((p: Product) => ({
     ...p,

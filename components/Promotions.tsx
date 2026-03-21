@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Zap, Plus, Flame, Store, Clock } from 'lucide-react';
 import { Product } from '../types';
 import { useStores } from '../lib/hooks/useStores';
-import { promoCombos } from '../data/catalogData';
+import { useProducts } from '../lib/hooks/useProducts';
 
 interface PromotionsProps {
   onAddToCart: (product: Product, storeId?: string) => void;
@@ -13,6 +13,7 @@ interface PromotionsProps {
 const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
   const navigate = useNavigate();
   const { stores } = useStores();
+  const { promoCombos } = useProducts();
 
   return (
     <section className="py-12 bg-venezuela-dark">
