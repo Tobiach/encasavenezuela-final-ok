@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Zap, Plus, Trophy, PackageCheck, Store, ArrowRight } from 'lucide-react';
 import { Product, Reward, PartnerStore } from '../types';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
+import { useStores } from '../lib/hooks/useStores';
 
 const allProducts: Product[] = [
   { 
@@ -140,11 +140,12 @@ interface PromotionDetailViewProps {
 const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, onAddToCart, onSelectStore, showLoyalty = true }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { stores } = useStores();
   const combo = allProducts.find(p => p.id === Number(id));
 
   if (!combo) return null;
 
-  const store = LOCALES_VENEZOLANOS.find(s => s.id === combo.storeId);
+  const store = stores.find(s => s.id === combo.storeId);
   const comboItems = comboDefinitions[combo.id] || [];
   const pointsEarned = Math.floor(combo.price / 10000);
   const nextReward = [...rewards].find(r => r.pointsCost > userPoints) || rewards[0];

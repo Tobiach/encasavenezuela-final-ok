@@ -2,11 +2,12 @@ import React from 'react';
 import { Tag, ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { allProducts, promoCombos } from '../data/catalogData';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
+import { useStores } from '../lib/hooks/useStores';
 import { Product } from '../types';
 
 const Offers: React.FC = () => {
   const navigate = useNavigate();
+  const { stores } = useStores();
   
   const offerProducts = allProducts.slice(0, 4).map((p: Product) => ({
     ...p,
@@ -102,7 +103,7 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
           <div className="flex overflow-x-hidden no-scrollbar">
             <div className="flex gap-8 animate-marquee-reverse whitespace-nowrap py-6">
               {doublePromos.map((promo, idx) => {
-                const store = LOCALES_VENEZOLANOS.find(s => s.id === promo.storeId);
+                const store = stores.find(s => s.id === promo.storeId);
                 const discountPercent = promo.oldPrice ? Math.round(((promo.oldPrice - promo.price) / promo.oldPrice) * 100) : 15;
 
                 return (

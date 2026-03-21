@@ -11,7 +11,6 @@ import {
   MapPin,
 } from "lucide-react";
 import { Product, PartnerStore } from "../types";
-import { LOCALES_VENEZOLANOS } from "../data/localesAmigos";
 import { askGeminiWorker, WorkerChatMessage } from "../data/lib/geminiWorker";
 
 interface Message {
@@ -24,6 +23,7 @@ interface Message {
 interface ProductAIChatProps {
   product?: Product; // Opcional para modo chat global
   allProducts: Product[];
+  stores: PartnerStore[];
   cart: { product: Product; qty: number }[];
   onClose: () => void;
   onAddToCart: (p: Product, storeId?: string) => void;
@@ -34,6 +34,7 @@ interface ProductAIChatProps {
 const ProductAIChat: React.FC<ProductAIChatProps> = ({
   product,
   allProducts,
+  stores,
   cart,
   onClose,
   onAddToCart,
@@ -49,7 +50,7 @@ const ProductAIChat: React.FC<ProductAIChatProps> = ({
   const [addedItems, setAddedItems] = useState<Record<number, boolean>>({});
 
   const scrollRef = useRef<HTMLDivElement>(null);
-  const currentStore = LOCALES_VENEZOLANOS.find((s) => s.id === storeId);
+  const currentStore = stores.find((s) => s.id === storeId);
 
   // Filtrar productos por local para el contexto de la IA
   const localProducts = storeId
@@ -69,7 +70,7 @@ REGLAS DE CONVERSACIÓN (CRÍTICAS):
 7. COMPRA WEB: Incentivá la compra online. Di que abajo aparecen las opciones para agregar directo al carrito.
 
 DATOS DISPONIBLES:
-- Locales: ${LOCALES_VENEZOLANOS.map((s) => `${s.name} en ${s.neighborhood}`).join(", ")}
+- Locales: ${stores.map((s) => `${s.name} en ${s.neighborhood}`).join(", ")}
 - Productos del local actual: ${localProducts.map((p) => p.name).join(", ")}
 - Todos los productos del sistema: ${allProducts.map((p) => p.name).join(", ")}`;
 
@@ -88,7 +89,7 @@ DATOS DISPONIBLES:
   ): { cleanText: string; products: Product[]; stores: PartnerStore[] } => {
     let cleanText = text;
     const products: Product[] = [];
-    const stores: PartnerStore[] = [];
+    const suggestedStores: PartnerStore[] = [];
 
     // Parse Products
     const productMatch = text.match(/\[LLEVAR:\s*(.*?)\]/);
@@ -119,15 +120,15 @@ DATOS DISPONIBLES:
       const storeNames = storeMatch[1]
         .split(",")
         .map((n) => n.trim().toLowerCase());
-      const foundStores = LOCALES_VENEZOLANOS.filter((s) =>
+      const foundStores = stores.filter((s) =>
         storeNames.some((name) => s.name.toLowerCase().includes(name))
       ).slice(0, 2);
 
-      stores.push(...foundStores);
+      suggestedStores.push(...foundStores);
       cleanText = cleanText.replace(/\[LOCAL:.*?\]/g, "").trim();
     }
 
-    return { cleanText, products, stores };
+    return { cleanText, products, stores: suggestedStores };
   };
 
   // Saludo inicial (sin SDK, todo por Worker)

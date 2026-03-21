@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
 import ProductDetailView from './ProductDetailView';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
 import { allProducts } from '../data/catalogData';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -23,12 +22,13 @@ const categoryIcons: Record<string, React.ElementType> = {
 };
 
 interface CatalogViewProps {
+  stores: PartnerStore[];
   onAddToCart: (product: Product, storeId?: string) => void;
   selectedStore: PartnerStore | null;
   onSelectStore: (store: PartnerStore | null) => void;
 }
 
-const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, onSelectStore }) => {
+const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selectedStore, onSelectStore }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [category, setCategory] = useState(location.state?.category || 'Todos');
@@ -45,7 +45,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
   // Filtrado de Locales por Producto (Marketplace Inteligente)
   const displayedStores = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    let baseStores = LOCALES_VENEZOLANOS;
+    let baseStores = stores;
 
     // 1. Filtrar por Categoría (si viene de la navegación de categorías)
     if (category !== 'Todos') {
@@ -85,11 +85,11 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
       if (a.plan !== 'premium' && b.plan === 'premium') return 1;
       return 0;
     });
-  }, [searchTerm, category]);
+  }, [stores, searchTerm, category]);
 
   const premiumStores = useMemo(() => {
-    return LOCALES_VENEZOLANOS.filter(s => s.plan === 'premium');
-  }, []);
+    return stores.filter(s => s.plan === 'premium');
+  }, [stores]);
 
   const filteredProducts = useMemo(() => {
     return allProducts.filter(p => {
@@ -120,6 +120,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ onAddToCart, selectedStore, o
         <ProductDetailView
           product={viewingProduct}
           allProducts={allProducts}
+          stores={stores}
           onClose={() => setViewingProduct(null)}
           onAddToCart={onAddToCart}
           onSelectStore={(s) => {

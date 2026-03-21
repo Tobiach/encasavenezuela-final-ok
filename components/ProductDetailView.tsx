@@ -2,11 +2,11 @@
 import React, { useState, useMemo } from 'react';
 import { X, ShoppingCart, Plus, Minus, Check, ChefHat, MapPin, Sparkles } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
 
 interface ProductDetailViewProps {
   product: Product;
   allProducts: Product[];
+  stores: PartnerStore[];
   onClose: () => void;
   onAddToCart: (p: Product, storeId?: string) => void;
   onSelectStore: (store: PartnerStore) => void;
@@ -15,6 +15,7 @@ interface ProductDetailViewProps {
 
 const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   product,
+  stores,
   onClose,
   onAddToCart,
   onSelectStore,
@@ -24,13 +25,13 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const [qty, setQty] = useState(1);
 
   const currentStore = useMemo(
-    () => LOCALES_VENEZOLANOS.find((s) => s.id === storeId),
-    [storeId]
+    () => stores.find((s) => s.id === storeId),
+    [stores, storeId]
   );
 
   const availableStores = useMemo(
-    () => LOCALES_VENEZOLANOS.filter((s) => product.availableInStoreIds?.includes(s.id)),
-    [product]
+    () => stores.filter((s) => product.availableInStoreIds?.includes(s.id)),
+    [stores, product]
   );
 
   return (

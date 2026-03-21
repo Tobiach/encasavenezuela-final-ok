@@ -28,10 +28,8 @@ import AIAssistantButton from '../components/AIAssistantButton';
 import ProductAIChat from '../components/ProductAIChat'; // El componente de chat
 import OrderConfirmationView from '../components/OrderConfirmationView';
 import { PartnerStore, Product, PurchaseHistoryItem, User, UserRole } from '../types';
-import { 
-  LOCALES_VENEZOLANOS 
-} from '../data/localesAmigos';
 import { supabase } from '../lib/supabase';
+import { useStores } from '../lib/hooks/useStores';
 
 // FEATURE FLAGS ESTRATÉGICAS
 const FEATURE_LOYALTY = false;
@@ -58,15 +56,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, user }) => {
   return <>{children}</>;
 };
 
-const CartStoreBadge: React.FC<{ 
-  cart: { product: Product; qty: number }[]; 
+const CartStoreBadge: React.FC<{
+  cart: { product: Product; qty: number }[];
+  stores: PartnerStore[];
   onSelectStore: (store: PartnerStore | null) => void;
-}> = ({ cart, onSelectStore }) => {
+}> = ({ cart, stores, onSelectStore }) => {
   const location = useLocation();
   if (cart.length === 0) return null;
 
   const storeId = cart[0].product.storeId;
-  const store = LOCALES_VENEZOLANOS.find(s => s.id === storeId);
+  const store = stores.find(s => s.id === storeId);
   const storeName = store ? store.name : (storeId ? "local no encontrado" : "sin local");
 
   // Solo mostramos el mensaje completo en secciones de compra directa
@@ -95,6 +94,7 @@ const CartStoreBadge: React.FC<{
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { stores } = useStores();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -384,8 +384,8 @@ const handlePurchase = (total: number) => {
     const currentStoreId = cart.length > 0 ? cart[0].product.storeId : null;
     
     if (currentStoreId && currentStoreId !== finalStoreId) {
-      const newStore = LOCALES_VENEZOLANOS.find(s => s.id === finalStoreId);
-      const currentStore = LOCALES_VENEZOLANOS.find(s => s.id === currentStoreId);
+      const newStore = stores.find(s => s.id === finalStoreId);
+      const currentStore = stores.find(s => s.id === currentStoreId);
       
       setStoreChangeConfirm({
         newStore: newStore || ({ name: 'este local' } as unknown as PartnerStore),
@@ -410,7 +410,7 @@ const handlePurchase = (total: number) => {
 
     const currentStoreId = cart.length > 0 ? cart[0].product.storeId : null;
     if (currentStoreId && currentStoreId !== store.id) {
-      const currentStore = LOCALES_VENEZOLANOS.find(s => s.id === currentStoreId);
+      const currentStore = stores.find(s => s.id === currentStoreId);
       setStoreChangeConfirm({
         newStore: store,
         currentStoreName: currentStore?.name || 'otro local',
@@ -467,7 +467,7 @@ const handlePurchase = (total: number) => {
         onLogout={handleLogout}
       />
 
-      <CartStoreBadge cart={cart} onSelectStore={handleSelectStore} />
+      <CartStoreBadge cart={cart} stores={stores} onSelectStore={handleSelectStore} />
       
       <PurchaseNotification realEarned={showRealNotification ? lastEarned : undefined} />
       
@@ -481,10 +481,11 @@ const handlePurchase = (total: number) => {
             <Offers />
             <ContextRecommendations onAddToCart={handleAddToCart} />
             <div id="partner-stores">
-              <PartnerStores 
-                onViewAll={() => navigate('/partners')} 
-                onOpenMap={handleSelectStore} 
-                limit={2} 
+              <PartnerStores
+                stores={stores}
+                onViewAll={() => navigate('/partners')}
+                onOpenMap={handleSelectStore}
+                limit={2}
               />
             </div>
             <Features />
@@ -496,8 +497,9 @@ const handlePurchase = (total: number) => {
         } />
         
         <Route path="/catalog" element={
-          <CatalogView 
-            onAddToCart={handleAddToCart} 
+          <CatalogView
+            stores={stores}
+            onAddToCart={handleAddToCart}
             selectedStore={selectedStore}
             onSelectStore={handleSelectStore}
           />
@@ -509,11 +511,11 @@ const handlePurchase = (total: number) => {
         <Route path="/gifts" element={<GiftsView onAddToCart={handleAddToCart} />} />
         
         {/* MODIFICADO: Checkout accesible sin login */}
-        <Route path="/checkout" element={<OrderConfirmationView cart={cart} user={user} onFinalizePurchase={handlePurchase} onClearCart={() => setCart([])} />} />
+        <Route path="/checkout" element={<OrderConfirmationView stores={stores} cart={cart} user={user} onFinalizePurchase={handlePurchase} onClearCart={() => setCart([])} />} />
         
         <Route path="/radar" element={FEATURE_RADAR ? <ProtectedRoute user={user}><RadarDashboardView user={user!} /></ProtectedRoute> : <Navigate to="/" />} />
         <Route path="/promotion/:id" element={<PromotionDetailView userPoints={userPoints} onAddToCart={handleAddToCart} onSelectStore={handleSelectStore} showLoyalty={FEATURE_LOYALTY} />} />
-        <Route path="/partners" element={<PartnerStores onOpenMap={(s) => {handleSelectStore(s); navigate('/catalog');}} isFullView={true} />} />
+        <Route path="/partners" element={<PartnerStores stores={stores} onOpenMap={(s) => {handleSelectStore(s); navigate('/catalog');}} isFullView={true} />} />
         <Route path="/map" element={selectedStore ? <StoreMapView store={selectedStore} /> : null} />
       </Routes>
       
@@ -553,23 +555,24 @@ const handlePurchase = (total: number) => {
       
       {/* Lógica de Chat Global */}
       {isAIChatOpen && (
-        <ProductAIChat 
-          allProducts={allProducts} 
+        <ProductAIChat
+          allProducts={allProducts}
+          stores={stores}
           cart={cart}
-          onClose={() => setIsAIChatOpen(false)} 
+          onClose={() => setIsAIChatOpen(false)}
           onAddToCart={handleAddToCart}
           storeId={selectedStore?.id}
-          onOpenMap={(s) => { 
-            setSelectedStore(s); 
-            navigate('/catalog'); 
-            setIsAIChatOpen(false); 
+          onOpenMap={(s) => {
+            setSelectedStore(s);
+            navigate('/catalog');
+            setIsAIChatOpen(false);
           }}
         />
       )}
 
       <div className="fixed bottom-10 right-10 z-[100] flex flex-col gap-4 items-end">
         {!isCartOpen && !['/checkout', '/repeat'].includes(location.pathname) && (
-          <WhatsAppButton cart={cart} user={user} />
+          <WhatsAppButton stores={stores} cart={cart} user={user} />
         )}
         <AIAssistantButton onClick={() => setIsAIChatOpen(true)} />
       </div>

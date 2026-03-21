@@ -2,7 +2,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Coffee, Sun, Moon, Sparkles, Plus, UtensilsCrossed, Store } from 'lucide-react';
 import { Product } from '../types';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
+import { useStores } from '../lib/hooks/useStores';
 import { allProducts } from '../data/catalogData';
 
 interface ContextRecommendationsProps {
@@ -10,23 +10,25 @@ interface ContextRecommendationsProps {
 }
 
 const ContextRecommendations: React.FC<ContextRecommendationsProps> = ({ onAddToCart }) => {
+  const { stores } = useStores();
   const [rotationIndex, setRotationIndex] = useState(0);
 
   useEffect(() => {
+    if (stores.length === 0) return;
     // Rotación cada 15 minutos basada en la hora actual
     const updateRotation = () => {
       const now = new Date();
       const minutesSinceEpoch = Math.floor(now.getTime() / (1000 * 60));
       const intervalIndex = Math.floor(minutesSinceEpoch / 15);
-      setRotationIndex(intervalIndex % LOCALES_VENEZOLANOS.length);
+      setRotationIndex(intervalIndex % stores.length);
     };
 
     updateRotation();
     const interval = setInterval(updateRotation, 60000); // Revisar cada minuto
     return () => clearInterval(interval);
-  }, []);
+  }, [stores.length]);
 
-  const currentStore = LOCALES_VENEZOLANOS[rotationIndex];
+  const currentStore = stores[rotationIndex];
 
   const context = useMemo(() => {
     const hour = new Date().getHours();

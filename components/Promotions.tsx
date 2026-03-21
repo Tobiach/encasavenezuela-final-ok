@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Zap, Plus, Flame, Store, Clock } from 'lucide-react';
 import { Product } from '../types';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
+import { useStores } from '../lib/hooks/useStores';
 import { promoCombos } from '../data/catalogData';
 
 interface PromotionsProps {
@@ -12,6 +12,7 @@ interface PromotionsProps {
 
 const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
   const navigate = useNavigate();
+  const { stores } = useStores();
 
   return (
     <section className="py-12 bg-venezuela-dark">
@@ -29,7 +30,7 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
 
         <div className="flex overflow-x-auto no-scrollbar md:grid md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto pb-8 -mx-6 px-6 md:pb-0 md:mx-auto md:px-0">
           {promoCombos.map(combo => {
-            const store = LOCALES_VENEZOLANOS.find(s => s.id === combo.storeId);
+            const store = stores.find(s => s.id === combo.storeId);
             const savings = combo.oldPrice ? combo.oldPrice - combo.price : 0;
             const savingsPercent = combo.oldPrice ? Math.round((savings / combo.oldPrice) * 100) : 0;
 

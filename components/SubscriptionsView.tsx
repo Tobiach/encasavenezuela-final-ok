@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Zap, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
+import { useStores } from '../lib/hooks/useStores';
 
 const plans = [
   {
@@ -36,6 +36,7 @@ const plans = [
 
 const SubscriptionsView: React.FC = () => {
   const navigate = useNavigate();
+  const { stores } = useStores();
   const [activeSub, setActiveSub] = useState<string | null>(localStorage.getItem('encasa_active_sub'));
   const [user, setUser] = useState<{name: string, email: string} | null>(null);
 
@@ -51,7 +52,7 @@ const SubscriptionsView: React.FC = () => {
       return;
     }
 
-    const store = LOCALES_VENEZOLANOS.find(s => s.id === plan.storeId);
+    const store = stores.find(s => s.id === plan.storeId);
     localStorage.setItem('encasa_active_sub', plan.id);
     setActiveSub(plan.id);
 
@@ -70,7 +71,7 @@ const SubscriptionsView: React.FC = () => {
 
       <div className="grid md:grid-cols-3 gap-8">
         {plans.map(plan => {
-          const store = LOCALES_VENEZOLANOS.find(s => s.id === plan.storeId);
+          const store = stores.find(s => s.id === plan.storeId);
           return (
             <div key={plan.id} className={`gradient-card p-10 rounded-[48px] border transition-all relative overflow-hidden flex flex-col ${activeSub === plan.id ? 'border-ven-yellow shadow-2xl' : 'border-white/5 hover:border-white/10'}`}>
               <div className="mb-6 flex items-center justify-between">

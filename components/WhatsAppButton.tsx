@@ -1,16 +1,16 @@
 import React from 'react';
 import { MessageSquare } from 'lucide-react';
-import { Product, User } from '../types';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
+import { Product, PartnerStore, User } from '../types';
 
 declare function encasaTrack(name: string, payload?: Record<string, unknown>): void;
 
 interface WhatsAppButtonProps {
+  stores: PartnerStore[];
   cart: { product: Product; qty: number }[];
-  user?: User | null; // ✅ puede venir null sin romper preview
+  user?: User | null;
 }
 
-const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({ cart, user }) => {
+const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({ stores, cart, user }) => {
   const handleWhatsAppRedirect = () => {
     let message = '';
     const cartTotal = cart.reduce((acc, curr) => acc + curr.product.price * curr.qty, 0);
@@ -36,7 +36,7 @@ const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({ cart, user }) => {
 
     // Obtener info del local del carrito
     const storeId = cart.length > 0 ? cart[0].product.storeId : null;
-    const storeName = storeId ? LOCALES_VENEZOLANOS.find((s) => s.id === storeId)?.name : null;
+    const storeName = storeId ? stores.find((s) => s.id === storeId)?.name : null;
 
     if (cart.length > 0) {
       if (!storeId) {

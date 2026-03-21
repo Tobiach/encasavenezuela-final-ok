@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, Sparkles, ShoppingBag, Zap, MessageSquare, AlertCircle, Clock } from 'lucide-react'; import { Product, PartnerStore, User as UserType } from '../types';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
 import { supabase } from '../lib/supabase';
 
 interface OrderConfirmationViewProps {
+  stores: PartnerStore[];
   cart: { product: Product; qty: number }[];
   user: UserType | null;
   onFinalizePurchase: (total: number) => void;
@@ -15,7 +15,7 @@ const WHATSAPP_NUMBER = '5491134552996';
 const MINIMUM_ORDER = 5999;
 
 const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
-  cart, user, onFinalizePurchase, onClearCart
+  stores, cart, user, onFinalizePurchase, onClearCart
 }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -46,7 +46,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
 
     let foundStore: PartnerStore | null = null;
     if (uniqueIds.length === 1) {
-      foundStore = LOCALES_VENEZOLANOS.find(s => s.id === uniqueIds[0]) || null;
+      foundStore = stores.find(s => s.id === uniqueIds[0]) || null;
     }
 
     return {

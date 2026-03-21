@@ -2,17 +2,17 @@
 import React, { useState, useMemo } from 'react';
 import { MapPin, Star, ChevronRight, ArrowLeft, Clock, Search, Zap } from 'lucide-react';
 import { PartnerStore } from '../types';
-import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
 import { useNavigate } from 'react-router-dom';
 
 interface PartnerStoresProps {
+  stores: PartnerStore[];
   onViewAll?: () => void;
   onOpenMap: (store: PartnerStore) => void;
   limit?: number;
   isFullView?: boolean;
 }
 
-const PartnerStores: React.FC<PartnerStoresProps> = ({ onViewAll, onOpenMap, limit = 6, isFullView = false }) => {
+const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpenMap, limit = 6, isFullView = false }) => {
   const navigate = useNavigate();
   const [selectedTag, setSelectedTag] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,28 +20,28 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ onViewAll, onOpenMap, lim
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     tags.add('Todos');
-    LOCALES_VENEZOLANOS.forEach(store => {
+    stores.forEach(store => {
       store.tags?.forEach(tag => tags.add(tag));
     });
     return Array.from(tags);
-  }, []);
+  }, [stores]);
 
   const filteredLocales = useMemo(() => {
-    return LOCALES_VENEZOLANOS.filter(store => {
+    return stores.filter(store => {
       const matchesTag = selectedTag === 'Todos' || store.tags?.includes(selectedTag);
-      const matchesSearch = store.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      const matchesSearch = store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            store.neighborhood?.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesTag && matchesSearch;
     });
-  }, [selectedTag, searchQuery]);
+  }, [stores, selectedTag, searchQuery]);
 
   const displayedLocales = useMemo(() => {
     if (isFullView) return filteredLocales;
     // Priorizar locales premium en el Home
-    const premium = LOCALES_VENEZOLANOS.filter(s => s.plan === 'premium');
-    const prepared = LOCALES_VENEZOLANOS.filter(s => s.isPreparedFood && s.plan !== 'premium');
+    const premium = stores.filter(s => s.plan === 'premium');
+    const prepared = stores.filter(s => s.isPreparedFood && s.plan !== 'premium');
     return [...premium, ...prepared].slice(0, limit);
-  }, [isFullView, filteredLocales, limit]);
+  }, [stores, isFullView, filteredLocales, limit]);
 
   const MarketplaceCard: React.FC<{ store: PartnerStore }> = ({ store }) => (
     <div 
