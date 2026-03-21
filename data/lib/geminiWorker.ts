@@ -1,64 +1,37 @@
-// lib/geminiWorker.ts
-
-import { GoogleGenAI } from "@google/genai";
-
 export type WorkerChatMessage = {
   role: "user" | "model";
   text: string;
 };
 
-/**
- * Llama directamente a la API de Gemini usando el SDK oficial.
- * Reemplaza al Cloudflare Worker que estaba fallando.
- */
 export async function askGeminiWorker(args: {
   system?: string;
   prompt: string;
   history?: WorkerChatMessage[];
   timeoutMs?: number;
 }): Promise<{ text: string }> {
-  const { system, prompt, history = [] } = args;
+  const { prompt, history = [] } = args;
 
-  // Usamos process.env.GEMINI_API_KEY según las directrices de la plataforma
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  
-  if (!apiKey) {
-    console.error("GEMINI_API_KEY no está configurada.");
-    return { text: "Lo siento pana, no tengo conexión con el chef ahora mismo. (Falta API Key)" };
+  await new Promise(resolve => setTimeout(resolve, 600));
+
+  const promptLower = prompt.toLowerCase();
+
+  if (promptLower.includes('espectacular') || promptLower.includes('razón') || history.length === 0) {
+    return { text: "¡Épale pana! Este producto es puro sabor venezolano de calidad. Perfecto para compartir en familia. ¿Querés saber cómo prepararlo o con qué combinarlo?" };
   }
 
-  try {
-    const ai = new GoogleGenAI({ apiKey });
-    
-    // Mapeamos el historial al formato que espera el SDK
-    const contents = history.map(m => ({
-      role: m.role === "user" ? "user" : "model",
-      parts: [{ text: m.text }]
-    }));
-
-    // Agregamos el prompt actual
-    contents.push({
-      role: "user",
-      parts: [{ text: prompt }]
-    });
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents,
-      config: {
-        systemInstruction: system || "Eres un asistente servicial.",
-        temperature: 0.7,
-        topP: 0.95,
-        topK: 40,
-      },
-    });
-
-    // El SDK devuelve el texto directamente en la propiedad .text
-    return { text: response.text || "No pude generar una respuesta, pana." };
-  } catch (error) {
-    console.error("Error llamando a Gemini API:", error);
-    // Devolvemos un mensaje amigable en lugar de fallar silenciosamente
-    return { text: "¡Epa pana! Se me quemaron los cables en la cocina. Intentemos de nuevo." };
+  if (promptLower.includes('preparar') || promptLower.includes('cocinar') || promptLower.includes('receta') || promptLower.includes('cómo')) {
+    return { text: "Te lo recomiendo calentarlo a fuego medio para que quede en su punto. Combina perfecto con queso rallado. ¿Necesitás más tips?" };
   }
+
+  if (promptLower.includes('acompañar') || promptLower.includes('combinar') || promptLower.includes('con qué')) {
+    return { text: "Va brutal con una malta bien fría y unos tequeños. ¡Combo ganador! ¿Te interesa agregarlo?" };
+  }
+
+  if (promptLower.includes('gracias') || promptLower.includes('ok') || promptLover.includes('dale')) {
+    return { text: "¡De nada, pana! ¿Algo más?" };
+  }
+
+  return { text: "¡Chévere! Este es de los más pedidos. ¿Querés que te diga cómo prepararlo o con qué combinarlo?" };
 }
+
 

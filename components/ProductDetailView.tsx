@@ -1,15 +1,8 @@
 /// <reference types="vite/client" />
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { X, ShoppingCart, Plus, Minus, Check, ChefHat, Send, Loader2, MapPin } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { X, ShoppingCart, Plus, Minus, Check, ChefHat, MapPin, Sparkles } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
 import { LOCALES_VENEZOLANOS } from '../data/localesAmigos';
-import { askGeminiWorker, WorkerChatMessage } from '../data/lib/geminiWorker';
-
-interface Message {
-  role: 'user' | 'model';
-  text: string;
-  suggestedProducts?: Product[];
-}
 
 interface ProductDetailViewProps {
   product: Product;
@@ -22,165 +15,27 @@ interface ProductDetailViewProps {
 
 const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   product,
-  allProducts,
   onClose,
   onAddToCart,
   onSelectStore,
   storeId
 }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
   const [addedStatus, setAddedStatus] = useState(false);
   const [qty, setQty] = useState(1);
-  const [addedItems, setAddedItems] = useState<Record<number, boolean>>({});
-  const [lastNotification, setLastNotification] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   const currentStore = useMemo(
     () => LOCALES_VENEZOLANOS.find((s) => s.id === storeId),
     [storeId]
   );
 
-  const availableStores = useMemo(() => {
-    return LOCALES_VENEZOLANOS.filter((s) => product.availableInStoreIds?.includes(s.id));
-  }, [product]);
-
-  const contextualProducts = useMemo(() => {
-    if (!storeId) return allProducts;
-    return allProducts.filter((p) => p.availableInStoreIds?.includes(storeId));
-  }, [storeId, allProducts]);
-
-  const systemInstruction = `Eres "Tu Pana Chef AI" de EnCasa VEN.
-Tu misión: Asesorar sobre ${product.name} y CERRAR VENTAS.
-${storeId ? `IMPORTANTE: Estás atendiendo en el local "${currentStore?.name}". SOLO recomienda productos disponibles en este local: ${contextualProducts.map(p => p.name).join(', ')}.` : `Estás en el marketplace general.`}
-
-HABILIDAD ESPECIAL: COMPRA DIRECTA
-- Si el usuario muestra interés o pregunta por combinaciones, responde amablemente y AL FINAL incluye siempre: [LLEVAR: NombreProducto1, NombreProducto2] (máximo 3).
-- Ejemplo: "Esa malta va perfecta con un Pirulín. [LLEVAR: Pirulín]"
-
-REGLAS DE ORO:
-1. Sé BREVE y CONVERSACIONAL (máximo 2 líneas). Tono venezolano ("pana", "chévere").
-2. Sé PROACTIVO: Sugiere combos que aumenten el carrito.
-3. NO USES negritas ni asteriscos.`;
-
-  const parseSuggestedProducts = (text: string): { cleanText: string; products: Product[] } => {
-    const match = text.match(/\[LLEVAR:\s*(.*?)\]/);
-    if (!match) return { cleanText: text, products: [] };
-
-    const productNames = match[1].split(',').map((n) => n.trim().toLowerCase());
-
-    const foundProducts = contextualProducts
-      .filter((p) => productNames.some((name) => p.name.toLowerCase().includes(name)))
-      .slice(0, 3);
-
-    return {
-      cleanText: text.replace(/\[LLEVAR:.*?\]/g, '').trim(),
-      products: foundProducts
-    };
-  };
-
-  useEffect(() => {
-    const initialGreeting = async () => {
-      if (messages.length > 0) return;
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        const prompt = `Dime una razón rápida de por qué el ${product.name} es espectacular y sugiere llevarlo.`;
-        const { text } = await askGeminiWorker({ system: systemInstruction, prompt });
-
-        const { cleanText, products } = parseSuggestedProducts(text || '');
-        setMessages([
-          {
-            role: 'model',
-            text: cleanText || `¡¡Épale pana! El ${product.name} es clave en cualquier mesa.`,
-            suggestedProducts: products
-          }
-        ]);
-      } catch (e) {
-        console.error('Worker Greeting Error:', e);
-        setMessages([{ role: 'model', text: '¡Epa pana! Ya prendí el fogón. ¿Qué quieres saber?' }]);
-        setError('No pude prender el fogón.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initialGreeting();
-  }, [product.id, storeId]);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages, loading]);
-
-  const sendMessage = async (text: string) => {
-    if (!text.trim() || loading) return;
-
-    const userMsg = text.trim();
-    setInput('');
-    setMessages((prev) => [...prev, { role: 'user', text: userMsg }]);
-    setLoading(true);
-    setError(null);
-
-    try {
-      const history: WorkerChatMessage[] = messages.map((m) => ({
-        role: m.role,
-        text: m.text,
-      }));
-
-      const { text: answer } = await askGeminiWorker({
-        system: systemInstruction,
-        prompt: userMsg,
-        history,
-        timeoutMs: 12000,
-      });
-
-      const { cleanText, products } = parseSuggestedProducts(answer || '');
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'model',
-          text: cleanText || '¡Epa pana! Se me quemaron los cables.',
-          suggestedProducts: products
-        }
-      ]);
-    } catch (e) {
-      console.error('Worker Message Error:', e);
-      setMessages((prev) => [
-        ...prev,
-        { role: 'model', text: 'Hubo un problema, intentemos de nuevo, pana.' }
-      ]);
-      setError('Hubo un problema con el Worker.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAddSuggested = (p: Product) => {
-    onAddToCart(p, storeId);
-    setAddedItems((prev) => ({ ...prev, [p.id]: true }));
-    setLastNotification(`✅ ${p.name} al carrito`);
-    setTimeout(() => {
-      setAddedItems((prev) => ({ ...prev, [p.id]: false }));
-      setLastNotification(null);
-    }, 3000);
-  };
+  const availableStores = useMemo(
+    () => LOCALES_VENEZOLANOS.filter((s) => product.availableInStoreIds?.includes(s.id)),
+    [product]
+  );
 
   return (
     <div className="fixed inset-0 z-[150] bg-black/95 backdrop-blur-xl flex items-center justify-center overflow-hidden animate-in fade-in duration-300 p-0 md:p-6">
       <div className="w-full h-full md:h-[90vh] md:max-w-4xl md:rounded-[48px] bg-[#0F0A08] border border-white/10 flex flex-col md:flex-row overflow-hidden shadow-2xl relative">
-
-        {lastNotification && (
-          <div className="absolute top-20 left-1/2 -translate-x-1/2 z-[200] bg-green-500 text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl animate-in slide-in-from-top-4 flex items-center gap-2">
-            <Check size={14} strokeWidth={4} /> {lastNotification}
-          </div>
-        )}
 
         <button
           onClick={onClose}
@@ -189,6 +44,7 @@ REGLAS DE ORO:
           <X size={20} />
         </button>
 
+        {/* Panel izquierdo — producto */}
         <div className="w-full md:w-[40%] flex flex-col overflow-y-auto no-scrollbar scroll-smooth bg-gradient-to-b from-venezuela-dark to-black border-r border-white/5 shrink-0 h-[40vh] md:h-full">
           <div className="relative h-[25vh] md:h-auto md:aspect-square shrink-0 overflow-hidden bg-black/40 flex items-center justify-center">
             <img src={product.img} alt={product.name} className="max-w-full max-h-full object-contain md:object-cover" />
@@ -293,7 +149,10 @@ REGLAS DE ORO:
           </div>
         </div>
 
+        {/* Panel derecho — mantenimiento */}
         <div className="w-full md:w-[60%] flex-grow h-full flex flex-col bg-venezuela-dark relative overflow-hidden border-t md:border-t-0 border-white/5">
+
+          {/* Header — igual al original */}
           <div className="p-3 md:p-5 border-b border-white/5 flex items-center justify-between bg-black/40 backdrop-blur-md shrink-0">
             <div className="flex items-center gap-2 md:gap-3">
               <div className="w-8 h-8 md:w-12 md:h-12 bg-gradient-to-br from-ven-yellow to-venezuela-orange rounded-lg md:rounded-xl flex items-center justify-center text-white shadow-xl">
@@ -311,102 +170,45 @@ REGLAS DE ORO:
             </div>
           </div>
 
-          <div ref={scrollRef} className="flex-grow overflow-y-auto p-5 md:p-8 space-y-6 scrollbar-hide pb-28 md:pb-10 bg-gradient-to-b from-[#2D1618] to-[#1A0D0E]">
-            {messages.map((m, i) => (
-              <div
-                key={i}
-                className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'} animate-in slide-in-from-bottom-3 duration-500`}
-              >
-                <div
-                  className={`max-w-[88%] md:max-w-[85%] p-5 md:p-7 rounded-[32px] text-[14px] md:text-[16px] leading-relaxed shadow-xl font-medium ${
-                    m.role === 'user'
-                      ? 'bg-gradient-to-r from-ven-yellow to-venezuela-orange text-white rounded-tr-none'
-                      : 'bg-[#3D1F22]/80 text-gray-100 border border-ven-yellow/20 rounded-tl-none backdrop-blur-2xl'
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap">{m.text}</p>
-                </div>
+          {/* Mensaje de mantenimiento */}
+          <div className="flex-grow flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#2D1618] to-[#1A0D0E]">
+            <div className="flex flex-col items-center gap-6 max-w-xs text-center animate-in fade-in zoom-in-95 duration-500">
 
-                {m.suggestedProducts && m.suggestedProducts.length > 0 && (
-                  <div className="mt-4 w-full max-w-[300px] space-y-3 animate-in slide-in-from-left-3 duration-600">
-                    <p className="text-[10px] font-black text-ven-yellow uppercase tracking-widest mb-1 ml-2">
-                      Sugerencias del Chef:
-                    </p>
-                    {m.suggestedProducts.map((p) => (
-                      <div
-                        key={p.id}
-                        className="bg-white/5 border border-white/10 p-3 rounded-2xl flex items-center gap-4 group hover:bg-white/10 transition-all"
-                      >
-                        <div className="w-12 h-12 rounded-xl overflow-hidden bg-black shrink-0">
-                          <img src={p.img} className="w-full h-full object-cover opacity-80" alt={p.name} />
-                        </div>
-                        <div className="flex-grow min-w-0">
-                          <p className="text-[11px] font-black text-white truncate uppercase tracking-tight">
-                            {p.name}
-                          </p>
-                          <p className="text-[10px] text-ven-yellow font-bold uppercase tracking-tighter">${p.price}</p>
-                        </div>
-                        <button
-                          onClick={() => handleAddSuggested(p)}
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                            addedItems[p.id]
-                              ? 'bg-green-500 text-white'
-                              : 'bg-gradient-to-r from-ven-yellow to-venezuela-orange text-white hover:scale-110 active:scale-90 shadow-lg shadow-yellow-500/20'
-                          }`}
-                        >
-                          {addedItems[p.id] ? <Check size={16} strokeWidth={4} /> : <Plus size={20} strokeWidth={3} />}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-
-            {loading && (
-              <div className="flex justify-start">
-                <div className="bg-white/5 p-5 rounded-[32px] border border-white/5 rounded-tl-none flex items-center gap-4 backdrop-blur-md">
-                  <Loader2 size={16} className="animate-spin text-ven-yellow" />
-                  <span className="text-[11px] text-gray-300 font-black uppercase tracking-widest italic">
-                    El Pana está cocinando...
-                  </span>
+              {/* Ícono con glow */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-ven-yellow/20 rounded-full blur-2xl scale-150" />
+                <div className="relative w-24 h-24 bg-gradient-to-br from-ven-yellow/20 to-venezuela-orange/20 border border-ven-yellow/30 rounded-3xl flex items-center justify-center shadow-2xl">
+                  <ChefHat size={44} className="text-ven-yellow" />
                 </div>
               </div>
-            )}
 
-            {error && !loading && (
-              <div className="flex justify-start">
-                <div className="bg-red-500/10 p-4 rounded-[24px] border border-red-500/20 text-red-300 text-[11px] font-bold">
-                  {error}
-                </div>
+              {/* Badge */}
+              <div className="flex items-center gap-2 bg-ven-yellow/10 border border-ven-yellow/30 px-4 py-2 rounded-full">
+                <Sparkles size={12} className="text-ven-yellow" />
+                <span className="text-[10px] font-black text-ven-yellow uppercase tracking-[0.2em]">
+                  Disponible próximamente
+                </span>
               </div>
-            )}
+
+              {/* Título */}
+              <div className="space-y-2">
+                <h2 className="text-xl font-black text-white uppercase tracking-tight leading-tight">
+                  Estamos mejorando
+                </h2>
+                <p className="text-sm text-gray-400 leading-relaxed font-medium">
+                  Tu <span className="text-ven-yellow font-black">Pana Chef</span> está recibiendo un upgrade. Vuelve pronto para recibir recomendaciones personalizadas.
+                </p>
+              </div>
+
+              {/* Línea decorativa */}
+              <div className="flex items-center gap-3 w-full">
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent to-ven-yellow/30" />
+                <div className="w-1.5 h-1.5 rounded-full bg-ven-yellow/60 animate-pulse" />
+                <div className="flex-1 h-px bg-gradient-to-l from-transparent to-ven-yellow/30" />
+              </div>
+            </div>
           </div>
 
-          <div className="p-5 md:p-10 bg-gradient-to-t from-[#1A0D0E] to-[#2D1618]/90 backdrop-blur-xl border-t border-ven-yellow/20 space-y-4 shrink-0 pb-8 md:pb-10">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                sendMessage(input);
-              }}
-              className="relative flex gap-3"
-            >
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Pregúntame tips de cocina, pana..."
-                className="flex-grow bg-white border border-white/20 rounded-[24px] py-4.5 px-6 focus:outline-none focus:border-ven-yellow focus:ring-2 focus:ring-ven-yellow/20 transition-all text-sm md:text-base text-venezuela-brown placeholder:text-gray-500 shadow-lg"
-              />
-              <button
-                type="submit"
-                disabled={loading || !input.trim()}
-                className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-r from-ven-yellow to-venezuela-orange rounded-[22px] flex items-center justify-center text-white shadow-2xl shadow-yellow-500/40 disabled:opacity-10 transition-all shrink-0 active:scale-95 hover:scale-105"
-              >
-                <Send size={22} />
-              </button>
-            </form>
-          </div>
         </div>
       </div>
     </div>

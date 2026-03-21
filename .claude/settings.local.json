@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/Tobia/Downloads/encasa-final-ok -maxdepth 3 -type f)"
+    ]
+  }
+}
