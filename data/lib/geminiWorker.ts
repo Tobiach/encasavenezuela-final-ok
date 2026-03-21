@@ -35,3 +35,21 @@ export async function askGeminiWorker(args: {
 }
 
 
+// PanaChef AI - Temporalmente deshabilitado
+// Se reactivará cuando la cuota de Gemini se resetee (4am diario)
+
+export type WorkerChatMessage = {
+  role: "user" | "model";
+  text: string;
+};
+
+export async function askGeminiWorker(args: {
+  system?: string;
+  prompt: string;
+  history?: WorkerChatMessage[];
+  timeoutMs?: number;
+}): Promise<{ text: string }> {
+  return { text: "Función deshabilitada temporalmente." };
+}
+
+
