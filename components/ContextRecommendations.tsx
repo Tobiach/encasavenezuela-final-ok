@@ -32,13 +32,15 @@ const ContextRecommendations: React.FC<ContextRecommendationsProps> = ({ onAddTo
   const currentStore = stores[rotationIndex];
 
   const context = useMemo(() => {
+    if (!currentStore) return { id: 'loading', title: '', subtitle: '', icon: null, items: [] };
+
     const hour = new Date().getHours();
-    
+
     // Filtrar productos del local actual
     const storeProducts = allProducts.filter((p: Product) => p.availableInStoreIds?.includes(currentStore.id));
     // Si el local no tiene productos (raro en demo), usar todos
     const pool = storeProducts.length > 0 ? storeProducts : allProducts;
-    
+
     // Seleccionar 5 productos aleatorios del local
     const selectedItems = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
 
@@ -74,6 +76,8 @@ const ContextRecommendations: React.FC<ContextRecommendationsProps> = ({ onAddTo
       items: selectedItems
     };
   }, [currentStore, allProducts]);
+
+  if (!currentStore || context.items.length === 0) return null;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
