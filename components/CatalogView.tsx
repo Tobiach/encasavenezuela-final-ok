@@ -243,7 +243,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       <div className="mt-auto pt-4 border-t border-black/5">
                         <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-xl px-3 py-2 mb-3">
                           <p className="text-[9px] font-black text-ven-yellow uppercase tracking-widest text-center">
-                            🚚 {store.coverageArea || 'CABA completa'}
+                            🛵 {store.coverageArea || 'CABA completa'}
                           </p>
                         </div>
                         <div className="flex items-center justify-between">
@@ -300,7 +300,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       {/* BADGE DE COBERTURA */}
                       <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-lg px-2 py-1.5 mb-auto">
                         <p className="text-[8px] font-black text-ven-yellow uppercase tracking-widest text-center">
-                          🚚 {store.coverageArea || 'CABA'}
+                          🛵 {store.coverageArea || 'CABA'}
                         </p>
                       </div>
                     </div>
