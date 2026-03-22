@@ -211,22 +211,22 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                   <div
                     key={`premium-${store.id}`}
                     onClick={() => onSelectStore(store)}
-                    className="group min-w-[280px] md:min-w-[320px] bg-white rounded-[32px] border-2 border-venezuela-orange/30 overflow-hidden transition-all duration-300 hover:border-venezuela-orange hover:-translate-y-2 cursor-pointer flex flex-col shadow-2xl relative"
+                    className="group min-w-[280px] md:min-w-[320px] bg-white rounded-[32px] border-2 border-ven-yellow/30 overflow-hidden transition-all duration-300 hover:border-ven-yellow hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(212,175,55,0.25)] cursor-pointer flex flex-col shadow-2xl relative"
                   >
-                    <div className="absolute top-4 left-4 z-10 bg-ven-yellow text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wide flex items-center gap-1.5 shadow-2xl border border-white/20">
+                    <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wide flex items-center gap-1.5 shadow-lg shadow-ven-yellow/40 border border-white/30">
                       <Zap size={10} fill="currentColor" /> RECOMENDADO
                     </div>
-                    <div className="relative aspect-video overflow-hidden">
+                    <div className="relative aspect-[4/3] overflow-hidden">
                       <img src={store.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
-                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/10">
-                        <Star size={10} className="fill-ven-yellow text-ven-yellow" />
-                        <span className="text-[10px] font-black text-white">{store.rating.toFixed(1)}</span>
+                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-[0_0_10px_rgba(212,175,55,0.5)]">
+                        <Star size={13} className="fill-ven-yellow text-ven-yellow" />
+                        <span className="text-[11px] font-black text-white">{store.rating.toFixed(1)}</span>
                       </div>
                     </div>
                     <div className="p-6 flex flex-col flex-grow">
                       <div className="mb-3">
-                        <h3 className="text-lg md:text-xl font-black text-venezuela-brown leading-tight mb-2 group-hover:text-venezuela-orange transition-colors truncate uppercase tracking-tight">{store.name}</h3>
+                        <h3 className="text-lg md:text-xl font-black text-venezuela-brown leading-tight mb-2 group-hover:text-ven-yellow transition-colors truncate uppercase tracking-tight">{store.name}</h3>
 
                         {/* INFO DE UBICACIÓN Y COBERTURA */}
                         <div className="space-y-1.5">
@@ -250,7 +250,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                           <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-500 uppercase tracking-widest">
                             <MapPin size={12} className="text-ven-red" /> {store.location}
                           </div>
-                          <ChevronRight size={20} className="text-venezuela-orange group-hover:translate-x-1 transition-all" />
+                          <ChevronRight size={20} className="text-ven-yellow group-hover:translate-x-1 transition-all" />
                         </div>
                       </div>
                     </div>
@@ -271,21 +271,21 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                   <div
                     key={store.id}
                     onClick={() => onSelectStore(store)}
-                    className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-2 cursor-pointer flex flex-col shadow-xl ${store.plan === 'premium' ? 'border-venezuela-orange/40 shadow-venezuela-orange/10' : 'border-black/5 hover:border-ven-yellow/40'}`}
+                    className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(212,175,55,0.2)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.15)]'}`}
                   >
-                    <div className="aspect-video overflow-hidden relative">
+                    <div className="aspect-[4/3] overflow-hidden relative">
                       <img src={store.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40"></div>
                       <div className="absolute top-2 left-2 flex flex-col gap-1">
                         {store.plan === 'premium' && (
-                          <div className="bg-ven-yellow text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20">
+                          <div className="bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
                             <Zap size={8} fill="currentColor" /> Premium
                           </div>
                         )}
                       </div>
                     </div>
                     <div className="p-5 flex-grow flex flex-col">
-                      <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-2 text-sm md:text-base group-hover:text-venezuela-orange transition-colors">{store.name}</h3>
+                      <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-2 text-sm md:text-base group-hover:text-ven-yellow transition-colors">{store.name}</h3>
 
                       {/* INFO DE UBICACIÓN */}
                       <div className="space-y-1.5 mb-3">
@@ -305,7 +305,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       </div>
                     </div>
                     <div className="px-5 pb-5 mt-auto">
-                      <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-venezuela-orange group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-venezuela-orange group-hover:text-white transition-all shadow-sm group-hover:shadow-lg">
+                      <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-ven-yellow group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-[#C9A227] group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-ven-yellow/20">
                         Ver local
                       </div>
                     </div>
@@ -444,6 +444,8 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
+        .animate-shimmer { animation: shimmer 3s linear infinite; }
       `}</style>
     </div>
   );
