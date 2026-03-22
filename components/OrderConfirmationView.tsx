@@ -188,6 +188,39 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
         console.error("DB insert failed (orders/order_items):", dbErr);
       }
 
+      // Notificación Notion — fire and forget, jamás bloquea el flujo del pedido
+      try {
+        const notionStoreName = stores.find(s => s.id === uniqueStoreIds[0])?.name
+          ?? uniqueStoreIds[0]
+          ?? 'Desconocido';
+        void fetch('/api/notify-notion', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            order: {
+              id: orderId ?? 'sin-id',
+              customer_name: formData.name,
+              customer_phone: formData.phone,
+              customer_address: formData.address,
+              store_id: uniqueStoreIds[0] ?? null,
+              total,
+              payment_method: formData.paymentMethod,
+              status: 'pending',
+              note: formData.note || null,
+              created_at: new Date().toISOString(),
+            },
+            items: cart.map(i => ({
+              product_name: i.product.name,
+              qty: i.qty,
+              price: i.product.price,
+            })),
+            storeName: notionStoreName,
+          }),
+        }).catch(err => console.error('[Notion] fetch error:', err));
+      } catch (notionErr) {
+        console.error('[Notion] setup error:', notionErr);
+      }
+
       try {
         onFinalizePurchase?.(total);
       } catch (e) {
