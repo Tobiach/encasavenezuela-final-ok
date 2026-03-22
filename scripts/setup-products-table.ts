@@ -119,7 +119,7 @@ const PRODUCTS: ProductRow[] = [
   },
   {
     id: 3, name: 'Chocolate Savoy Carré', price: 2500, old_price: null,
-    category: 'Chucherías', img_path: 'savoy_carre.png',
+    category: 'Chucherías', img_path: 'chocolate_savoy_carre1.png',
     usage_info: 'Chocolate premium con avellanas enteras.',
     is_combo: false, store_id: null,
     available_in_store_ids: ['real-2', 'real-7', 'real-9'],
@@ -154,7 +154,7 @@ const PRODUCTS: ProductRow[] = [
   },
   {
     id: 8, name: 'Re-Kolita (Lata 355ml)', price: 1000, old_price: null,
-    category: 'Bebidas', img_path: 'rekolita.png',
+    category: 'Bebidas', img_path: 're-kolita_white.png',
     usage_info: 'Refresco sabor a colita, dulce y burbujeante.',
     is_combo: false, store_id: null,
     available_in_store_ids: ['real-1', 'real-7', 'real-11'],
