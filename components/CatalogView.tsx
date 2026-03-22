@@ -213,7 +213,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                     onClick={() => onSelectStore(store)}
                     className="group min-w-[280px] md:min-w-[320px] bg-white rounded-[32px] border-2 border-venezuela-orange/30 overflow-hidden transition-all duration-300 hover:border-venezuela-orange hover:-translate-y-2 cursor-pointer flex flex-col shadow-2xl relative"
                   >
-                    <div className="absolute top-4 left-4 z-10 bg-venezuela-orange text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase flex items-center gap-1.5 shadow-2xl border border-white/20">
+                    <div className="absolute top-4 left-4 z-10 bg-ven-yellow text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wide flex items-center gap-1.5 shadow-2xl border border-white/20">
                       <Zap size={10} fill="currentColor" /> RECOMENDADO
                     </div>
                     <div className="relative aspect-video overflow-hidden">
@@ -278,7 +278,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40"></div>
                       <div className="absolute top-2 left-2 flex flex-col gap-1">
                         {store.plan === 'premium' && (
-                          <div className="bg-venezuela-orange text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase flex items-center gap-1 shadow-lg border border-white/20">
+                          <div className="bg-ven-yellow text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20">
                             <Zap size={8} fill="currentColor" /> Premium
                           </div>
                         )}

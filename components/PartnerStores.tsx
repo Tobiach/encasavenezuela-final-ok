@@ -50,7 +50,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
     >
       {store.plan === 'premium' && (
         <div className="absolute top-4 left-4 z-10">
-          <div className="bg-ven-yellow text-white px-2 py-1 rounded-lg text-[7px] font-black uppercase flex items-center gap-1 shadow-lg border border-white/10">
+          <div className="bg-ven-yellow text-white px-2 py-1 rounded-lg text-[7px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/10">
             <Zap size={8} fill="currentColor" /> Recomendado
           </div>
         </div>
@@ -99,7 +99,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
       className={`group bg-black/[0.03] border rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col transition-all duration-300 hover:bg-black/[0.06] hover:-translate-y-1 cursor-pointer relative ${store.plan === 'premium' ? 'border-ven-yellow/50 ring-1 ring-ven-yellow/20 shadow-[0_0_30px_rgba(255,204,0,0.1)]' : 'border-black/5 hover:border-ven-yellow/30'}`}
     >
       {store.plan === 'premium' && (
-        <div className="absolute top-4 left-4 z-10 bg-ven-yellow text-white px-3 py-1 rounded-xl text-[8px] font-black uppercase flex items-center gap-1.5 shadow-xl">
+        <div className="absolute top-4 left-4 z-10 bg-ven-yellow text-white px-3 py-1 rounded-xl text-[8px] font-black uppercase tracking-wide flex items-center gap-1.5 shadow-xl">
           <Zap size={10} fill="currentColor" /> Recomendado
         </div>
       )}

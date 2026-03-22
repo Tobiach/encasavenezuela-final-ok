@@ -187,7 +187,7 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
           </div>
 
           <div className="absolute bottom-6 left-6 flex flex-col gap-2">
-            <div className="bg-venezuela-orange text-white px-4 py-2 rounded-2xl text-[10px] font-black uppercase flex items-center gap-2 shadow-2xl border border-white/10 backdrop-blur-md">
+            <div className="bg-ven-yellow text-white px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-wide flex items-center gap-2 shadow-2xl border border-white/10 backdrop-blur-md">
               <Zap size={14} fill="currentColor" /> Oferta Relámpago
             </div>
             {store && (
@@ -214,9 +214,9 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
                 </div>
               </div>
               {showLoyalty && (
-                <div className="bg-venezuela-orange/10 border border-venezuela-orange/20 px-4 py-3 rounded-2xl text-center shadow-inner">
-                   <p className="text-[9px] text-venezuela-orange font-black uppercase tracking-widest mb-1">Club Puntos</p>
-                   <p className="text-xl font-black text-venezuela-orange">+{pointsEarned}</p>
+                <div className="bg-ven-yellow/10 border border-ven-yellow/20 px-4 py-3 rounded-2xl text-center shadow-inner">
+                   <p className="text-[9px] text-ven-yellow font-black uppercase tracking-widest mb-1">Club Puntos</p>
+                   <p className="text-xl font-black text-ven-yellow">+{pointsEarned}</p>
                 </div>
               )}
             </div>
@@ -277,7 +277,7 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
                  </div>
               </div>
               {item.suggest && (
-                <span className="hidden sm:block bg-venezuela-orange/10 text-venezuela-orange text-[8px] font-black px-2 py-1 rounded-lg uppercase">
+                <span className="hidden sm:block bg-ven-yellow/10 text-ven-yellow text-[8px] font-black tracking-wide px-2 py-1 rounded-lg uppercase">
                   {item.suggest}
                 </span>
               )}
