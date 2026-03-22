@@ -106,7 +106,7 @@ const Navbar: React.FC<NavbarProps> = ({
             <img
               src={LOGO_ENCASA_IMAGE}
               alt="EnCasa Venezuela"
-              className="h-14 w-auto object-contain"
+              className="h-18 w-auto object-contain"
             />
           </div>
 
