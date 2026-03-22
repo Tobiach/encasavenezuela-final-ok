@@ -78,12 +78,12 @@ const Navbar: React.FC<NavbarProps> = ({
   return (
     <>
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/5 py-5 px-6 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center justify-between relative">
 
-          {/* LOGO + BRAND */}
+          {/* LOGO + BRAND — Desktop only */}
           <div
             onClick={() => { onNavHome(); closeMenus(); }}
-            className="flex items-center gap-4 cursor-pointer group"
+            className="hidden lg:flex items-center gap-4 cursor-pointer group"
           >
             <div className="relative">
               <div className="absolute inset-0 bg-ven-yellow blur-xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
@@ -97,6 +97,31 @@ const Navbar: React.FC<NavbarProps> = ({
               EnCasa <span className="text-ven-yellow">Venezuela</span>
             </span>
           </div>
+
+          {/* LOGO centrado — Mobile only */}
+          <div
+            onClick={() => { onNavHome(); closeMenus(); }}
+            className="lg:hidden absolute left-1/2 -translate-x-1/2 cursor-pointer z-10"
+          >
+            <img
+              src={LOGO_ENCASA_IMAGE}
+              alt="EnCasa Venezuela"
+              className="h-14 w-auto object-contain"
+            />
+          </div>
+
+          {/* CARRITO — Mobile only, izquierda */}
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className={`lg:hidden relative p-3 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-gradient-to-br from-[#FFCC00] via-[#F58220] to-[#E86D00] text-white border-yellow-200 shadow-[0_0_35px_rgba(255,204,0,0.7)]' : 'bg-black/5 border-black/10 text-venezuela-brown'}`}
+          >
+            <ShoppingCart size={20} className={bump ? 'animate-bounce' : ''} />
+            {cartCount > 0 && (
+              <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-red text-white' : 'bg-ven-yellow text-venezuela-dark'}`}>
+                {cartCount}
+              </span>
+            )}
+          </button>
 
           <div className="hidden lg:flex items-center gap-10">
             <button onClick={onNavHome} className="text-[11px] font-black uppercase tracking-[0.2em] text-venezuela-brown hover:text-ven-yellow transition-colors border-b-2 border-transparent hover:border-ven-yellow pb-1">Inicio</button>
@@ -171,28 +196,13 @@ const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          <div className="lg:hidden flex items-center gap-3">
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className={`relative p-3 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-gradient-to-br from-[#FFCC00] via-[#F58220] to-[#E86D00] text-white border-yellow-200 shadow-[0_0_35px_rgba(255,204,0,0.7)]' : 'bg-black/5 border-black/10 text-venezuela-brown'}`}
-            >
-              <ShoppingCart size={20} className={bump ? 'animate-bounce' : ''} />
-              {cartCount > 0 && (
-                <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-red text-white' : 'bg-ven-yellow text-venezuela-dark'}`}>
-                  {cartCount}
-                </span>
-              )}
-            </button>
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-3 bg-black/5 border border-black/10 rounded-xl text-venezuela-brown">
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-            <button
-              onClick={handleShare}
-              className="p-3 bg-ven-yellow/10 border border-ven-yellow/20 rounded-xl text-ven-yellow active:scale-90 transition-all"
-            >
-              {showShareTooltip ? <Check size={20} /> : <Share2 size={20} />}
-            </button>
-          </div>
+          {/* HAMBURGUESA — Mobile only, derecha */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden p-3 bg-black/5 border border-black/10 rounded-xl text-venezuela-brown"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </nav>
 
@@ -227,7 +237,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <span className="text-2xl">❓</span>
             </button>
             <div className="pt-10 space-y-6">
-              <p className="text-[13px] font-black text-[#F58220] uppercase tracking-[0.3em] flex items-center gap-3 drop-shadow-md">
+              <p className="text-[13px] font-black text-ven-yellow uppercase tracking-[0.3em] flex items-center gap-3 drop-shadow-md">
                 <Zap size={18} fill="currentColor" /> Experiencia Premium
               </p>
               <div className="grid grid-cols-2 gap-5">
@@ -242,7 +252,7 @@ const Navbar: React.FC<NavbarProps> = ({
                   <p className="text-[11px] text-gray-600 font-bold uppercase mt-1 tracking-tight">Regalos</p>
                 </button>
                 <button onClick={() => navTo('/repeat')} className="bg-white border-2 border-black/5 p-6 rounded-[32px] text-left active:scale-95 transition-all shadow-xl">
-                  <Repeat className="text-[#F58220] mb-3" size={32} />
+                  <Repeat className="text-ven-yellow mb-3" size={32} />
                   <p className="text-lg font-black uppercase tracking-tighter text-venezuela-brown drop-shadow-sm">Historial</p>
                   <p className="text-[11px] text-gray-600 font-bold uppercase mt-1 tracking-tight">Repetir</p>
                 </button>
@@ -256,9 +266,9 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
             <div className="py-12 space-y-4">
-              <button onClick={() => navTo('/auth')} className="w-full flex items-center justify-between bg-[#F58220]/10 border-2 border-[#F58220]/20 p-6 rounded-[36px] shadow-xl">
+              <button onClick={() => navTo('/auth')} className="w-full flex items-center justify-between bg-ven-yellow/10 border-2 border-ven-yellow/20 p-6 rounded-[36px] shadow-xl">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-[#F58220] flex items-center justify-center text-white shadow-lg">
+                  <div className="w-14 h-14 rounded-2xl bg-ven-yellow flex items-center justify-center text-white shadow-lg">
                     <UserCircle size={32} />
                   </div>
                   <div className="text-left">
@@ -266,7 +276,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     <p className="text-[10px] text-gray-600 font-black uppercase tracking-widest mt-1 opacity-80">{user ? `Rol: ${user.role}` : 'Ingresa para sumar'}</p>
                   </div>
                 </div>
-                <ChevronRight size={24} className="text-[#F58220]" />
+                <ChevronRight size={24} className="text-ven-yellow" />
               </button>
 
               {user && (

@@ -201,10 +201,10 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
           {searchTerm === '' && (
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-venezuela-orange rounded-lg flex items-center justify-center text-white shadow-lg">
+                <div className="w-8 h-8 bg-ven-yellow rounded-lg flex items-center justify-center text-white shadow-lg">
                   <Zap size={18} fill="currentColor" />
                 </div>
-                <h2 className="text-xl font-black uppercase tracking-tighter text-venezuela-brown">Locales <span className="text-venezuela-orange">Premium</span></h2>
+                <h2 className="text-xl font-black uppercase tracking-tighter text-venezuela-brown">Locales <span className="text-ven-yellow">Premium</span></h2>
               </div>
               <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4">
                 {premiumStores.map(store => (
