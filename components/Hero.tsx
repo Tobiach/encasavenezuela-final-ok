@@ -64,7 +64,11 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
           <div className="flex flex-col gap-3 w-full sm:flex-row sm:justify-center md:justify-start">
             <button
               onClick={onCatalogClick}
-              className="bg-gradient-to-b from-[#2D1618] to-[#1A0D0E] text-white w-full sm:w-auto px-8 py-4 md:py-5 rounded-[24px] flex items-center justify-center gap-3 text-base md:text-lg font-black shadow-[0_10px_30px_rgba(45,22,24,0.4)] transition-all active:scale-95 uppercase tracking-widest border border-white/10"
+              className="relative overflow-hidden text-white w-full sm:w-auto px-8 py-4 md:py-5 rounded-[24px] flex items-center justify-center gap-3 text-base md:text-lg font-black transition-all active:scale-95 uppercase tracking-widest border border-white/10"
+              style={{
+                background: 'linear-gradient(135deg, #3D0C11 0%, #5C1A1A 50%, #D4AF37 100%)',
+                boxShadow: 'inset 18px 0 28px rgba(0,0,0,0.55), inset -18px 0 28px rgba(0,0,0,0.55), 0 10px 30px rgba(61,12,17,0.4)',
+              }}
             >
               <ShoppingBag size={20} />
               VER CATÁLOGO
