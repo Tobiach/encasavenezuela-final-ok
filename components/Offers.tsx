@@ -114,9 +114,9 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
                   <div
                     key={`${promo.id}-${idx}`}
                     onClick={() => navigate(`/promotion/${promo.id}`)}
-                    className="snap-start shrink-0 inline-block w-[260px] max-w-[280px] bg-white border-2 border-black/5 rounded-[40px] p-4 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:-translate-y-2"
+                    className="snap-start shrink-0 inline-block w-[260px] max-w-[280px] bg-white border-2 border-black/5 rounded-[40px] p-4 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:scale-[1.03] hover:-translate-y-1"
                   >
-                    <div className="relative h-36 rounded-[32px] overflow-hidden mb-4 border border-black/5 bg-white">
+                    <div className="relative h-44 rounded-[32px] overflow-hidden mb-4 border border-black/5 bg-white">
                       <img
                         src={promo.img}
                         alt={promo.name}
@@ -127,7 +127,7 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
                         <div className="bg-white/40 backdrop-blur-md text-venezuela-brown px-2.5 py-1 rounded-xl text-[8px] font-black uppercase flex items-center gap-1 shadow-2xl border border-white/20">
                           <Zap size={10} fill="currentColor" className="text-ven-yellow" /> Relámpago
                         </div>
-                        <div className="bg-ven-red/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-xl text-[8px] font-black uppercase flex items-center gap-1 shadow-2xl border border-white/20">
+                        <div className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white px-2.5 py-1 rounded-xl text-[8px] font-black uppercase flex items-center gap-1 shadow-md shadow-red-500/50 border border-white/20">
                           <Flame size={10} fill="currentColor" /> -{discountPercent}%
                         </div>
                       </div>
@@ -140,8 +140,8 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
                       <h4 className="text-sm font-black text-venezuela-brown uppercase tracking-tight truncate group-hover:text-venezuela-orange transition-colors">{promo.name}</h4>
                       <div className="flex items-center justify-between pt-2">
                         <div className="flex flex-col">
-                          {promo.oldPrice && <span className="text-[10px] text-gray-400 line-through font-bold mb-0.5">${promo.oldPrice}</span>}
-                          <span className="text-venezuela-orange font-black text-xl tracking-tighter">${promo.price}</span>
+                          {promo.oldPrice && <span className="text-[9px] text-gray-300 line-through font-bold mb-0.5">${promo.oldPrice}</span>}
+                          <span className="text-venezuela-orange font-black text-2xl tracking-tighter">${promo.price}</span>
                         </div>
                         <div className="w-10 h-10 bg-black/5 rounded-2xl flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-ven-yellow group-hover:to-venezuela-orange group-hover:text-white transition-all shadow-md">
                           <ArrowRight size={18} />

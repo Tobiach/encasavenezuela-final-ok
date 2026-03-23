@@ -221,7 +221,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
                       <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-[0_0_10px_rgba(212,175,55,0.5)]">
                         <Star size={13} className="fill-ven-yellow text-ven-yellow" />
-                        <span className="text-[11px] font-black text-white">{store.rating.toFixed(1)}</span>
+                        <span className="text-base font-black text-white">{store.rating.toFixed(1)}</span>
                       </div>
                     </div>
                     <div className="p-6 flex flex-col flex-grow">
@@ -271,7 +271,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                   <div
                     key={store.id}
                     onClick={() => onSelectStore(store)}
-                    className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(212,175,55,0.2)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.15)]'}`}
+                    className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]'}`}
                   >
                     <div className="aspect-[4/3] overflow-hidden relative">
                       <img src={store.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -282,6 +282,10 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                             <Zap size={8} fill="currentColor" /> Premium
                           </div>
                         )}
+                      </div>
+                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-[0_0_10px_rgba(212,175,55,0.5)]">
+                        <Star size={10} className="fill-ven-yellow text-ven-yellow" />
+                        <span className="text-[11px] font-black text-white">{store.rating.toFixed(1)}</span>
                       </div>
                     </div>
                     <div className="p-5 flex-grow flex flex-col">
