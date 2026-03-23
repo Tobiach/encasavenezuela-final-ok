@@ -120,7 +120,7 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
                       <img
                         src={promo.img}
                         alt={promo.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute top-3 left-3 flex flex-col gap-1.5">
