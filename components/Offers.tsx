@@ -105,7 +105,7 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
             className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar md:overflow-x-hidden"
             style={{ touchAction: 'pan-x' }}
           >
-            <div className="flex gap-8 py-6 whitespace-nowrap md:animate-marquee-reverse">
+            <div className="flex gap-8 py-6 whitespace-nowrap w-max md:animate-marquee-reverse">
               {doublePromos.map((promo, idx) => {
                 const store = stores.find(s => s.id === promo.storeId);
                 const discountPercent = promo.oldPrice ? Math.round(((promo.oldPrice - promo.price) / promo.oldPrice) * 100) : 15;
