@@ -113,7 +113,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
     });
   }, [category, searchTerm, selectedStore, allProducts]);
 
-  const categories = ['Todos', 'Harinas', 'Lácteos', 'Congelados', 'Bebidas', 'Chucherías', 'Salsas', 'Almacén'];
+  const categories = ['Todos', 'Harinas', 'Lácteos', 'Congelados', 'Bebidas', 'Chucherías', 'Salsas', 'Almacén', 'Promociones'];
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">

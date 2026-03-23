@@ -102,13 +102,13 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
             {/* Controles del carrusel (visibles en hover) */}
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
             >
               <ChevronLeft size={24} />
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
             >
               <ChevronRight size={24} />
             </button>
@@ -119,7 +119,7 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${index === currentSlide ? 'bg-ven-yellow w-6' : 'bg-white/50'}`}
+                  className={`p-2 w-3 h-3 rounded-full transition-all ${index === currentSlide ? 'bg-ven-yellow w-6' : 'bg-white/50'}`}
                 />
               ))}
             </div>

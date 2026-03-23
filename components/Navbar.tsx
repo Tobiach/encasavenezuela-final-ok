@@ -117,7 +117,7 @@ const Navbar: React.FC<NavbarProps> = ({
           >
             <ShoppingCart size={20} className={bump ? 'animate-bounce' : ''} />
             {cartCount > 0 && (
-              <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-red text-white' : 'bg-ven-yellow text-venezuela-dark'}`}>
+              <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-red text-white' : 'bg-ven-yellow text-venezuela-dark'}`}>
                 {cartCount}
               </span>
             )}
@@ -215,9 +215,9 @@ const Navbar: React.FC<NavbarProps> = ({
               <span className="text-3xl font-black uppercase tracking-tighter text-venezuela-brown">Inicio</span>
               <span className="text-2xl">🏠</span>
             </button>
-            <button onClick={() => navTo('/catalog')} className="w-full text-left py-5 border-b border-black/10 flex items-center justify-between group active:scale-[0.98] transition-all">
+            <button onClick={() => navTo('/partners')} className="w-full text-left py-5 border-b border-black/10 flex items-center justify-between group active:scale-[0.98] transition-all">
               <span className="text-3xl font-black uppercase tracking-tighter text-venezuela-brown">Locales</span>
-              <span className="text-2xl">📦</span>
+              <span className="text-2xl">🏪</span>
             </button>
             <button
               onClick={() => {

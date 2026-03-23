@@ -79,7 +79,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
         
         <div className="flex items-center gap-2 text-gray-600 mb-4">
           <Clock size={12} className="text-venezuela-orange" />
-          <span className="text-[10px] md:text-xs font-black uppercase tracking-tight">35-50 min • Retiro</span>
+          <span className="text-[10px] md:text-xs font-black uppercase tracking-tight">{store.deliveryTime || '30-45 min'} • Retiro</span>
         </div>
 
         <div className="flex flex-wrap gap-1 mt-auto">
@@ -120,7 +120,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           <h3 className="text-base md:text-xl font-black text-venezuela-brown leading-tight mb-2 group-hover:text-venezuela-orange transition-colors truncate uppercase tracking-tight">{store.name}</h3>
           <div className="flex items-center gap-2 text-gray-600">
             <Clock size={14} className="text-venezuela-orange" />
-            <span className="text-[10px] md:text-xs font-black uppercase tracking-tight">30-45 min • Retiro</span>
+            <span className="text-[10px] md:text-xs font-black uppercase tracking-tight">{store.deliveryTime || '30-45 min'} • Retiro</span>
           </div>
         </div>
         <div className="mt-auto pt-4 border-t border-black/5 flex items-center justify-between">

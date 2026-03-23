@@ -140,7 +140,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="pt-12 border-t border-black/5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[11px] text-gray-700 font-black uppercase tracking-[0.4em]">© 2024 EnCasa Venezuela | El Sabor que nos Une</p>
+          <p className="text-[11px] text-gray-700 font-black uppercase tracking-[0.4em]">© {new Date().getFullYear()} EnCasa Venezuela | El Sabor que nos Une</p>
           <div className="flex items-center gap-3 text-[11px] text-gray-700 font-black uppercase tracking-[0.2em] bg-venezuela-dark px-4 py-2 rounded-full border border-black/5">
             <Sparkles size={14} className="text-ven-yellow" /> HECHO PARA LA COMUNIDAD
           </div>

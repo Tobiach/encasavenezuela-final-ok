@@ -26,7 +26,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
     note: ''
   });
 
-  const [tipAmount, setTipAmount] = useState<number>(797);
+  const [tipAmount, setTipAmount] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -387,7 +387,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setFormData(p => ({ ...p, paymentMethod: 'Transferencia' }))}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${formData.paymentMethod === 'Transferencia' ? 'bg-ven-blue/10 border-ven-blue text-venezuela-brown' : 'bg-black/5 border-transparent text-gray-500'}`}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${formData.paymentMethod === 'Transferencia' ? 'bg-ven-yellow/10 border-ven-yellow text-venezuela-brown' : 'bg-black/5 border-transparent text-gray-500'}`}
                 >
                   <Wallet size={24} />
                   <span className="text-[10px] font-black uppercase">Transferencia</span>
