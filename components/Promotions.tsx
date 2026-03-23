@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Zap, Plus, Flame, Store, Clock } from 'lucide-react';
 import { Product } from '../types';
@@ -14,6 +14,8 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
   const navigate = useNavigate();
   const { stores } = useStores();
   const { promoCombos } = useProducts();
+  const [isMobileRailPaused, setIsMobileRailPaused] = useState(false);
+  const mobileCombos = [...promoCombos, ...promoCombos];
 
   return (
     <section className="py-12 bg-venezuela-dark">
@@ -29,7 +31,82 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
           </p>
         </div>
 
-        <div className="flex overflow-x-auto no-scrollbar md:grid md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto pb-8 -mx-6 px-6 md:pb-0 md:mx-auto md:px-0">
+        <div
+          className="md:hidden flex overflow-x-auto no-scrollbar scroll-smooth touch-pan-x -mx-6 px-6 pb-8"
+          onMouseEnter={() => setIsMobileRailPaused(true)}
+          onMouseLeave={() => setIsMobileRailPaused(false)}
+          onFocusCapture={() => setIsMobileRailPaused(true)}
+          onBlurCapture={() => setIsMobileRailPaused(false)}
+          onTouchStart={() => setIsMobileRailPaused(true)}
+          onTouchEnd={() => setIsMobileRailPaused(false)}
+          onTouchCancel={() => setIsMobileRailPaused(false)}
+          style={{ touchAction: 'pan-x' }}
+        >
+          <div className={`flex w-max gap-6 ${isMobileRailPaused ? '' : 'animate-mobile-marquee'}`}>
+            {mobileCombos.map((combo, index) => {
+              const store = stores.find(s => s.id === combo.storeId);
+              const savings = combo.oldPrice ? combo.oldPrice - combo.price : 0;
+              const savingsPercent = combo.oldPrice ? Math.round((savings / combo.oldPrice) * 100) : 0;
+
+              return (
+                <div 
+                  key={`${combo.id}-${index}`} 
+                  onClick={() => navigate(`/promotion/${combo.id}`)}
+                  className="min-w-[320px] md:min-w-0 bg-white rounded-[40px] border-2 border-black/5 p-5 md:p-7 flex flex-row items-center gap-5 md:gap-8 group hover:border-ven-yellow transition-all duration-500 relative overflow-hidden cursor-pointer shadow-2xl hover:-translate-y-2"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-ven-yellow/5 via-transparent to-ven-red/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                  <div className="relative w-32 h-32 md:w-44 md:h-44 shrink-0 rounded-[32px] overflow-hidden shadow-2xl border-2 border-black/5 bg-white">
+                    <img src={combo.img} alt={combo.name} className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-700 object-center" />
+                    <div className="absolute top-3 left-3 bg-white/40 backdrop-blur-md text-venezuela-brown px-3 py-1 rounded-xl text-[9px] font-black uppercase flex items-center gap-1.5 shadow-xl border border-white/20">
+                      <Zap size={10} fill="currentColor" className="text-ven-yellow" /> DESTACADO
+                    </div>
+                    {savingsPercent > 0 && (
+                      <div className="absolute bottom-3 right-3 bg-ven-red/80 backdrop-blur-sm text-white px-3 py-1 rounded-xl text-[10px] font-black shadow-2xl border border-white/20">
+                        -{savingsPercent}%
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col flex-grow">
+                    <div className="flex items-center gap-2 text-gray-500 mb-3">
+                       <Store size={12} className="text-ven-yellow" />
+                       <span className="text-[9px] font-black uppercase tracking-[0.2em]">{store?.name || 'Local Aliado'}</span>
+                    </div>
+                    <h3 className="text-lg md:text-2xl font-black mb-2 group-hover:text-venezuela-orange transition-colors leading-tight uppercase tracking-tight text-venezuela-brown">
+                      {combo.name}
+                    </h3>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="bg-white/40 backdrop-blur-md text-ven-red text-[9px] font-black px-3 py-1 rounded-lg uppercase flex items-center gap-1.5 border border-white/20 shadow-sm">
+                        <Flame size={10} fill="currentColor" /> Relámpago
+                      </span>
+                      <span className="bg-white/40 backdrop-blur-md text-ven-blue text-[9px] font-black px-3 py-1 rounded-lg uppercase flex items-center gap-1.5 border border-white/20 shadow-sm">
+                        <Clock size={10} /> Limitado
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="flex flex-col">
+                        {combo.oldPrice && (
+                          <span className="text-[11px] text-gray-400 line-through font-bold mb-0.5">${combo.oldPrice}</span>
+                        )}
+                        <span className="text-2xl md:text-3xl font-black text-venezuela-brown tracking-tighter">${combo.price}</span>
+                      </div>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); onAddToCart(combo, combo.storeId); }}
+                        className="bg-gradient-to-br from-ven-yellow to-venezuela-orange text-white p-3.5 md:p-4 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-2xl shadow-venezuela-orange/30 border border-white/20"
+                      >
+                        <Plus size={24} strokeWidth={4} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="hidden md:grid md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
           {promoCombos.map(combo => {
             const store = stores.find(s => s.id === combo.storeId);
             const savings = combo.oldPrice ? combo.oldPrice - combo.price : 0;
@@ -92,6 +169,30 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
           })}
         </div>
       </div>
+
+      <style>{`
+        @keyframes mobile-marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+
+        .animate-mobile-marquee {
+          animation: mobile-marquee 35s linear infinite;
+        }
+
+        .touch-pan-x {
+          touch-action: pan-x;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-mobile-marquee {
+            animation: none !important;
+          }
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </section>
   );
 };

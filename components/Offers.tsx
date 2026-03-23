@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tag, ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../lib/hooks/useProducts';
@@ -8,7 +8,8 @@ import { Product } from '../types';
 const Offers: React.FC = () => {
   const navigate = useNavigate();
   const { stores } = useStores();
-  const { allProducts, promoCombos } = useProducts();
+  const { allProducts, promoCombos, loading } = useProducts();
+  const [isComboRailPaused, setIsComboRailPaused] = useState(false);
   
   const offerProducts = allProducts.slice(0, 4).map((p: Product) => ({
     ...p,
@@ -17,6 +18,12 @@ const Offers: React.FC = () => {
   }));
 
   const doublePromos = [...promoCombos, ...promoCombos, ...promoCombos];
+
+  const debugPanel = import.meta.env.DEV && !loading && promoCombos.length === 0 ? (
+    <div style={{ background: '#ff0', color: '#000', padding: '8px', fontFamily: 'monospace', fontSize: '12px', marginBottom: '8px' }}>
+      Debug: 0 combos cargados | allProducts={allProducts.length} | loading={String(loading)}
+    </div>
+  ) : null;
 
   return (
     <section className="py-16 bg-venezuela-dark relative overflow-hidden">
@@ -93,6 +100,7 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
           ))}
         </div>
 
+        {debugPanel}
         <div className="relative pt-16 border-t border-black/5 overflow-hidden">
           <div className="flex items-center gap-4 mb-10">
             <div className="w-10 h-10 bg-ven-yellow rounded-xl flex items-center justify-center text-white shadow-xl">
@@ -104,8 +112,15 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
           <div
             className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar md:overflow-x-hidden -mx-6 px-4 md:mx-0 md:px-0"
             style={{ touchAction: 'pan-x' }}
+            onMouseEnter={() => setIsComboRailPaused(true)}
+            onMouseLeave={() => setIsComboRailPaused(false)}
+            onFocusCapture={() => setIsComboRailPaused(true)}
+            onBlurCapture={() => setIsComboRailPaused(false)}
+            onTouchStart={() => setIsComboRailPaused(true)}
+            onTouchEnd={() => setIsComboRailPaused(false)}
+            onTouchCancel={() => setIsComboRailPaused(false)}
           >
-            <div className="flex gap-4 py-6 w-max md:gap-8 md:animate-marquee-reverse">
+            <div className={`flex gap-4 py-6 w-max md:gap-8 ${isComboRailPaused ? '' : 'md:animate-marquee-reverse'}`}>
               {doublePromos.map((promo, idx) => {
                 const store = stores.find(s => s.id === promo.storeId);
                 const discountPercent = promo.oldPrice ? Math.round(((promo.oldPrice - promo.price) / promo.oldPrice) * 100) : 15;
@@ -161,10 +176,25 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
           0% { transform: translateX(-50%); }
           100% { transform: translateX(0); }
         }
-        .animate-marquee-reverse {
-          display: flex;
-          width: max-content;
-          animation: marquee-reverse 30s linear infinite;
+        @media (min-width: 768px) {
+          .md\\:animate-marquee-reverse,
+          .animate-marquee-reverse {
+            display: flex;
+            width: max-content;
+            animation: marquee-reverse 30s linear infinite;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .md\\:animate-marquee-reverse {
+            animation: none;
+            width: auto;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-marquee-reverse {
+            animation: none !important;
+          }
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

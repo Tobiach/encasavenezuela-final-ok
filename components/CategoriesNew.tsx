@@ -7,6 +7,7 @@ const CategoriesNew: React.FC = () => {
   const navigate = useNavigate();
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -66,8 +67,15 @@ const CategoriesNew: React.FC = () => {
           WebkitOverflowScrolling: 'touch',
           scrollSnapType: 'x proximity'
         }}
+        onMouseEnter={() => setIsAutoScrollPaused(true)}
+        onMouseLeave={() => setIsAutoScrollPaused(false)}
+        onFocusCapture={() => setIsAutoScrollPaused(true)}
+        onBlurCapture={() => setIsAutoScrollPaused(false)}
+        onTouchStart={() => setIsAutoScrollPaused(true)}
+        onTouchEnd={() => setIsAutoScrollPaused(false)}
+        onTouchCancel={() => setIsAutoScrollPaused(false)}
       >
-        <div className="flex gap-3 md:gap-10 px-4 md:px-6 py-4 md:py-8 md:animate-marquee">
+        <div className={`flex gap-3 md:gap-10 px-4 md:px-6 py-4 md:py-8 ${isAutoScrollPaused ? '' : 'md:animate-marquee'}`}>
           {doubleCategories.map((cat, idx) => (
             <div 
               key={`${cat.name}-${idx}`}
@@ -130,6 +138,12 @@ const CategoriesNew: React.FC = () => {
             display: flex;
             width: max-content;
             animation: marquee 30s linear infinite;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .md\\:animate-marquee {
+            animation: none !important;
           }
         }
         

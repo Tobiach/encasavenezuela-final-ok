@@ -46,6 +46,7 @@ export function useProducts() {
     if (_cache) return;
     fetchProducts()
       .then(setProducts)
+      .catch(err => console.error('[useProducts] Error cargando productos desde Supabase:', err))
       .finally(() => setLoading(false));
   }, []);
 
