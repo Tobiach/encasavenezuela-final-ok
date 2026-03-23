@@ -66,7 +66,7 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
               onClick={onCatalogClick}
               className="relative overflow-hidden text-white w-full sm:w-auto px-8 py-4 md:py-5 rounded-[24px] flex items-center justify-center gap-3 text-base md:text-lg font-black transition-all active:scale-95 uppercase tracking-widest border border-white/10"
               style={{
-                background: 'linear-gradient(135deg, #3D0C11 0%, #5C1A1A 50%, #D4AF37 100%)',
+                background: 'linear-gradient(135deg, #D4AF37 0%, #5C1A1A 50%, #3D0C11 100%)',
                 boxShadow: 'inset 18px 0 28px rgba(0,0,0,0.55), inset -18px 0 28px rgba(0,0,0,0.55), 0 10px 30px rgba(61,12,17,0.4)',
               }}
             >
