@@ -81,15 +81,15 @@ const ContextRecommendations: React.FC<ContextRecommendationsProps> = ({ onAddTo
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
-      <div className="bg-venezuela-dark border border-white/5 rounded-[40px] p-8 flex flex-col items-start gap-8 relative overflow-hidden group">
+      <div className="bg-gradient-to-b from-orange-50 via-yellow-50 to-white rounded-[40px] p-8 flex flex-col items-start gap-8 relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform"><Sparkles size={80} /></div>
-        
+
         <div className="flex items-center gap-6 z-10 w-full">
-          <div className="bg-white/5 p-5 rounded-3xl shrink-0">
+          <div className="bg-ven-yellow/10 p-5 rounded-3xl shrink-0">
             {context.icon}
           </div>
           <div>
-            <h4 className="text-2xl font-black mb-1 leading-tight">{context.title}</h4>
+            <h4 className="text-2xl font-black mb-1 leading-tight text-gray-900">{context.title}</h4>
             <div className="flex items-center gap-2">
               <Store size={12} className="text-ven-yellow" />
               <p className="text-sm text-gray-500 italic">{context.subtitle}</p>
@@ -100,22 +100,22 @@ const ContextRecommendations: React.FC<ContextRecommendationsProps> = ({ onAddTo
         {/* Lista Vertical tipo Feed */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 z-10 w-full">
           {context.items.map((item, i) => (
-            <div key={i} className="flex items-center justify-between gap-4 bg-black/40 p-4 rounded-3xl border border-white/5 hover:border-ven-yellow/30 transition-all w-full">
+            <div key={i} className="flex items-center justify-between gap-4 bg-white/90 backdrop-blur-md border-2 border-ven-yellow/20 shadow-xl p-4 rounded-3xl hover:shadow-2xl hover:border-ven-yellow/40 hover:scale-[1.02] transition-all duration-300 w-full">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/20 shrink-0">
+                <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-ven-yellow/30 shadow-lg bg-white shrink-0">
                   <img src={item.img} className="w-full h-full object-cover" alt={item.name} />
                 </div>
                 <div>
-                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-tighter truncate max-w-[150px]">{item.name}</p>
+                  <p className="font-bold text-gray-900 truncate max-w-[150px]">{item.name}</p>
                   <p className="text-[9px] text-gray-600 italic truncate max-w-[150px] mb-1">
                     {item.usageInfo || `${item.category} de calidad.`}
                   </p>
-                  <p className="text-sm font-bold text-white">${item.price}</p>
+                  <p className="text-xl font-black text-venezuela-orange">${item.price}</p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => onAddToCart(item, currentStore.id)}
-                className="bg-ven-yellow p-3 rounded-xl hover:scale-110 transition-transform active:scale-90 flex items-center justify-center shadow-lg shadow-yellow-500/20"
+                className="bg-ven-yellow p-3 rounded-xl hover:scale-110 active:scale-95 transition-all shadow-md shadow-yellow-500/20 flex items-center justify-center"
               >
                 <Plus size={16} strokeWidth={3} className="text-ven-blue" />
               </button>
