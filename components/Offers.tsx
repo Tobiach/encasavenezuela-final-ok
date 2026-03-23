@@ -116,11 +116,11 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
                     onClick={() => navigate(`/promotion/${promo.id}`)}
                     className="snap-start shrink-0 inline-block min-w-[240px] bg-white border-2 border-black/5 rounded-[40px] p-4 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:-translate-y-2"
                   >
-                    <div className="relative aspect-[4/5] rounded-[32px] overflow-hidden mb-4 border border-black/5 bg-white">
-                      <img 
-                        src={promo.img} 
-                        alt={promo.name} 
-                        className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+                    <div className="relative h-40 rounded-[32px] overflow-hidden mb-4 border border-black/5 bg-white">
+                      <img
+                        src={promo.img}
+                        alt={promo.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute top-3 left-3 flex flex-col gap-1.5">
