@@ -101,17 +101,20 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
             <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-venezuela-brown">Combos <span className="text-ven-yellow">Relámpago</span></h3>
           </div>
 
-          <div className="flex overflow-x-hidden no-scrollbar">
-            <div className="flex gap-8 animate-marquee-reverse whitespace-nowrap py-6">
+          <div
+            className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar md:overflow-x-hidden"
+            style={{ touchAction: 'pan-x' }}
+          >
+            <div className="flex gap-8 py-6 whitespace-nowrap md:animate-marquee-reverse">
               {doublePromos.map((promo, idx) => {
                 const store = stores.find(s => s.id === promo.storeId);
                 const discountPercent = promo.oldPrice ? Math.round(((promo.oldPrice - promo.price) / promo.oldPrice) * 100) : 15;
 
                 return (
-                  <div 
+                  <div
                     key={`${promo.id}-${idx}`}
                     onClick={() => navigate(`/promotion/${promo.id}`)}
-                    className="inline-block min-w-[240px] bg-white border-2 border-black/5 rounded-[40px] p-4 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:-translate-y-2"
+                    className="snap-start shrink-0 inline-block min-w-[240px] bg-white border-2 border-black/5 rounded-[40px] p-4 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:-translate-y-2"
                   >
                     <div className="relative aspect-[4/5] rounded-[32px] overflow-hidden mb-4 border border-black/5 bg-white">
                       <img 

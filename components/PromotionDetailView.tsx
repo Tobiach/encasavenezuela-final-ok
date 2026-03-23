@@ -12,10 +12,10 @@ const allProducts: Product[] = [
     usageInfo: "Harina P.A.N., Diablitos y Queso Llanero.",
     storeId: 'real-11'
   },
-  { 
-    id: 105, name: "Combo Perro Callejero", price: 8500, category: "Promociones", 
-    img: "https://picsum.photos/seed/hotdog/400/400", isCombo: true,
-    usageInfo: "Pan de perro caliente, salchichas, papitas tipo hilo, salsa de ajo y picante, salsa Maiz y Pance.",
+  {
+    id: 105, name: "Combo Cachapero", price: 8500, category: "Promociones",
+    img: '', isCombo: true,
+    usageInfo: "Cachapas de maíz tierno con queso de mano derretido, jamón, nata fresca y tequeños crujientes. Todo el sabor venezolano en un solo combo.",
     storeId: 'real-1'
   },
   { 
@@ -70,10 +70,11 @@ const comboDefinitions: Record<number, { name: string, qty: string, price?: numb
     { name: "Margarina Mavesa 500g", qty: "1 unidad", price: 1600 }
   ],
   105: [
-    { name: "Pan de Perro Caliente", qty: "6 unidades" },
-    { name: "Salchichas de Copetín", qty: "1 pack" },
-    { name: "Papitas tipo Hilo", qty: "1 bolsa" },
-    { name: "Salsas (Ajo, Picante, Maíz)", qty: "Set de potes" }
+    { name: "Cachapas de Maíz Tierno", qty: "4 unidades", yield: "4 porciones", suggest: "Almuerzo o merienda" },
+    { name: "Queso de Mano", qty: "1 unidad" },
+    { name: "Jamón Ahumado", qty: "200g" },
+    { name: "Nata Criolla", qty: "1 pote" },
+    { name: "Tequeños", qty: "6 unidades" }
   ],
   106: [
     { name: "Harina P.A.N. Blanca 1kg", qty: "2 unidades" },
