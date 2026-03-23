@@ -102,10 +102,10 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
           </div>
 
           <div
-            className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar md:overflow-x-hidden"
+            className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar md:overflow-x-hidden -mx-6 px-4 md:mx-0 md:px-0"
             style={{ touchAction: 'pan-x' }}
           >
-            <div className="flex gap-8 py-6 whitespace-nowrap w-max md:animate-marquee-reverse">
+            <div className="flex gap-4 py-6 w-max md:gap-8 md:animate-marquee-reverse">
               {doublePromos.map((promo, idx) => {
                 const store = stores.find(s => s.id === promo.storeId);
                 const discountPercent = promo.oldPrice ? Math.round(((promo.oldPrice - promo.price) / promo.oldPrice) * 100) : 15;
@@ -114,9 +114,9 @@ className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:borde
                   <div
                     key={`${promo.id}-${idx}`}
                     onClick={() => navigate(`/promotion/${promo.id}`)}
-                    className="snap-start shrink-0 inline-block min-w-[240px] bg-white border-2 border-black/5 rounded-[40px] p-4 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:-translate-y-2"
+                    className="snap-start shrink-0 inline-block w-[260px] max-w-[280px] bg-white border-2 border-black/5 rounded-[40px] p-4 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:-translate-y-2"
                   >
-                    <div className="relative h-40 rounded-[32px] overflow-hidden mb-4 border border-black/5 bg-white">
+                    <div className="relative h-36 rounded-[32px] overflow-hidden mb-4 border border-black/5 bg-white">
                       <img
                         src={promo.img}
                         alt={promo.name}
