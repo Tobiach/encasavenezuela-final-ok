@@ -79,30 +79,45 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   const buildWhatsAppMessage = (orderId?: string) => {
     const isPickup = formData.fulfillmentMethod === 'pickup';
 
+    // Escape sequences para evitar corrupción de emojis en builds de producción
+    const EM = {
+      bag:   '\uD83D\uDECD',         // 🛍
+      flag:  '\uD83C\uDDFB\uD83C\uDDEA', // 🇻🇪
+      user:  '\uD83D\uDC64',         // 👤
+      phone: '\uD83D\uDCDE',         // 📞
+      truck: '\uD83D\uDE9A',         // 🚚
+      pin:   '\uD83D\uDCCD',         // 📍
+      store: '\uD83C\uDFEA',         // 🏪
+      box:   '\uD83D\uDCE6',         // 📦
+      money: '\uD83D\uDCB0',         // 💰
+      note:  '\uD83D\uDCDD',         // 📝
+      check: '\u2705',               // ✅
+    };
+
     const orderItemsText = cart
-      .map((i) => `• ${i.qty}x ${i.product.name} ($${i.product.price * i.qty})`)
-      .join("\n");
+      .map((i) => `\u2022 ${i.qty}x ${i.product.name} ($${i.product.price * i.qty})`)
+      .join('\n');
 
     const deliveryText = isPickup
-      ? `\n🛍️ *Tipo de entrega:* Retiro en el local`
-      : `\n🚚 *Tipo de entrega:* Delivery\n📍 *Dirección:* ${formData.address}`;
-    const storeText = store ? `\n🏪 *Local:* ${store.name}` : "";
-    const orderIdText = orderId ? `\n🆔 *ID Pedido:* ${orderId}` : "";
-    const tipText = !isPickup && tipAmount > 0 ? `\n💰 *Propina:* $${tipAmount}` : "";
-    const noteText = !isPickup && formData.note ? `\n📝 *Nota:* ${formData.note}` : "";
+      ? `\n${EM.bag} *Tipo de entrega:* Retiro en el local`
+      : `\n${EM.truck} *Tipo de entrega:* Delivery\n${EM.pin} *Direcci\u00f3n:* ${formData.address}`;
+    const storeText = store ? `\n${EM.store} *Local:* ${store.name}` : '';
+    const orderIdText = orderId ? `\n\uD83D\uDD17 *ID Pedido:* ${orderId}` : '';
+    const tipText = !isPickup && tipAmount > 0 ? `\n${EM.money} *Propina:* $${tipAmount}` : '';
+    const noteText = !isPickup && formData.note ? `\n${EM.note} *Nota:* ${formData.note}` : '';
 
     return (
-      `🛍️ *Pedido EnCasa Venezuela* 🇻🇪\n\n` +
-      `👤 *Nombre:* ${formData.name}\n` +
-      `📞 *Teléfono:* ${formData.phone}` +
+      `${EM.bag} *Pedido EnCasa Venezuela* ${EM.flag}\n\n` +
+      `${EM.user} *Nombre:* ${formData.name}\n` +
+      `${EM.phone} *Tel\u00e9fono:* ${formData.phone}` +
       deliveryText +
       storeText +
       orderIdText +
-      `\n\n📦 *Items:*\n${orderItemsText}\n\n` +
-      `💰 *Total Estimado:* $${total}` +
+      `\n\n${EM.box} *Items:*\n${orderItemsText}\n\n` +
+      `${EM.money} *Total Estimado:* $${total}` +
       tipText +
       noteText +
-      `\n\n✅ ¿Me confirman stock?`
+      `\n\n${EM.check} \u00bfMe confirman stock?`
     );
   };
 
