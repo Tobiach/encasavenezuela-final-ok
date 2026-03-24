@@ -330,7 +330,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                   </button>
                   <button
                     type="button"
-                    onClick={() => setFormData(p => ({ ...p, fulfillmentMethod: 'pickup' }))}
+                    onClick={() => { setFormData(p => ({ ...p, fulfillmentMethod: 'pickup', address: '', note: '' })); setTipAmount(0); }}
                     className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${formData.fulfillmentMethod === 'pickup' ? 'bg-ven-yellow/10 border-ven-yellow text-venezuela-brown' : 'bg-black/5 border-transparent text-gray-500'}`}
                   >
                     <ShoppingBag size={22} />
@@ -434,7 +434,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
               </div>
             </div>
 
-            <div className="pt-4 border-t border-black/5">
+            {formData.fulfillmentMethod === 'delivery' && <div className="pt-4 border-t border-black/5">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Propina</p>
                 {tipAmount > 0 && <span className="text-ven-yellow font-black text-xs">+${tipAmount}</span>}
@@ -452,9 +452,9 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                   </button>
                 ))}
               </div>
-            </div>
+            </div>}
 
-            <div className="pt-4 border-t border-black/5">
+            {formData.fulfillmentMethod === 'delivery' && <div className="pt-4 border-t border-black/5">
               <div className="relative">
                 <MessageSquare className="absolute left-4 top-4 text-gray-500" size={18} />
                 <textarea
@@ -465,7 +465,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                   className="w-full bg-white border border-black/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:border-ven-yellow transition-all text-sm h-24 resize-none text-venezuela-brown placeholder:text-gray-400"
                 />
               </div>
-            </div>
+            </div>}
           </div>
 
           {/* Sugerencia IA */}
@@ -496,10 +496,12 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
               <span className="text-2xl font-black text-venezuela-brown">${subtotal}</span>
             </div>
 
-            <div className="flex justify-between items-center pb-4 border-t border-black/5 pt-4">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">Propina</span>
-              <span className="text-2xl font-black text-ven-yellow">${tipAmount}</span>
-            </div>
+            {formData.fulfillmentMethod === 'delivery' && (
+              <div className="flex justify-between items-center pb-4 border-t border-black/5 pt-4">
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">Propina</span>
+                <span className="text-2xl font-black text-ven-yellow">${tipAmount}</span>
+              </div>
+            )}
 
             <div className="pt-6 border-t-2 border-ven-yellow/30">
               <div className="flex justify-between items-end mb-6">
