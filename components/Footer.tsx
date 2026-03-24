@@ -91,7 +91,7 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-center gap-5 group">
                 <div className="w-12 h-12 rounded-2xl bg-ven-blue/10 flex items-center justify-center text-ven-blue group-hover:bg-ven-blue group-hover:text-white transition-all shadow-md border border-ven-blue/20"><Mail size={20} /></div>
-                <span className="group-hover:text-venezuela-brown transition-colors truncate">info.encasaven@gmail.com</span>
+                <span className="group-hover:text-venezuela-brown transition-colors truncate">Encasavenezuela.ar@gmail.com</span>
               </li>
               <li className="flex items-center gap-5 group">
                 <div className="w-12 h-12 rounded-2xl bg-ven-red/10 flex items-center justify-center text-ven-red group-hover:bg-ven-red group-hover:text-white transition-all shadow-md border border-ven-red/20"><MapPin size={20} /></div>

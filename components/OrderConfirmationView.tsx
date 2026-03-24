@@ -107,9 +107,15 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   };
 
   const openWhatsApp = (message: string) => {
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    const encodedMessage = encodeURIComponent(
+      new TextEncoder().encode(message).reduce((acc, byte) => acc + String.fromCharCode(byte), '')
+    );
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
+
+
 
   const handleConfirmOrder = async () => {
     if (isSubmitting) return;
