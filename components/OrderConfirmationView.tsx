@@ -77,45 +77,39 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   ];
 
   const buildWhatsAppMessage = (orderId?: string) => {
+    const isPickup = formData.fulfillmentMethod === 'pickup';
+
     const orderItemsText = cart
       .map((i) => `• ${i.qty}x ${i.product.name} ($${i.product.price * i.qty})`)
       .join("\n");
 
-    const isPickup = formData.fulfillmentMethod === 'pickup';
-    const tipText = tipAmount > 0 ? `\n\n💰 *Propina:* $${tipAmount}` : "";
-    const noteText = formData.note ? `\n\n📝 *Nota:* ${formData.note}` : "";
-    const storeText = store ? `\n🏪 *Local:* ${store.name}` : "";
-    const orderIdText = orderId ? `\n🆔 *Order ID:* ${orderId}` : "";
     const deliveryText = isPickup
       ? `\n🛍️ *Tipo de entrega:* Retiro en el local`
       : `\n🚚 *Tipo de entrega:* Delivery\n📍 *Dirección:* ${formData.address}`;
+    const storeText = store ? `\n🏪 *Local:* ${store.name}` : "";
+    const orderIdText = orderId ? `\n🆔 *ID Pedido:* ${orderId}` : "";
+    const tipText = !isPickup && tipAmount > 0 ? `\n💰 *Propina:* $${tipAmount}` : "";
+    const noteText = !isPickup && formData.note ? `\n📝 *Nota:* ${formData.note}` : "";
 
-    const rawMessage =
-      `*Pedido EnCasa Venezuela* 🇻🇪\n\n` +
+    return (
+      `🛍️ *Pedido EnCasa Venezuela* 🇻🇪\n\n` +
       `👤 *Nombre:* ${formData.name}\n` +
-      `📱 *Teléfono:* ${formData.phone}` +
+      `📞 *Teléfono:* ${formData.phone}` +
       deliveryText +
       storeText +
       orderIdText +
-      `\n\n🛒 *Items:*\n${orderItemsText}\n\n` +
-      `💵 *Total Estimado:* $${total}` +
+      `\n\n📦 *Items:*\n${orderItemsText}\n\n` +
+      `💰 *Total Estimado:* $${total}` +
       tipText +
       noteText +
-      `\n\n¿Me confirman stock? 🙏`;
-
-    return rawMessage;
+      `\n\n✅ ¿Me confirman stock?`
+    );
   };
 
   const openWhatsApp = (message: string) => {
-    const encodedMessage = encodeURIComponent(
-      new TextEncoder().encode(message).reduce((acc, byte) => acc + String.fromCharCode(byte), '')
-    );
-
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
-
-
 
   const handleConfirmOrder = async () => {
     if (isSubmitting) return;
