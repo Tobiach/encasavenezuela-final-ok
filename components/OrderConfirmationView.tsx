@@ -23,7 +23,8 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
     phone: '',
     address: '',
     paymentMethod: 'Efectivo' as 'Efectivo' | 'Transferencia',
-    note: ''
+    note: '',
+    fulfillmentMethod: 'delivery' as 'delivery' | 'pickup',
   });
 
   const [tipAmount, setTipAmount] = useState<number>(0);
@@ -80,23 +81,27 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
       .map((i) => `• ${i.qty}x ${i.product.name} ($${i.product.price * i.qty})`)
       .join("\n");
 
-    const tipText = tipAmount > 0 ? `\n\n*Propina:* $${tipAmount}` : "";
-    const noteText = formData.note ? `\n\n*Nota:* ${formData.note}` : "";
-    const storeText = store ? `\n*Local:* ${store.name}` : "";
-    const orderIdText = orderId ? `\n*Order ID:* ${orderId}` : "";
+    const isPickup = formData.fulfillmentMethod === 'pickup';
+    const tipText = tipAmount > 0 ? `\n\n💰 *Propina:* $${tipAmount}` : "";
+    const noteText = formData.note ? `\n\n📝 *Nota:* ${formData.note}` : "";
+    const storeText = store ? `\n🏪 *Local:* ${store.name}` : "";
+    const orderIdText = orderId ? `\n🆔 *Order ID:* ${orderId}` : "";
+    const deliveryText = isPickup
+      ? `\n🛍️ *Tipo de entrega:* Retiro en el local`
+      : `\n🚚 *Tipo de entrega:* Delivery\n📍 *Dirección:* ${formData.address}`;
 
     const rawMessage =
       `*Pedido EnCasa Venezuela* 🇻🇪\n\n` +
-      `*Nombre:* ${formData.name}\n` +
-      `*Teléfono:* ${formData.phone}\n` +
-      `*Dirección:* ${formData.address}` +
+      `👤 *Nombre:* ${formData.name}\n` +
+      `📱 *Teléfono:* ${formData.phone}` +
+      deliveryText +
       storeText +
       orderIdText +
-      `\n\n*Items:*\n${orderItemsText}\n\n` +
-      `*Total Estimado:* $${total}` +
+      `\n\n🛒 *Items:*\n${orderItemsText}\n\n` +
+      `💵 *Total Estimado:* $${total}` +
       tipText +
       noteText +
-      `\n\n¿Me confirman stock?`;
+      `\n\n¿Me confirman stock? 🙏`;
 
     return rawMessage;
   };
@@ -109,7 +114,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   const handleConfirmOrder = async () => {
     if (isSubmitting) return;
 
-    if (!formData.name || !formData.phone || !formData.address) {
+    if (!formData.name || !formData.phone || (formData.fulfillmentMethod === 'delivery' && !formData.address)) {
       alert("Por favor completa los campos requeridos.");
       return;
     }
@@ -158,7 +163,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
             status: 'pending',
             customer_name: formData.name,
             customer_phone: formData.phone,
-            customer_address: formData.address,
+            customer_address: formData.fulfillmentMethod === 'pickup' ? 'RETIRO EN LOCAL' : formData.address,
             payment_method: formData.paymentMethod,
             note: formData.note || null,
           })
@@ -201,7 +206,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
               id: orderId ?? 'sin-id',
               customer_name: formData.name,
               customer_phone: formData.phone,
-              customer_address: formData.address,
+              customer_address: formData.fulfillmentMethod === 'pickup' ? 'RETIRO EN LOCAL' : formData.address,
               store_id: uniqueStoreIds[0] ?? null,
               total,
               payment_method: formData.paymentMethod,
@@ -310,17 +315,51 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                   className="w-full bg-white border border-black/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:border-ven-yellow transition-all text-sm text-venezuela-brown placeholder:text-gray-400"
                 />
               </div>
-              <div className="relative">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  placeholder="Dirección de entrega"
-                  className="w-full bg-white border border-black/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:border-ven-yellow transition-all text-sm text-venezuela-brown placeholder:text-gray-400"
-                />
+
+              {/* Selector de tipo de entrega */}
+              <div>
+                <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] mb-3">Tipo de entrega</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData(p => ({ ...p, fulfillmentMethod: 'delivery' }))}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${formData.fulfillmentMethod === 'delivery' ? 'bg-ven-yellow/10 border-ven-yellow text-venezuela-brown' : 'bg-black/5 border-transparent text-gray-500'}`}
+                  >
+                    <MapPin size={22} />
+                    <span className="text-[10px] font-black uppercase">🚚 Delivery</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(p => ({ ...p, fulfillmentMethod: 'pickup' }))}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${formData.fulfillmentMethod === 'pickup' ? 'bg-ven-yellow/10 border-ven-yellow text-venezuela-brown' : 'bg-black/5 border-transparent text-gray-500'}`}
+                  >
+                    <ShoppingBag size={22} />
+                    <span className="text-[10px] font-black uppercase">🛍️ Retiro</span>
+                  </button>
+                </div>
               </div>
+
+              {/* Dirección — solo para delivery */}
+              {formData.fulfillmentMethod === 'delivery' ? (
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    placeholder="Dirección de entrega"
+                    className="w-full bg-white border border-black/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:border-ven-yellow transition-all text-sm text-venezuela-brown placeholder:text-gray-400"
+                  />
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 bg-ven-yellow/10 border border-ven-yellow/30 rounded-2xl px-4 py-3">
+                  <ShoppingBag size={16} className="text-ven-yellow shrink-0" />
+                  <p className="text-[11px] font-black text-ven-yellow uppercase tracking-wide">
+                    Retirás el pedido directamente en el local
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="pt-4 border-t border-black/5">
