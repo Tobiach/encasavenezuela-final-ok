@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, ChevronRight, ArrowLeft, Share2, Check, AlertCircle } from 'lucide-react';
 import { Product, User } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LOGO_ENCASA_IMAGE } from '../src/assets/imagenes';
 
 interface NavbarProps {
@@ -36,6 +36,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const [showShareTooltip, setShowShareTooltip] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 8);
@@ -74,6 +75,16 @@ const Navbar: React.FC<NavbarProps> = ({
     closeMenus();
   };
 
+  // Logo y botón Inicio: scroll al top si ya está en "/", navega si no
+  const handleNavHome = () => {
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      onNavHome();
+    }
+    closeMenus();
+  };
+
   const handleShare = () => {
     const url = window.location.origin + window.location.pathname + window.location.hash;
     navigator.clipboard.writeText(url).then(() => {
@@ -89,7 +100,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
           {/* LOGO + BRAND — Desktop only */}
           <div
-            onClick={() => { onNavHome(); closeMenus(); }}
+            onClick={handleNavHome}
             className="hidden lg:flex items-center gap-4 cursor-pointer group"
           >
             <div className="relative">
@@ -107,7 +118,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
           {/* LOGO centrado — Mobile only */}
           <div
-            onClick={() => { onNavHome(); closeMenus(); }}
+            onClick={handleNavHome}
             className="lg:hidden absolute left-1/2 -translate-x-1/2 cursor-pointer z-10 active:scale-95 transition-transform duration-150"
           >
             <img
@@ -218,7 +229,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <div className="fixed inset-0 z-[60] bg-venezuela-dark/98 backdrop-blur-3xl flex flex-col pt-24 px-8 animate-in fade-in slide-in-from-top-2 duration-200 lg:hidden overflow-y-auto">
           <div className="space-y-4">
             <p className="text-[12px] font-black text-gray-600 uppercase tracking-[0.4em] mb-4 drop-shadow-sm">Menú Principal</p>
-            <button onClick={() => navTo('/')} className="w-full text-left py-5 border-b border-black/10 flex items-center justify-between group active:scale-[0.98] transition-all">
+            <button onClick={handleNavHome} className="w-full text-left py-5 border-b border-black/10 flex items-center justify-between group active:scale-[0.98] transition-all">
               <span className="text-3xl font-black uppercase tracking-tighter text-venezuela-brown">Inicio</span>
               <span className="text-2xl">🏠</span>
             </button>

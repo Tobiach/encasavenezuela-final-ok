@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Tag, ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
+import { ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../lib/hooks/useProducts';
 import { useStores } from '../lib/hooks/useStores';
-import { Product } from '../types';
 
 const Offers: React.FC = () => {
   const navigate = useNavigate();
@@ -11,11 +10,13 @@ const Offers: React.FC = () => {
   const { allProducts, promoCombos, loading } = useProducts();
   const [isComboRailPaused, setIsComboRailPaused] = useState(false);
   
-  const offerProducts = allProducts.slice(0, 4).map((p: Product) => ({
-    ...p,
-    discount: Math.floor(Math.random() * 15) + 10,
-    oldPrice: Math.round(p.price * 1.2)
-  }));
+  // Secciones estilo app — datos reales de Supabase ya cacheados, sin nuevas requests
+  const sections = [
+    { emoji: '\uD83D\uDD25', label: 'Lo m\u00e1s pedido',   items: allProducts.slice(0, 8) },
+    { emoji: '\uD83C\uDD95', label: 'Nuevos ingresos', items: allProducts.slice(4, 12) },
+    { emoji: '\uD83D\uDFE1', label: 'Ofertas del d\u00eda', items: allProducts.filter(p => !!p.oldPrice).slice(0, 8) },
+    { emoji: '\uD83D\uDCB8', label: 'Todo a $5.999',   items: allProducts.filter(p => p.price <= 5999).slice(0, 8) },
+  ].filter(s => s.items.length > 0);
 
   const doublePromos = [...promoCombos, ...promoCombos, ...promoCombos];
 
@@ -53,48 +54,45 @@ const Offers: React.FC = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-16">
-          {offerProducts.map((product: Product & { discount: number; oldPrice: number }) => (
-            <div 
-              key={product.id}
-              onClick={() => navigate('/catalog', { state: { category: product.category } })}
-className="group bg-white border-2 border-black/5 rounded-[32px] p-4 hover:border-ven-yellow transition-all duration-500 cursor-pointer relative flex flex-col shadow-xl hover:-translate-y-2"            >
-              <div className="absolute top-5 left-5 z-20 bg-ven-red text-white px-3 py-1.5 rounded-xl text-[11px] font-black shadow-2xl flex items-center gap-1.5 border border-white/20">
-                <Tag size={12} fill="currentColor" />
-                -{product.discount}%
-              </div>
-
-              <div className="aspect-[3/4] rounded-[24px] overflow-hidden mb-4 relative border border-black/5">
-                <img 
-                  src={product.img} 
-                  alt={product.name} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-
-              <div className="space-y-1.5 mb-4">
-                <span className="text-[10px] font-black text-ven-yellow uppercase tracking-[0.2em] bg-ven-yellow/10 px-2 py-0.5 rounded-lg border border-ven-yellow/20">
-                  {product.category}
-                </span>
-                <h3 className="text-base md:text-lg font-black text-venezuela-brown uppercase tracking-tight line-clamp-1 group-hover:text-venezuela-orange transition-colors mt-2">
-                  {product.name}
-                </h3>
-              </div>
-
-              <div className="mt-auto flex items-end justify-between">
-                <div className="flex flex-col">
-                  <span className="text-[11px] text-gray-400 line-through font-bold mb-0.5">
-                    ${product.oldPrice}
-                  </span>
-                  <span className="text-2xl font-black text-venezuela-brown tracking-tighter">
-                    ${product.price}
-                  </span>
-                </div>
-                <div className="w-12 h-12 bg-ven-yellow/10 rounded-2xl flex items-center justify-center text-ven-yellow group-hover:bg-gradient-to-br group-hover:from-ven-yellow group-hover:to-venezuela-orange group-hover:text-white transition-all shadow-lg">
-                  <ArrowRight size={24} />
-                </div>
+        {/* Secciones horizontales estilo app */}
+        <div className="space-y-10 mb-16">
+          {sections.map(({ emoji, label, items }) => (
+            <div key={label}>
+              <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-venezuela-brown mb-4">
+                {emoji} {label}
+              </h3>
+              <div
+                className="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 -mx-6 px-6"
+                style={{ touchAction: 'pan-x' }}
+              >
+                {items.map((product) => (
+                  <div
+                    key={product.id}
+                    onClick={() => navigate('/catalog', { state: { category: product.category } })}
+                    className="snap-start shrink-0 w-[152px] bg-white border-2 border-black/5 rounded-[24px] p-3 cursor-pointer hover:border-ven-yellow active:scale-95 transition-all"
+                  >
+                    <div className="aspect-square rounded-[18px] overflow-hidden mb-2 border border-black/5 bg-gray-50">
+                      <img
+                        src={product.img}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <span className="block text-[8px] font-black text-ven-yellow uppercase tracking-widest truncate mb-1">
+                      {product.category}
+                    </span>
+                    <p className="text-[11px] font-black text-venezuela-brown uppercase tracking-tight line-clamp-2 leading-tight mb-2">
+                      {product.name}
+                    </p>
+                    <div className="flex flex-col">
+                      {product.oldPrice && (
+                        <span className="text-[9px] text-gray-400 line-through">${product.oldPrice}</span>
+                      )}
+                      <span className="text-sm font-black text-venezuela-brown">${product.price}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
