@@ -15,21 +15,21 @@ const Offers: React.FC = () => {
   const sectionCards = [
     {
       key: 'pedido',
-      emoji: '\uD83D\uDD25', label: 'Lo m\u00e1s pedido',
+      emoji: '🔥', label: 'Lo más pedido',
       subtitle: 'Los favoritos de la comunidad',
       img: getImageUrl('abarrotes_1.png'),
       items: allProducts.slice(0, 8),
     },
     {
       key: 'nuevo',
-      emoji: '\uD83C\uDD95', label: 'Nuevos ingresos',
-      subtitle: 'Descubr\u00ed lo nuevo de esta semana',
+      emoji: '🆕', label: 'Nuevos ingresos',
+      subtitle: 'Descubrí lo nuevo de esta semana',
       img: getImageUrl('harinas1.png'),
       items: allProducts.slice(4, 12),
     },
     {
       key: 'oferta',
-      emoji: '\uD83D\uDFE1', label: 'Ofertas del d\u00eda',
+      emoji: '🟡', label: 'Ofertas del día',
       subtitle: 'Tiempo limitado',
       img: getImageUrl('golosinas_1.png'),
       items: (() => {
@@ -39,7 +39,7 @@ const Offers: React.FC = () => {
     },
     {
       key: 'budget',
-      emoji: '\uD83D\uDCB8', label: 'Todo a $5.999',
+      emoji: '💸', label: 'Todo a $5.999',
       subtitle: 'Opciones para comprar y ahorrar',
       img: getImageUrl('snacks1.png'),
       items: allProducts.filter(p => p.price <= 5999).slice(0, 8),
@@ -48,13 +48,19 @@ const Offers: React.FC = () => {
 
   const activeCard = sectionCards.find(s => s.key === activeSection);
 
-  // 2 copias: la animación va de translateX(0) a translateX(-50%) — loop seamless
-  const marqueeItems = [...promoCombos, ...promoCombos];
+  // Mismo patrón que Promotions.tsx: duplicar items + estado de pausa en touch
+  const carouselItems = [...promoCombos, ...promoCombos];
+  const [isRailPaused, setIsRailPaused] = useState(false);
 
   return (
-    <section className="py-16 bg-venezuela-dark relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-ven-yellow/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-ven-blue/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
+    // ⚠️ SIN overflow-hidden en la section — ese era el bug que bloqueaba el
+    // scroll táctil en iOS Safari. Los círculos de blur tienen su propio wrapper.
+    <section className="py-16 bg-venezuela-dark relative">
+      {/* Círculos decorativos — overflow-hidden solo sobre ellos, no sobre la section */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-ven-yellow/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-ven-blue/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -70,7 +76,7 @@ const Offers: React.FC = () => {
               Encontrá rápido lo más pedido, novedades, promos del día y opciones para ahorrar.
             </p>
           </div>
-          <button 
+          <button
             onClick={() => navigate('/catalog')}
             className="group flex items-center gap-3 bg-black/5 hover:bg-black/10 border border-black/10 px-6 py-3 rounded-2xl transition-all active:scale-95 text-venezuela-brown"
           >
@@ -175,13 +181,16 @@ const Offers: React.FC = () => {
             </div>
           </div>
 
-          {/* Rail — overflow hidden para que la animación CSS no genere scrollbar */}
-          <div className="relative overflow-hidden -mx-6">
-            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-venezuela-dark to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-venezuela-dark to-transparent pointer-events-none z-10" />
-
-            <div className="combo-marquee gap-5 py-6 pl-6">
-              {marqueeItems.map((promo, idx) => {
+          {/* Rail — arquitectura idéntica a Promotions.tsx: flex+overflow-x-auto en el mismo div */}
+          <div
+            className="flex overflow-x-auto no-scrollbar scroll-smooth touch-pan-x -mx-6 px-6 pb-6 pt-2"
+            style={{ touchAction: 'pan-x' }}
+            onTouchStart={() => setIsRailPaused(true)}
+            onTouchEnd={() => setIsRailPaused(false)}
+            onTouchCancel={() => setIsRailPaused(false)}
+          >
+            <div className={`flex w-max gap-5 ${isRailPaused ? '' : 'combo-marquee-anim'}`}>
+              {carouselItems.map((promo, idx) => {
                 const store = stores.find(s => s.id === promo.storeId);
                 const discountPercent = promo.oldPrice
                   ? Math.round(((promo.oldPrice - promo.price) / promo.oldPrice) * 100)
@@ -190,7 +199,8 @@ const Offers: React.FC = () => {
                   <div
                     key={`${promo.id}-${idx}`}
                     onClick={() => navigate(`/promotion/${promo.id}`)}
-                    className="shrink-0 w-[255px] bg-white border border-black/5 rounded-[26px] p-4 cursor-pointer active:scale-95 transition-transform shadow-lg"
+                    style={{ width: '255px', flexShrink: 0 }}
+                    className="bg-white border border-black/5 rounded-[26px] p-4 cursor-pointer active:scale-95 transition-transform shadow-lg"
                   >
                     <div className="relative h-48 rounded-[18px] overflow-hidden mb-4 bg-gray-50">
                       <img
@@ -235,17 +245,18 @@ const Offers: React.FC = () => {
       </div>
 
       <style>{`
-        @keyframes marquee {
+        @keyframes combo-marquee {
           0%   { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .combo-marquee {
-          display: flex;
-          width: max-content;
-          animation: marquee 32s linear infinite;
+        .combo-marquee-anim {
+          animation: combo-marquee 32s linear infinite;
+        }
+        .touch-pan-x {
+          touch-action: pan-x;
         }
         @media (prefers-reduced-motion: reduce) {
-          .combo-marquee { animation-duration: 90s; }
+          .combo-marquee-anim { animation: none !important; }
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
