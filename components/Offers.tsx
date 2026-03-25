@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../lib/hooks/useProducts';
@@ -11,6 +11,43 @@ const Offers: React.FC = () => {
   const { allProducts, promoCombos, loading } = useProducts();
   const [isComboRailPaused, setIsComboRailPaused] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  // Auto-scroll mobile — refs para evitar stale closures
+  const railRef = useRef<HTMLDivElement>(null);
+  const isPausedRef = useRef(false);
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const pauseRail = () => {
+    isPausedRef.current = true;
+    setIsComboRailPaused(true);
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+  };
+  const scheduleResume = () => {
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      isPausedRef.current = false;
+      setIsComboRailPaused(false);
+    }, 2500);
+  };
+
+  useEffect(() => {
+    const el = railRef.current;
+    if (!el) return;
+    let rafId: number;
+    const tick = () => {
+      if (!isPausedRef.current && window.innerWidth < 768 && el) {
+        el.scrollLeft += 0.6;
+        // Al llegar al final del primer tercio del contenido triplicado, vuelve al inicio
+        if (el.scrollLeft >= el.scrollWidth / 3) el.scrollLeft = 0;
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(rafId);
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    };
+  }, []);
 
   // Cards de sección — datos reales cacheados de Supabase, sin requests extra
   const sectionCards = [
@@ -157,26 +194,36 @@ const Offers: React.FC = () => {
           )}
         </div>
 
-        <div className="relative pt-16 border-t border-black/5 overflow-hidden">
-          <div className="flex items-center gap-4 mb-10">
-            <div className="w-10 h-10 bg-ven-yellow rounded-xl flex items-center justify-center text-white shadow-xl">
-              <Flame size={22} className="animate-pulse" />
+        <div className="relative pt-16 border-t border-black/5">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-ven-yellow rounded-xl flex items-center justify-center shadow-lg">
+                <Flame size={20} fill="currentColor" className="text-white animate-pulse" />
+              </div>
+              <div>
+                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-venezuela-brown leading-none">Combos <span className="text-ven-yellow">Relámpago</span></h3>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Ofertas por tiempo limitado</p>
+              </div>
             </div>
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-venezuela-brown">Combos <span className="text-ven-yellow">Relámpago</span></h3>
           </div>
 
-          <div
-            className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar md:overflow-x-hidden -mx-6 px-4 md:mx-0 md:px-0"
-            style={{ touchAction: 'pan-x' }}
-            onMouseEnter={() => setIsComboRailPaused(true)}
-            onMouseLeave={() => setIsComboRailPaused(false)}
-            onFocusCapture={() => setIsComboRailPaused(true)}
-            onBlurCapture={() => setIsComboRailPaused(false)}
-            onTouchStart={() => setIsComboRailPaused(true)}
-            onTouchEnd={() => setIsComboRailPaused(false)}
-            onTouchCancel={() => setIsComboRailPaused(false)}
-          >
-            <div className={`flex gap-4 py-6 w-max md:gap-8 ${isComboRailPaused ? '' : 'md:animate-marquee-reverse'}`}>
+          {/* Fade derecha para indicar scroll */}
+          <div className="relative overflow-hidden">
+            <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-venezuela-dark to-transparent pointer-events-none z-10" />
+            <div
+              ref={railRef}
+              className="flex overflow-x-auto no-scrollbar md:overflow-x-hidden -mx-6 px-6 md:mx-0 md:px-0"
+              style={{
+                touchAction: 'pan-x',
+                WebkitOverflowScrolling: 'touch',
+              } as React.CSSProperties}
+              onMouseEnter={pauseRail}
+              onMouseLeave={scheduleResume}
+              onTouchStart={pauseRail}
+              onTouchEnd={scheduleResume}
+              onTouchCancel={scheduleResume}
+            >
+            <div className={`flex gap-5 py-4 w-max md:gap-6 ${isComboRailPaused ? '' : 'md:animate-marquee-reverse'}`}>
               {doublePromos.map((promo, idx) => {
                 const store = stores.find(s => s.id === promo.storeId);
                 const discountPercent = promo.oldPrice ? Math.round(((promo.oldPrice - promo.price) / promo.oldPrice) * 100) : 15;
@@ -222,6 +269,7 @@ const Offers: React.FC = () => {
                   </div>
                 );
               })}
+            </div>
             </div>
           </div>
         </div>
