@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../lib/hooks/useProducts';
@@ -8,46 +8,8 @@ import { getImageUrl } from '../lib/supabase';
 const Offers: React.FC = () => {
   const navigate = useNavigate();
   const { stores } = useStores();
-  const { allProducts, promoCombos, loading } = useProducts();
-  const [isComboRailPaused, setIsComboRailPaused] = useState(false);
+  const { allProducts, promoCombos } = useProducts();
   const [activeSection, setActiveSection] = useState<string | null>(null);
-
-  // Auto-scroll mobile — refs para evitar stale closures
-  const railRef = useRef<HTMLDivElement>(null);
-  const isPausedRef = useRef(false);
-  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const pauseRail = () => {
-    isPausedRef.current = true;
-    setIsComboRailPaused(true);
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-  };
-  const scheduleResume = () => {
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => {
-      isPausedRef.current = false;
-      setIsComboRailPaused(false);
-    }, 2500);
-  };
-
-  useEffect(() => {
-    const el = railRef.current;
-    if (!el) return;
-    let rafId: number;
-    const tick = () => {
-      if (!isPausedRef.current && window.innerWidth < 768 && el) {
-        el.scrollLeft += 0.6;
-        // Al llegar al final del primer tercio del contenido triplicado, vuelve al inicio
-        if (el.scrollLeft >= el.scrollWidth / 3) el.scrollLeft = 0;
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(rafId);
-      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    };
-  }, []);
 
   // Cards de sección — datos reales cacheados de Supabase, sin requests extra
   const sectionCards = [
@@ -86,7 +48,8 @@ const Offers: React.FC = () => {
 
   const activeCard = sectionCards.find(s => s.key === activeSection);
 
-  const doublePromos = [...promoCombos, ...promoCombos, ...promoCombos];
+  // 2 copias: la animación va de translateX(0) a translateX(-50%) — loop seamless
+  const marqueeItems = [...promoCombos, ...promoCombos];
 
   return (
     <section className="py-16 bg-venezuela-dark relative overflow-hidden">
@@ -195,74 +158,71 @@ const Offers: React.FC = () => {
         </div>
 
         <div className="relative pt-16 border-t border-black/5">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-ven-yellow rounded-xl flex items-center justify-center shadow-lg">
-                <Flame size={20} fill="currentColor" className="text-white animate-pulse" />
-              </div>
-              <div>
-                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-venezuela-brown leading-none">Combos <span className="text-ven-yellow">Relámpago</span></h3>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Ofertas por tiempo limitado</p>
-              </div>
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-9 h-9 bg-ven-yellow rounded-xl flex items-center justify-center shadow-md shrink-0">
+              <Flame size={18} fill="currentColor" className="text-black" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-venezuela-brown leading-none">
+                Combos <span className="text-ven-yellow">Relámpago</span>
+              </h3>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Ofertas por tiempo limitado</p>
+            </div>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-red-500">Live</span>
             </div>
           </div>
 
-          {/* Fade derecha para indicar scroll */}
-          <div className="relative overflow-hidden">
-            <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-venezuela-dark to-transparent pointer-events-none z-10" />
-            <div
-              ref={railRef}
-              className="flex overflow-x-auto no-scrollbar md:overflow-x-hidden -mx-6 px-6 md:mx-0 md:px-0"
-              style={{
-                touchAction: 'pan-x',
-                WebkitOverflowScrolling: 'touch',
-              } as React.CSSProperties}
-              onMouseEnter={pauseRail}
-              onMouseLeave={scheduleResume}
-              onTouchStart={pauseRail}
-              onTouchEnd={scheduleResume}
-              onTouchCancel={scheduleResume}
-            >
-            <div className={`flex gap-5 py-4 w-max md:gap-6 ${isComboRailPaused ? '' : 'md:animate-marquee-reverse'}`}>
-              {doublePromos.map((promo, idx) => {
-                const store = stores.find(s => s.id === promo.storeId);
-                const discountPercent = promo.oldPrice ? Math.round(((promo.oldPrice - promo.price) / promo.oldPrice) * 100) : 15;
+          {/* Rail — overflow hidden para que la animación CSS no genere scrollbar */}
+          <div className="relative overflow-hidden -mx-6">
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-venezuela-dark to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-venezuela-dark to-transparent pointer-events-none z-10" />
 
+            <div className="combo-marquee gap-5 py-6 pl-6">
+              {marqueeItems.map((promo, idx) => {
+                const store = stores.find(s => s.id === promo.storeId);
+                const discountPercent = promo.oldPrice
+                  ? Math.round(((promo.oldPrice - promo.price) / promo.oldPrice) * 100)
+                  : 15;
                 return (
                   <div
                     key={`${promo.id}-${idx}`}
                     onClick={() => navigate(`/promotion/${promo.id}`)}
-                    className="snap-start shrink-0 inline-block w-[260px] max-w-[280px] bg-white border-2 border-black/5 rounded-[40px] p-4 group cursor-pointer hover:border-ven-yellow transition-all shadow-2xl backdrop-blur-sm hover:scale-[1.03] hover:-translate-y-1"
+                    className="shrink-0 w-[255px] bg-white border border-black/5 rounded-[26px] p-4 cursor-pointer active:scale-95 transition-transform shadow-lg"
                   >
-                    <div className="relative h-44 rounded-[32px] overflow-hidden mb-4 border border-black/5 bg-white">
+                    <div className="relative h-48 rounded-[18px] overflow-hidden mb-4 bg-gray-50">
                       <img
                         src={promo.img}
                         alt={promo.name}
-                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-contain"
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-                        <div className="bg-white/40 backdrop-blur-md text-venezuela-brown px-2.5 py-1 rounded-xl text-[8px] font-black uppercase flex items-center gap-1 shadow-2xl border border-white/20">
-                          <Zap size={10} fill="currentColor" className="text-ven-yellow" /> Relámpago
+                        <div className="bg-black/55 backdrop-blur-sm text-white px-2.5 py-1 rounded-lg text-[8px] font-black uppercase flex items-center gap-1">
+                          <Zap size={9} fill="currentColor" className="text-ven-yellow" /> Relámpago
                         </div>
-                        <div className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white px-2.5 py-1 rounded-xl text-[8px] font-black uppercase flex items-center gap-1 shadow-md shadow-red-500/50 border border-white/20">
-                          <Flame size={10} fill="currentColor" /> -{discountPercent}%
+                        <div className="bg-red-500 text-white px-2.5 py-1 rounded-lg text-[8px] font-black uppercase flex items-center gap-1">
+                          <Flame size={9} fill="currentColor" /> -{discountPercent}%
                         </div>
                       </div>
                     </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 opacity-80">
-                        <Store size={12} className="text-ven-yellow" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] truncate max-w-[140px] text-gray-500">{store?.name || 'Local Vene'}</span>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-1.5">
+                        <Store size={11} className="text-ven-yellow shrink-0" />
+                        <span className="text-[10px] font-bold uppercase tracking-wide truncate text-gray-400">{store?.name || 'Local Vene'}</span>
                       </div>
-                      <h4 className="text-sm font-black text-venezuela-brown uppercase tracking-tight truncate group-hover:text-venezuela-orange transition-colors">{promo.name}</h4>
-                      <div className="flex items-center justify-between pt-2">
-                        <div className="flex flex-col">
-                          {promo.oldPrice && <span className="text-[9px] text-gray-300 line-through font-bold mb-0.5">${promo.oldPrice}</span>}
-                          <span className="text-venezuela-orange font-black text-2xl tracking-tighter">${promo.price}</span>
+                      <h4 className="text-[13px] font-black text-venezuela-brown uppercase tracking-tight line-clamp-2 leading-tight">{promo.name}</h4>
+                      <div className="flex items-end justify-between pt-1.5">
+                        <div>
+                          {promo.oldPrice && (
+                            <span className="block text-[10px] text-gray-300 line-through font-semibold leading-none mb-0.5">${promo.oldPrice}</span>
+                          )}
+                          <span className="text-venezuela-orange font-black text-[22px] tracking-tighter leading-none">${promo.price}</span>
                         </div>
-                        <div className="w-10 h-10 bg-black/5 rounded-2xl flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-ven-yellow group-hover:to-venezuela-orange group-hover:text-white transition-all shadow-md">
-                          <ArrowRight size={18} />
+                        <div className="w-9 h-9 bg-ven-yellow/10 rounded-xl flex items-center justify-center shrink-0">
+                          <ArrowRight size={15} className="text-venezuela-brown" />
                         </div>
                       </div>
                     </div>
@@ -270,35 +230,22 @@ const Offers: React.FC = () => {
                 );
               })}
             </div>
-            </div>
           </div>
         </div>
       </div>
 
       <style>{`
-        @keyframes marquee-reverse {
-          0% { transform: translateX(-50%); }
-          100% { transform: translateX(0); }
+        @keyframes marquee {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
-        @media (min-width: 768px) {
-          .md\\:animate-marquee-reverse,
-          .animate-marquee-reverse {
-            display: flex;
-            width: max-content;
-            animation: marquee-reverse 30s linear infinite;
-          }
-        }
-
-        @media (max-width: 767px) {
-          .md\\:animate-marquee-reverse {
-            animation: none;
-            width: auto;
-          }
+        .combo-marquee {
+          display: flex;
+          width: max-content;
+          animation: marquee 32s linear infinite;
         }
         @media (prefers-reduced-motion: reduce) {
-          .animate-marquee-reverse {
-            animation: none !important;
-          }
+          .combo-marquee { animation-duration: 90s; }
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
