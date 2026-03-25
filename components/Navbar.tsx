@@ -34,7 +34,14 @@ const Navbar: React.FC<NavbarProps> = ({
   const [bump, setBump] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'Efectivo' | 'Transferencia'>('Efectivo');
   const [showShareTooltip, setShowShareTooltip] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const cartCount = cart.reduce((acc, curr) => acc + curr.qty, 0);
   const subtotal = cart.reduce((acc, curr) => acc + (curr.product.price * curr.qty), 0);
@@ -77,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/5 py-5 px-6 shadow-sm">
+      <nav className={`fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/5 py-5 px-6 transition-shadow duration-300 ${isScrolled ? 'shadow-xl shadow-black/10' : 'shadow-sm'}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
 
           {/* LOGO + BRAND — Desktop only */}
@@ -101,7 +108,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* LOGO centrado — Mobile only */}
           <div
             onClick={() => { onNavHome(); closeMenus(); }}
-            className="lg:hidden absolute left-1/2 -translate-x-1/2 cursor-pointer z-10"
+            className="lg:hidden absolute left-1/2 -translate-x-1/2 cursor-pointer z-10 active:scale-95 transition-transform duration-150"
           >
             <img
               src={LOGO_ENCASA_IMAGE}
@@ -199,7 +206,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* HAMBURGUESA — Mobile only, derecha */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-3 bg-black/5 border border-black/10 rounded-xl text-venezuela-brown"
+            className="lg:hidden p-3 bg-black/5 border border-black/10 rounded-xl text-venezuela-brown transition-all active:scale-95"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -208,7 +215,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
       {/* MOBILE MENU */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[60] bg-venezuela-dark/98 backdrop-blur-3xl flex flex-col pt-24 px-8 animate-in fade-in duration-300 lg:hidden overflow-y-auto">
+        <div className="fixed inset-0 z-[60] bg-venezuela-dark/98 backdrop-blur-3xl flex flex-col pt-24 px-8 animate-in fade-in slide-in-from-top-2 duration-200 lg:hidden overflow-y-auto">
           <div className="space-y-4">
             <p className="text-[12px] font-black text-gray-600 uppercase tracking-[0.4em] mb-4 drop-shadow-sm">Menú Principal</p>
             <button onClick={() => navTo('/')} className="w-full text-left py-5 border-b border-black/10 flex items-center justify-between group active:scale-[0.98] transition-all">
