@@ -25,23 +25,29 @@ const Categories: React.FC<CategoriesProps> = ({ onCategorySelect }) => {
         </div>
 
         <div
-          className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-6 px-6 pb-3"
-          style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+          className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-6 px-6 pb-4"
+          style={{
+            touchAction: 'pan-x',
+            WebkitOverflowScrolling: 'touch',
+          } as React.CSSProperties}
         >
           {categories.map((cat, idx) => (
             <div
               key={idx}
               onClick={onCategorySelect}
-              className="snap-start shrink-0 w-[160px] h-[160px] relative rounded-[28px] overflow-hidden group cursor-pointer border border-black/5 active:scale-95 transition-all shadow-lg"
+              className="snap-start relative rounded-[28px] overflow-hidden cursor-pointer active:scale-95 transition-all shadow-xl border border-black/5"
+              style={{ width: '185px', height: '185px', flexShrink: 0 }}
             >
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                className="absolute inset-0 w-full h-full object-cover"
               />
-              <div className="absolute inset-0 category-overlay flex flex-col justify-end p-4">
-                <h4 className="text-sm font-black text-white uppercase tracking-tight leading-tight">{cat.name}</h4>
-                <p className="text-[10px] text-gray-200 mt-0.5 leading-tight line-clamp-2">{cat.subtitle}</p>
+              <div
+                className="absolute inset-0 flex flex-col justify-end p-4"
+                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)' }}
+              >
+                <h4 className="text-[13px] font-black text-white uppercase tracking-tight leading-tight">{cat.name}</h4>
               </div>
             </div>
           ))}
