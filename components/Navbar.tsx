@@ -77,7 +77,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/5 py-5 px-6 shadow-sm">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/5 py-5 px-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
 
           {/* LOGO + BRAND — Desktop only */}

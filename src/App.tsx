@@ -72,7 +72,7 @@ const CartStoreBadge: React.FC<{
   const isShoppingSection = ['/catalog', '/partners', '/checkout'].includes(location.pathname);
 
   return (
-    <div className="sticky top-[72px] z-[40] bg-venezuela-dark/95 backdrop-blur-md border-b border-black/5 py-2.5 px-4 flex items-center justify-center gap-4 animate-in slide-in-from-top duration-500 shadow-lg">
+    <div className="sticky top-28 z-[40] bg-venezuela-dark/95 backdrop-blur-md border-b border-black/5 py-2.5 px-4 flex items-center justify-center gap-4 animate-in slide-in-from-top duration-500 shadow-lg">
       {isShoppingSection && (
         <div className="flex items-center gap-2.5">
           <div className="w-1.5 h-1.5 bg-ven-yellow rounded-full animate-pulse shadow-[0_0_8px_rgba(255,204,0,0.8)]" />
@@ -449,7 +449,7 @@ const handlePurchase = (total: number) => {
   }
 
   return (
-    <div className="min-h-screen bg-venezuela-dark selection:bg-ven-yellow/30">
+    <div className="min-h-screen bg-venezuela-dark selection:bg-ven-yellow/30 pt-28">
       <ScrollToTop />
       <Navbar 
         onNavHome={() => navigate('/')} 
