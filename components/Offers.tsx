@@ -67,17 +67,17 @@ const Offers: React.FC = () => {
               Ahorro Real
             </div>
             <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-venezuela-brown">
-              Ofertas <span className="text-ven-yellow">Imperdibles</span>
+              Explo\u00e1 seg\u00fan <span className="text-ven-yellow">lo que busc\u00e1s</span>
             </h2>
             <p className="text-gray-600 max-w-md font-medium text-sm md:text-base">
-              Los mejores precios en tus productos favoritos. ¡Solo por tiempo limitado!
+              Entr\u00e1 r\u00e1pido a lo m\u00e1s pedido, novedades, promos del d\u00eda y opciones para ahorrar.
             </p>
           </div>
           <button 
             onClick={() => navigate('/catalog')}
             className="group flex items-center gap-3 bg-black/5 hover:bg-black/10 border border-black/10 px-6 py-3 rounded-2xl transition-all active:scale-95 text-venezuela-brown"
           >
-            <span className="text-xs font-black uppercase tracking-widest">Ver todo el catálogo</span>
+            <span className="text-xs font-black uppercase tracking-widest">Explorar todas las secciones</span>
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>

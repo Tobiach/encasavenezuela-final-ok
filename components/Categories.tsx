@@ -11,34 +11,37 @@ const Categories: React.FC<CategoriesProps> = ({ onCategorySelect }) => {
   return (
     <section className="py-12 bg-venezuela-dark">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-end justify-between mb-12">
+        <div className="flex items-end justify-between mb-6">
           <div>
-            <h2 className="text-4xl font-bold mb-4 text-venezuela-brown">Explora nuestras categorías</h2>
-            <p className="text-gray-600">Todo lo que extrañas de Venezuela a un clic.</p>
+            <h2 className="text-3xl font-black tracking-tighter uppercase text-venezuela-brown">Explora nuestras <span className="text-ven-yellow">categor\u00edas</span></h2>
+            <p className="text-gray-600 text-sm mt-1">Todo lo que extra\u00f1\u00e1s de Venezuela a un clic.</p>
           </div>
-          <button 
+          <button
             onClick={onCategorySelect}
-            className="flex items-center gap-2 text-ven-yellow font-bold hover:underline"
+            className="flex items-center gap-2 text-ven-yellow font-black text-xs uppercase tracking-widest hover:underline active:scale-95 transition-transform"
           >
-            Ver todas <ArrowRight size={20} />
+            Ver todas <ArrowRight size={16} />
           </button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+        <div
+          className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-6 px-6 pb-3"
+          style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+        >
           {categories.map((cat, idx) => (
-            <div 
+            <div
               key={idx}
               onClick={onCategorySelect}
-              className="relative aspect-square rounded-[32px] overflow-hidden group cursor-pointer border border-black/5"
+              className="snap-start shrink-0 w-[160px] h-[160px] relative rounded-[28px] overflow-hidden group cursor-pointer border border-black/5 active:scale-95 transition-all shadow-lg"
             >
-              <img 
-                src={cat.image} 
-                alt={cat.name} 
+              <img
+                src={cat.image}
+                alt={cat.name}
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
-              <div className="absolute inset-0 category-overlay flex flex-col justify-end p-6">
-                <h4 className="text-lg font-bold text-white">{cat.name}</h4>
-                <p className="text-xs text-gray-200 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">{cat.subtitle}</p>
+              <div className="absolute inset-0 category-overlay flex flex-col justify-end p-4">
+                <h4 className="text-sm font-black text-white uppercase tracking-tight leading-tight">{cat.name}</h4>
+                <p className="text-[10px] text-gray-200 mt-0.5 leading-tight line-clamp-2">{cat.subtitle}</p>
               </div>
             </div>
           ))}
