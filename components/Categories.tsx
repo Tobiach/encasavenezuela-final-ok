@@ -13,8 +13,8 @@ const Categories: React.FC<CategoriesProps> = ({ onCategorySelect }) => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-end justify-between mb-6">
           <div>
-            <h2 className="text-3xl font-black tracking-tighter uppercase text-venezuela-brown">Explora nuestras <span className="text-ven-yellow">categor\u00edas</span></h2>
-            <p className="text-gray-600 text-sm mt-1">Todo lo que extra\u00f1\u00e1s de Venezuela a un clic.</p>
+            <h2 className="text-3xl font-black tracking-tighter uppercase text-venezuela-brown">Explora nuestras <span className="text-ven-yellow">categorías</span></h2>
+            <p className="text-gray-600 text-sm mt-1">Todo lo que extrañás de Venezuela a un clic.</p>
           </div>
           <button
             onClick={onCategorySelect}

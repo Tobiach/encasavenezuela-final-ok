@@ -67,10 +67,10 @@ const Offers: React.FC = () => {
               Ahorro Real
             </div>
             <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-venezuela-brown">
-              Explo\u00e1 seg\u00fan <span className="text-ven-yellow">lo que busc\u00e1s</span>
+              Explorá según <span className="text-ven-yellow">lo que buscás</span>
             </h2>
             <p className="text-gray-600 max-w-md font-medium text-sm md:text-base">
-              Entr\u00e1 r\u00e1pido a lo m\u00e1s pedido, novedades, promos del d\u00eda y opciones para ahorrar.
+              Encontrá rápido lo más pedido, novedades, promos del día y opciones para ahorrar.
             </p>
           </div>
           <button 
@@ -110,7 +110,7 @@ const Offers: React.FC = () => {
                 </div>
                 {activeSection === card.key && (
                   <div className="absolute top-2.5 right-2.5 w-5 h-5 bg-ven-yellow rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-[8px] font-black text-black">\u2713</span>
+                    <span className="text-[8px] font-black text-black">✓</span>
                   </div>
                 )}
               </div>
