@@ -3,20 +3,48 @@ import { ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../lib/hooks/useProducts';
 import { useStores } from '../lib/hooks/useStores';
+import { getImageUrl } from '../lib/supabase';
 
 const Offers: React.FC = () => {
   const navigate = useNavigate();
   const { stores } = useStores();
   const { allProducts, promoCombos, loading } = useProducts();
   const [isComboRailPaused, setIsComboRailPaused] = useState(false);
-  
-  // Secciones estilo app — datos reales de Supabase ya cacheados, sin nuevas requests
-  const sections = [
-    { emoji: '\uD83D\uDD25', label: 'Lo m\u00e1s pedido',   items: allProducts.slice(0, 8) },
-    { emoji: '\uD83C\uDD95', label: 'Nuevos ingresos', items: allProducts.slice(4, 12) },
-    { emoji: '\uD83D\uDFE1', label: 'Ofertas del d\u00eda', items: allProducts.filter(p => !!p.oldPrice).slice(0, 8) },
-    { emoji: '\uD83D\uDCB8', label: 'Todo a $5.999',   items: allProducts.filter(p => p.price <= 5999).slice(0, 8) },
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  // Cards de sección — datos reales cacheados de Supabase, sin requests extra
+  const sectionCards = [
+    {
+      key: 'pedido',
+      emoji: '\uD83D\uDD25', label: 'Lo m\u00e1s pedido',
+      subtitle: 'Los favoritos de la comunidad',
+      img: getImageUrl('abarrotes_1.png'),
+      items: allProducts.slice(0, 8),
+    },
+    {
+      key: 'nuevo',
+      emoji: '\uD83C\uDD95', label: 'Nuevos ingresos',
+      subtitle: 'Descubr\u00ed lo nuevo de esta semana',
+      img: getImageUrl('harinas1.png'),
+      items: allProducts.slice(4, 12),
+    },
+    {
+      key: 'oferta',
+      emoji: '\uD83D\uDFE1', label: 'Ofertas del d\u00eda',
+      subtitle: 'Promos activas por tiempo limitado',
+      img: getImageUrl('golosinas_1.png'),
+      items: allProducts.filter(p => !!p.oldPrice).slice(0, 8),
+    },
+    {
+      key: 'budget',
+      emoji: '\uD83D\uDCB8', label: 'Todo a $5.999',
+      subtitle: 'Opciones para comprar y ahorrar',
+      img: getImageUrl('snacks1.png'),
+      items: allProducts.filter(p => p.price <= 5999).slice(0, 8),
+    },
   ].filter(s => s.items.length > 0);
+
+  const activeCard = sectionCards.find(s => s.key === activeSection);
 
   const doublePromos = [...promoCombos, ...promoCombos, ...promoCombos];
 
@@ -54,18 +82,52 @@ const Offers: React.FC = () => {
           </button>
         </div>
 
-        {/* Secciones horizontales estilo app */}
-        <div className="space-y-10 mb-16">
-          {sections.map(({ emoji, label, items }) => (
-            <div key={label}>
-              <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-venezuela-brown mb-4">
-                {emoji} {label}
-              </h3>
+        {/* Cards de sección estilo app — tap para desplegar productos */}
+        <div className="mb-16">
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            {sectionCards.map(card => (
+              <div
+                key={card.key}
+                onClick={() => setActiveSection(activeSection === card.key ? null : card.key)}
+                className={`relative rounded-[24px] overflow-hidden h-40 cursor-pointer active:scale-95 transition-all border-2 shadow-xl ${
+                  activeSection === card.key
+                    ? 'border-ven-yellow shadow-[0_0_24px_rgba(212,175,55,0.35)]'
+                    : 'border-transparent'
+                }`}
+              >
+                <img
+                  src={card.img}
+                  alt={card.label}
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  <p className="text-[11px] font-black text-white uppercase tracking-tight leading-tight">
+                    {card.emoji} {card.label}
+                  </p>
+                  <p className="text-[9px] text-white/70 font-medium mt-0.5 leading-tight line-clamp-2">{card.subtitle}</p>
+                </div>
+                {activeSection === card.key && (
+                  <div className="absolute top-2.5 right-2.5 w-5 h-5 bg-ven-yellow rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-[8px] font-black text-black">\u2713</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Productos de la sección activa */}
+          {activeCard && (
+            <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.25em] mb-4">
+                {activeCard.emoji} {activeCard.label}
+              </p>
               <div
                 className="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 -mx-6 px-6"
                 style={{ touchAction: 'pan-x' }}
               >
-                {items.map((product) => (
+                {activeCard.items.map((product) => (
                   <div
                     key={product.id}
                     onClick={() => navigate('/catalog', { state: { category: product.category } })}
@@ -95,7 +157,7 @@ const Offers: React.FC = () => {
                 ))}
               </div>
             </div>
-          ))}
+          )}
         </div>
 
         {debugPanel}
