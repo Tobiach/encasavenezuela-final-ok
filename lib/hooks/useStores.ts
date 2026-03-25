@@ -37,7 +37,10 @@ async function fetchStores(): Promise<PartnerStore[]> {
       .eq('is_active', true)
       .order('plan', { ascending: false })
       .then(({ data, error }) => {
-        if (error) throw error;
+        if (error) {
+          _promise = null; // permite reintentar en el próximo render
+          throw error;
+        }
         const result = (data || []).map(mapRowToStore);
         _cache = result;
         return result;

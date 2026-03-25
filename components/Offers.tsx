@@ -48,12 +48,6 @@ const Offers: React.FC = () => {
 
   const doublePromos = [...promoCombos, ...promoCombos, ...promoCombos];
 
-  const debugPanel = import.meta.env.DEV && !loading && promoCombos.length === 0 ? (
-    <div style={{ background: '#ff0', color: '#000', padding: '8px', fontFamily: 'monospace', fontSize: '12px', marginBottom: '8px' }}>
-      Debug: 0 combos cargados | allProducts={allProducts.length} | loading={String(loading)}
-    </div>
-  ) : null;
-
   return (
     <section className="py-16 bg-venezuela-dark relative overflow-hidden">
       <div className="absolute top-0 right-0 w-96 h-96 bg-ven-yellow/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
@@ -160,7 +154,6 @@ const Offers: React.FC = () => {
           )}
         </div>
 
-        {debugPanel}
         <div className="relative pt-16 border-t border-black/5 overflow-hidden">
           <div className="flex items-center gap-4 mb-10">
             <div className="w-10 h-10 bg-ven-yellow rounded-xl flex items-center justify-center text-white shadow-xl">
