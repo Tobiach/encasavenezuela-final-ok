@@ -31,9 +31,12 @@ const Offers: React.FC = () => {
     {
       key: 'oferta',
       emoji: '\uD83D\uDFE1', label: 'Ofertas del d\u00eda',
-      subtitle: 'Promos activas por tiempo limitado',
+      subtitle: 'Tiempo limitado',
       img: getImageUrl('golosinas_1.png'),
-      items: allProducts.filter(p => !!p.oldPrice).slice(0, 8),
+      items: (() => {
+        const withDiscount = allProducts.filter(p => !!p.oldPrice).slice(0, 8);
+        return withDiscount.length > 0 ? withDiscount : allProducts.slice(0, 4);
+      })(),
     },
     {
       key: 'budget',

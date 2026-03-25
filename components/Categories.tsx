@@ -36,7 +36,7 @@ const Categories: React.FC<CategoriesProps> = ({ onCategorySelect }) => {
               key={idx}
               onClick={onCategorySelect}
               className="snap-start relative rounded-[28px] overflow-hidden cursor-pointer active:scale-95 transition-all shadow-xl border border-black/5"
-              style={{ width: '185px', height: '185px', flexShrink: 0 }}
+              style={{ width: '215px', height: '215px', flexShrink: 0 }}
             >
               <img
                 src={cat.image}
@@ -44,10 +44,10 @@ const Categories: React.FC<CategoriesProps> = ({ onCategorySelect }) => {
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div
-                className="absolute inset-0 flex flex-col justify-end p-4"
+                className="absolute inset-0 flex flex-col justify-end p-5"
                 style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)' }}
               >
-                <h4 className="text-[13px] font-black text-white uppercase tracking-tight leading-tight">{cat.name}</h4>
+                <h4 className="text-[14px] font-black text-white uppercase tracking-tight leading-tight">{cat.name}</h4>
               </div>
             </div>
           ))}
