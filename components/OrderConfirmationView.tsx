@@ -79,46 +79,45 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   const buildWhatsAppMessage = (orderId?: string) => {
     const isPickup = formData.fulfillmentMethod === 'pickup';
 
-    // Emojis como caracteres UTF-8 directos — sin pares sustitutos que los builds pueden corromper
-    const EM = {
-      bag:   '🛍',
-      flag:  '🇻🇪',
-      user:  '👤',
-      phone: '📞',
-      truck: '🚚',
-      pin:   '📍',
-      store: '🏪',
-      box:   '📦',
-      money: '💰',
-      note:  '📝',
-      check: '✅',
-    };
-
     const orderItemsText = cart
       .map((i) => `• ${i.qty}x ${i.product.name} ($${i.product.price * i.qty})`)
       .join('\n');
 
-    const deliveryText = isPickup
-      ? `\n${EM.bag} *Tipo de entrega:* Retiro en el local`
-      : `\n${EM.truck} *Tipo de entrega:* Delivery\n${EM.pin} *Dirección:* ${formData.address}`;
-    const storeText = store ? `\n${EM.store} *Local:* ${store.name}` : '';
-    const orderIdText = orderId ? `\n🔗 *ID Pedido:* ${orderId}` : '';
-    const tipText = !isPickup && tipAmount > 0 ? `\n${EM.money} *Propina:* $${tipAmount}` : '';
-    const noteText = !isPickup && formData.note ? `\n${EM.note} *Nota:* ${formData.note}` : '';
+    const lines: string[] = [
+      'Pedido EnCasa Venezuela',
+      '',
+      `Nombre: ${formData.name}`,
+      `Telefono: ${formData.phone}`,
+      `Tipo de entrega: ${isPickup ? 'Retiro en el local' : 'Delivery'}`,
+    ];
 
-    return (
-      `${EM.bag} *Pedido EnCasa Venezuela* ${EM.flag}\n\n` +
-      `${EM.user} *Nombre:* ${formData.name}\n` +
-      `${EM.phone} *Teléfono:* ${formData.phone}` +
-      deliveryText +
-      storeText +
-      orderIdText +
-      `\n\n${EM.box} *Items:*\n${orderItemsText}\n\n` +
-      `${EM.money} *Total Estimado:* $${total}` +
-      tipText +
-      noteText +
-      `\n\n${EM.check} ¿Me confirman stock?`
-    );
+    if (!isPickup) {
+      lines.push(`Direccion: ${formData.address}`);
+    }
+
+    if (store) {
+      lines.push(`Local: ${store.name}`);
+    }
+
+    if (orderId) {
+      lines.push(`ID Pedido: ${orderId}`);
+    }
+
+    lines.push('', 'Items:', orderItemsText, '');
+
+    lines.push(`Total estimado: $${total}`);
+
+    if (!isPickup && tipAmount > 0) {
+      lines.push(`Propina: $${tipAmount}`);
+    }
+
+    if (!isPickup && formData.note) {
+      lines.push(`Nota: ${formData.note}`);
+    }
+
+    lines.push('', '¿Me confirman stock?');
+
+    return lines.join('\n');
   };
 
   const openWhatsApp = (message: string) => {
