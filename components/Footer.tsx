@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Instagram, Facebook, Phone, Mail, MapPin, Send, CheckCircle2, Sparkles } from 'lucide-react';
+import { Instagram, Facebook, MessageSquare, Phone, Mail, MapPin, Send, CheckCircle2, Sparkles } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
@@ -62,6 +62,15 @@ const Footer: React.FC = () => {
                   <Icon size={24} />
                 </a>
               ))}
+              <a
+                href="https://wa.me/5491134552996"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg"
+                aria-label="WhatsApp EnCasa Venezuela"
+              >
+                <MessageSquare size={24} />
+              </a>
             </div>
           </div>
 
@@ -86,12 +95,24 @@ const Footer: React.FC = () => {
             <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[11px] text-venezuela-orange border-b-2 border-venezuela-orange/20 pb-2 inline-block">Contacto Directo</h4>
             <ul className="space-y-8 text-sm font-black text-gray-600">
               <li className="flex items-center gap-5 group">
-                <div className="w-12 h-12 rounded-2xl bg-ven-yellow/10 flex items-center justify-center text-ven-yellow group-hover:bg-ven-yellow group-hover:text-white transition-all shadow-md border border-ven-yellow/20"><Phone size={20} /></div>
-                <span className="group-hover:text-venezuela-brown transition-colors">+54 9 11 3455 2996</span>
+                <a
+                  href="https://wa.me/5491134552996"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contents"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-ven-yellow/10 flex items-center justify-center text-ven-yellow group-hover:bg-[#25D366] group-hover:text-white transition-all shadow-md border border-ven-yellow/20 shrink-0"><Phone size={20} /></div>
+                  <span className="group-hover:text-venezuela-brown transition-colors">+54 9 11 3455 2996</span>
+                </a>
               </li>
               <li className="flex items-center gap-5 group">
-                <div className="w-12 h-12 rounded-2xl bg-ven-blue/10 flex items-center justify-center text-ven-blue group-hover:bg-ven-blue group-hover:text-white transition-all shadow-md border border-ven-blue/20"><Mail size={20} /></div>
-                <span className="group-hover:text-venezuela-brown transition-colors truncate">Encasavenezuela.ar@gmail.com</span>
+                <a
+                  href="mailto:encasavenezuela.ar@gmail.com"
+                  className="contents"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-ven-blue/10 flex items-center justify-center text-ven-blue group-hover:bg-ven-blue group-hover:text-white transition-all shadow-md border border-ven-blue/20 shrink-0"><Mail size={20} /></div>
+                  <span className="group-hover:text-venezuela-brown transition-colors truncate">encasavenezuela.ar@gmail.com</span>
+                </a>
               </li>
               <li className="flex items-center gap-5 group">
                 <div className="w-12 h-12 rounded-2xl bg-ven-red/10 flex items-center justify-center text-ven-red group-hover:bg-ven-red group-hover:text-white transition-all shadow-md border border-ven-red/20"><MapPin size={20} /></div>

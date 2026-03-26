@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Trophy, MapPin } from 'lucide-react';
 
 interface NotificationData {
@@ -25,6 +26,7 @@ interface PurchaseNotificationProps {
 }
 
 const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned }) => {
+  const navigate = useNavigate();
   const [current, setCurrent] = useState<NotificationData | null>(null);
   const [show, setShow] = useState(false);
   const showRef = useRef(show);
@@ -121,12 +123,15 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
           </div>
 
           {/* CTA footer */}
-          <div className="border-t border-black/5 px-4 py-2 flex items-center justify-between bg-gray-50/60">
+          <button
+            onClick={() => navigate('/catalog')}
+            className="w-full border-t border-black/5 px-4 py-2 flex items-center justify-between bg-gray-50/60 hover:bg-ven-yellow/5 active:bg-ven-yellow/10 transition-colors"
+          >
             <span className="text-[10px] text-gray-300 font-medium flex items-center gap-1">
               <MapPin size={9} /> CABA, ARG
             </span>
             <span className="text-[10px] font-black text-ven-yellow uppercase tracking-wide">Ver combo →</span>
-          </div>
+          </button>
         </div>
       )}
     </div>

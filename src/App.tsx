@@ -23,7 +23,6 @@ import GiftsView from '../components/GiftsView';
 import RadarDashboardView from '../components/RadarDashboardView';
 import Offers from '../components/Offers';
 import AuthView from '../components/AuthView';
-import WhatsAppButton from '../components/WhatsAppButton';
 import AIAssistantButton from '../components/AIAssistantButton';
 import ProductAIChat from '../components/ProductAIChat'; // El componente de chat
 import OrderConfirmationView from '../components/OrderConfirmationView';
@@ -572,9 +571,6 @@ const handlePurchase = (total: number) => {
       )}
 
       <div className="fixed bottom-10 right-10 z-[100] flex flex-col gap-4 items-end">
-        {!isCartOpen && !['/checkout', '/repeat'].includes(location.pathname) && (
-          <WhatsAppButton stores={stores} cart={cart} user={user} />
-        )}
         <AIAssistantButton onClick={() => setIsAIChatOpen(true)} />
       </div>
     </div>
