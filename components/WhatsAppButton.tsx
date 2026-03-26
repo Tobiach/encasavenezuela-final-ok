@@ -63,7 +63,7 @@ const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({ stores, cart, user }) =
         `%0A%0AQuería consultar sobre productos disponibles y zonas de envío. ¡Gracias!`;
     }
 
-    window.open(`https://wa.me/5491134552996?text=${message}`, '_blank');
+    window.open(`https://wa.me/5491136026302?text=${message}`, '_blank');
   };
 
   return (

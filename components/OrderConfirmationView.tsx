@@ -11,7 +11,7 @@ interface OrderConfirmationViewProps {
   onClearCart: () => void;
 }
 
-const WHATSAPP_NUMBER = '5491134552996';
+const WHATSAPP_NUMBER = '5491136026302';
 const MINIMUM_ORDER = 5999;
 
 const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
@@ -87,12 +87,12 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
       '*Pedido EnCasa Venezuela*',
       '',
       `*Nombre:* ${formData.name}`,
-      `*Telefono:* ${formData.phone}`,
+      `*Teléfono:* ${formData.phone}`,
       `*Tipo de entrega:* ${isPickup ? 'Retiro en el local' : 'Delivery'}`,
     ];
 
     if (!isPickup) {
-      lines.push(`*Direccion:* ${formData.address}`);
+      lines.push(`*Dirección:* ${formData.address}`);
     }
 
     if (store) {
@@ -115,7 +115,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
       lines.push(`*Nota:* ${formData.note}`);
     }
 
-    lines.push('', '¿Me confirman stock?');
+    lines.push('', '*¿Me confirman stock?*');
 
     return lines.join('\n');
   };

@@ -63,7 +63,7 @@ const Footer: React.FC = () => {
                 </a>
               ))}
               <a
-                href="https://wa.me/5491134552996"
+                href="https://wa.me/5491136026302"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg"
@@ -96,13 +96,13 @@ const Footer: React.FC = () => {
             <ul className="space-y-8 text-sm font-black text-gray-600">
               <li className="flex items-center gap-5 group">
                 <a
-                  href="https://wa.me/5491134552996"
+                  href="https://wa.me/5491136026302"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="contents"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-ven-yellow/10 flex items-center justify-center text-ven-yellow group-hover:bg-[#25D366] group-hover:text-white transition-all shadow-md border border-ven-yellow/20 shrink-0"><Phone size={20} /></div>
-                  <span className="group-hover:text-venezuela-brown transition-colors">+54 9 11 3455 2996</span>
+                  <span className="group-hover:text-venezuela-brown transition-colors">+54 9 11 3602-6302</span>
                 </a>
               </li>
               <li className="flex items-center gap-5 group">

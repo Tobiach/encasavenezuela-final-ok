@@ -11,7 +11,7 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
 
   const handleOrderRedirect = () => {
     const message = `¡Hola EnCasa Venezuela! 🇻🇪 Vi el local *${store.name}* en el mapa y quiero hacer un pedido para retirar ahí o que me envíen de esa zona.`;
-    window.open(`https://wa.me/5491134552996?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/5491136026302?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (

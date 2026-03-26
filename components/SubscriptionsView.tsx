@@ -57,7 +57,7 @@ const SubscriptionsView: React.FC = () => {
     setActiveSub(plan.id);
 
     const message = `¡Hola EnCasa! 🇻🇪 Quiero suscribirme al plan *${plan.name}* ofrecido por el local *${store?.name || 'Aliado'}*.%0A%0AMi correo: ${user.email}%0A%0A¿Me confirman los pasos para activar mi suscripción mensual?`;
-    window.open(`https://wa.me/5491134552996?text=${message}`, '_blank');
+    window.open(`https://wa.me/5491136026302?text=${message}`, '_blank');
   };
 
   return (
