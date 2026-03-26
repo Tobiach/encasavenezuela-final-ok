@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, MapPin } from 'lucide-react';
+import { useProducts } from '../lib/hooks/useProducts';
 
 interface NotificationData {
   title: string;
@@ -27,6 +28,7 @@ interface PurchaseNotificationProps {
 
 const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned }) => {
   const navigate = useNavigate();
+  const { promoCombos, allProducts } = useProducts();
   const [current, setCurrent] = useState<NotificationData | null>(null);
   const [show, setShow] = useState(false);
   const showRef = useRef(show);
@@ -78,6 +80,29 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
     };
   }, []);
 
+  const handleCtaClick = () => {
+    if (!current) return;
+    const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const itemNorm = norm(current.item);
+
+    // 1. Buscar en promoCombos → /promotion/:id
+    const combo = promoCombos.find(p => {
+      const pNorm = norm(p.name);
+      return pNorm.includes(itemNorm) || itemNorm.includes(pNorm);
+    });
+    if (combo) { navigate(`/promotion/${combo.id}`); return; }
+
+    // 2. Buscar en allProducts → /catalog con filtro de categoría
+    const product = allProducts.find(p => {
+      const pNorm = norm(p.name);
+      return pNorm.includes(itemNorm) || itemNorm.includes(pNorm);
+    });
+    if (product) { navigate('/catalog', { state: { category: product.category } }); return; }
+
+    // 3. Fallback al catálogo general
+    navigate('/catalog');
+  };
+
   if (!current) return null;
 
   return (
@@ -124,7 +149,7 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
 
           {/* CTA footer */}
           <button
-            onClick={() => navigate('/catalog')}
+            onClick={handleCtaClick}
             className="w-full border-t border-black/5 px-4 py-2 flex items-center justify-between bg-gray-50/60 hover:bg-ven-yellow/5 active:bg-ven-yellow/10 transition-colors"
           >
             <span className="text-[10px] text-gray-300 font-medium flex items-center gap-1">
