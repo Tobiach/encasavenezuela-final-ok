@@ -17,11 +17,15 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
   const [selectedTag, setSelectedTag] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const HIDDEN_TAGS = ['Pasapalos', 'Snacks'];
+
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     tags.add('Todos');
     stores.forEach(store => {
-      store.tags?.forEach(tag => tags.add(tag));
+      store.tags?.forEach(tag => {
+        if (!HIDDEN_TAGS.includes(tag)) tags.add(tag);
+      });
     });
     return Array.from(tags);
   }, [stores]);
@@ -83,7 +87,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
         </div>
 
         <div className="flex flex-wrap gap-1 mt-auto">
-          {store.tags?.slice(0, 2).map(tag => (
+          {store.tags?.filter(tag => !HIDDEN_TAGS.includes(tag)).slice(0, 2).map(tag => (
             <span key={tag} className="text-[7px] md:text-[8px] font-black text-gray-500 bg-black/5 px-2 py-0.5 rounded-full uppercase border border-black/5">
               {tag}
             </span>

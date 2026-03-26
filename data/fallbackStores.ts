@@ -16,7 +16,7 @@ export const FALLBACK_STORES: PartnerStore[] = [
     review_count: 0,
     google_maps_url: 'https://maps.google.com',
     img: getImageUrl('abarrotes_1.png'),
-    tags: ['Abarrotes', 'Harinas', 'Lácteos', 'Snacks'],
+    tags: ['Abarrotes', 'Harinas', 'Lácteos'],
     type: 'productos',
     isPreparedFood: false,
     plan: 'premium',
