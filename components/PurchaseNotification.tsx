@@ -107,7 +107,7 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
 
   return (
     <div
-      className={`fixed bottom-24 left-4 z-[60] max-w-[272px] w-full transition-all duration-300 ease-out ${
+      className={`fixed bottom-4 left-4 z-[60] max-w-[248px] w-full transition-all duration-300 ease-out ${
         show ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0 pointer-events-none'
       }`}
     >
@@ -124,38 +124,38 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
       ) : (
         <div className="rounded-2xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-black/5 overflow-hidden">
           {/* Header */}
-          <div className="px-4 pt-3 pb-2.5">
-            <div className="flex items-center justify-between mb-2.5">
+          <div className="px-3 pt-2.5 pb-2">
+            <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
                 </span>
-                <span className="text-[10px] font-black text-green-600 uppercase tracking-wider">Pedido en vivo</span>
+                <span className="text-[9px] font-black text-green-600 uppercase tracking-wider">Pedido en vivo</span>
               </div>
               <span className="text-[9px] text-gray-400 font-medium">{current.timeAgo}</span>
             </div>
 
             {/* Content */}
             <div className="space-y-0.5">
-              <p className="text-[12px] font-bold text-gray-800 leading-snug">
+              <p className="text-[11px] font-bold text-gray-800 leading-snug">
                 <span className="text-gray-900">{current.name}</span>
                 <span className="text-gray-400 font-medium"> — {current.location}</span>
               </p>
-              <p className="text-[11px] text-gray-400 font-medium">acaba de pedir</p>
-              <p className="text-[13px] font-black text-gray-900 truncate">{current.item}</p>
+              <p className="text-[10px] text-gray-400 font-medium">acaba de pedir</p>
+              <p className="text-[12px] font-black text-gray-900 truncate">{current.item}</p>
             </div>
           </div>
 
           {/* CTA footer */}
           <button
             onClick={handleCtaClick}
-            className="w-full border-t border-black/5 px-4 py-2 flex items-center justify-between bg-gray-50/60 hover:bg-ven-yellow/5 active:bg-ven-yellow/10 transition-colors"
+            className="w-full border-t border-black/5 px-3 py-1.5 flex items-center justify-between bg-gray-50/60 hover:bg-ven-yellow/5 active:bg-ven-yellow/10 transition-colors"
           >
-            <span className="text-[10px] text-gray-300 font-medium flex items-center gap-1">
-              <MapPin size={9} /> CABA, ARG
+            <span className="text-[9px] text-gray-300 font-medium flex items-center gap-1">
+              <MapPin size={8} /> CABA, ARG
             </span>
-            <span className="text-[10px] font-black text-ven-yellow uppercase tracking-wide">Ver combo →</span>
+            <span className="text-[9px] font-black text-ven-yellow uppercase tracking-wide">Ver combo →</span>
           </button>
         </div>
       )}

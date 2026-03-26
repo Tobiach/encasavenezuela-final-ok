@@ -6,7 +6,7 @@ const features = [
   {
     icon: <Truck className="text-white" size={28} />,
     title: "En Casa en Minutos",
-    description: "Envíos a domicilio ultra veloces. Cada uno de nuestros locales asociados cuenta con su propio personal de entregas para garantizar rapidez.",
+    description: "Envíos a domicilio, ya que cada uno de nuestros locales asociados cuenta con su propio personal de entregas para garantizar rapidez.",
     bgGradient: "from-ven-yellow to-venezuela-orange",
     shadowColor: "shadow-venezuela-orange/20"
   },

@@ -4,10 +4,6 @@ import { Plus, Minus, HelpCircle } from 'lucide-react';
 
 const faqs = [
   {
-    question: "¿Los productos son realmente originales de Venezuela?",
-    answer: "¡Absolutamente! Trabajamos directamente con importadores autorizados de marcas como Empresas Polar, Savoy y Nestlé. Nuestros productos artesanales (quesos, tequeños) son elaborados por expertos venezolanos en Argentina siguiendo las recetas tradicionales."
-  },
-  {
     question: "¿Cuánto tarda el envío exactamente?",
     answer: "Nuestro sistema 'En Casa en Minutos' asigna tu pedido al local asociado más cercano a tu ubicación. Dependiendo de la zona en CABA o GBA, los tiempos suelen oscilar entre 30 y 90 minutos."
   },
@@ -46,7 +42,7 @@ const Faq: React.FC = () => {
         <div className="text-center mb-12">
           <HelpCircle className="text-ven-yellow mx-auto mb-4" size={40} />
           <h2 className="text-4xl font-black mb-4 text-venezuela-brown uppercase tracking-tighter">Preguntas <span className="text-ven-yellow">Frecuentes</span></h2>
-          <p className="text-gray-600 font-medium">Despejamos tus dudas antes de que pidas tu primera arepa.</p>
+          <p className="text-gray-600 font-medium">Despejamos tu duda antes de que hagas tu primera compra.</p>
         </div>
 
         <div className="space-y-4">

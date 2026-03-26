@@ -47,7 +47,7 @@ const fallbackCombos: Product[] = [
   {
     id: 110, name: "Combo Reunión Venezolana", price: 22500, category: "Promociones",
     img: "https://picsum.photos/seed/party/400/400", isCombo: true,
-    usageInfo: "Tequeños, salsa guasacaca, 6 × Maltín Polar, snacks venezolanos, chicharrón, obleas.",
+    usageInfo: "Tequeños, salsa guasacaca, 6 × Maltín Polar, chucherías venezolanas, chicharrón, obleas.",
     storeId: 'real-8'
   },
   {
@@ -117,7 +117,7 @@ const comboDefinitions: Record<number, ComboItem[]> = {
     { name: "Tequeños de Queso", qty: "24 unidades", emoji: "🥖" },
     { name: "Salsa Tártara / Guasacaca", qty: "2 potes", emoji: "🥗" },
     { name: "Maltín Polar", qty: "6 unidades", emoji: "🧃" },
-    { name: "Snacks Venezolanos Mixtos", qty: "2 bolsas", emoji: "🍿" },
+    { name: "Chucherías Venezolanas Mixtas", qty: "2 bolsas", emoji: "🍿" },
     { name: "Chicharrón Crujiente", qty: "1 bolsa", emoji: "🥓" },
     { name: "Obleas con Arequipe", qty: "1 pack", emoji: "🍬" },
   ],

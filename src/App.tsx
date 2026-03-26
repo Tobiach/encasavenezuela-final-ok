@@ -488,9 +488,9 @@ const handlePurchase = (total: number) => {
               />
             </div>
             <ContextRecommendations onAddToCart={handleAddToCart} />
-            <Features />
-            <Promotions onAddToCart={handleAddToCart} />
             <div id="how-it-works"><HowItWorks /></div>
+            <Promotions onAddToCart={handleAddToCart} />
+            <Features />
             <Testimonials />
             <Faq />
           </main>

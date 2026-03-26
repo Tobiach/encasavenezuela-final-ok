@@ -21,7 +21,7 @@ const HERO_SLIDES = [
   {
     image: HERO_SLIDE_3,
     title: "Tequeños crujientes y dorados",
-    badge: "Pasapalos favoritos"
+    badge: "Almacén venezolano"
   }
 ];
 

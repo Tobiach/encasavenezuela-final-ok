@@ -29,7 +29,7 @@ const plans = [
     price: 12000,
     frequency: "Mensual",
     storeId: 'real-7',
-    description: "Especial de golosinas y snacks para tus tardes de café o Toddy.",
+    description: "Especial de golosinas y chucherías para tus tardes de café o Toddy.",
     items: ["2x Cocosette", "2x Galak", "1x Toddy (400g)", "1x Susy"]
   }
 ];
