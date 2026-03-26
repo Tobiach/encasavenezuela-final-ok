@@ -84,35 +84,35 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
       .join('\n');
 
     const lines: string[] = [
-      'Pedido EnCasa Venezuela',
+      '*Pedido EnCasa Venezuela*',
       '',
-      `Nombre: ${formData.name}`,
-      `Telefono: ${formData.phone}`,
-      `Tipo de entrega: ${isPickup ? 'Retiro en el local' : 'Delivery'}`,
+      `*Nombre:* ${formData.name}`,
+      `*Telefono:* ${formData.phone}`,
+      `*Tipo de entrega:* ${isPickup ? 'Retiro en el local' : 'Delivery'}`,
     ];
 
     if (!isPickup) {
-      lines.push(`Direccion: ${formData.address}`);
+      lines.push(`*Direccion:* ${formData.address}`);
     }
 
     if (store) {
-      lines.push(`Local: ${store.name}`);
+      lines.push(`*Local:* ${store.name}`);
     }
 
     if (orderId) {
       lines.push(`ID Pedido: ${orderId}`);
     }
 
-    lines.push('', 'Items:', orderItemsText, '');
+    lines.push('', '*Items:*', orderItemsText, '');
 
-    lines.push(`Total estimado: $${total}`);
+    lines.push(`*Total estimado:* $${total}`);
 
     if (!isPickup && tipAmount > 0) {
-      lines.push(`Propina: $${tipAmount}`);
+      lines.push(`*Propina:* $${tipAmount}`);
     }
 
     if (!isPickup && formData.note) {
-      lines.push(`Nota: ${formData.note}`);
+      lines.push(`*Nota:* ${formData.note}`);
     }
 
     lines.push('', '¿Me confirman stock?');
