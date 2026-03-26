@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Zap, Plus, Trophy, PackageCheck, Store, ArrowRight, ImageOff } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Zap, Plus, Trophy, PackageCheck, Store, ArrowRight, ImageOff } from 'lucide-react';
 import { Product, Reward, PartnerStore } from '../types';
 import { useStores } from '../lib/hooks/useStores';
 import { useProducts } from '../lib/hooks/useProducts';
@@ -169,10 +169,24 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
   const { promoCombos } = useProducts();
   const [imgError, setImgError] = useState(false);
 
-  // Buscar primero en Supabase (datos reales), luego en fallback hardcodeado
-  const combo = promoCombos.find(p => p.id === Number(id)) || fallbackCombos.find(p => p.id === Number(id));
+  // Lista de combos para navegación prev/next — Supabase primero, fallback si no hay datos aún
+  const allCombos = promoCombos.length > 0 ? promoCombos : fallbackCombos;
 
-  if (!combo) return null;
+  // Buscar primero en Supabase (datos reales), luego en fallback hardcodeado
+  const combo = allCombos.find(p => p.id === Number(id)) || fallbackCombos.find(p => p.id === Number(id));
+
+  if (!combo) return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 p-8">
+      <p className="text-venezuela-brown font-black text-lg uppercase tracking-tight">Combo no encontrado</p>
+      <button onClick={() => navigate('/')} className="text-[10px] font-black text-ven-yellow uppercase tracking-widest hover:underline">
+        ← Volver al inicio
+      </button>
+    </div>
+  );
+
+  const currentIndex = allCombos.findIndex(p => p.id === combo.id);
+  const prevCombo = allCombos[(currentIndex - 1 + allCombos.length) % allCombos.length];
+  const nextCombo = allCombos[(currentIndex + 1) % allCombos.length];
 
   const store = stores.find(s => s.id === combo.storeId);
   const comboItems = getComboItems(combo);
@@ -191,16 +205,42 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 animate-in fade-in duration-500">
-      {/* Volver */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-500 hover:text-venezuela-orange transition-colors mb-7 group"
-      >
-        <div className="w-9 h-9 bg-white/5 rounded-full flex items-center justify-center group-hover:bg-venezuela-orange/10 transition-all">
-          <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+      {/* Barra de navegación: Volver + prev/next entre combos */}
+      <div className="flex items-center justify-between mb-7 gap-3">
+        {/* Volver siempre va al home, donde el usuario estaba (scroll restaurado) */}
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-gray-500 hover:text-venezuela-orange transition-colors group shrink-0"
+        >
+          <div className="w-9 h-9 bg-white/5 rounded-full flex items-center justify-center group-hover:bg-venezuela-orange/10 transition-all border border-black/8">
+            <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          </div>
+          <span className="text-[11px] font-black uppercase tracking-widest">Volver</span>
+        </button>
+
+        {/* Contador + prev/next */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate(`/promotion/${prevCombo.id}`)}
+            title={prevCombo.name}
+            className="w-9 h-9 bg-white border border-black/8 rounded-full flex items-center justify-center hover:border-ven-yellow hover:bg-ven-yellow/10 active:scale-90 transition-all shadow-sm group"
+          >
+            <ChevronLeft size={16} className="text-gray-500 group-hover:text-venezuela-brown transition-colors" />
+          </button>
+
+          <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest min-w-[40px] text-center">
+            {currentIndex + 1} / {allCombos.length}
+          </span>
+
+          <button
+            onClick={() => navigate(`/promotion/${nextCombo.id}`)}
+            title={nextCombo.name}
+            className="w-9 h-9 bg-white border border-black/8 rounded-full flex items-center justify-center hover:border-ven-yellow hover:bg-ven-yellow/10 active:scale-90 transition-all shadow-sm group"
+          >
+            <ChevronRight size={16} className="text-gray-500 group-hover:text-venezuela-brown transition-colors" />
+          </button>
         </div>
-        <span className="text-[11px] font-black uppercase tracking-widest">Volver</span>
-      </button>
+      </div>
 
       <div className="grid md:grid-cols-2 gap-8 items-start">
 

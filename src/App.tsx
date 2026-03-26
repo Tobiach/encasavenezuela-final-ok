@@ -493,7 +493,7 @@ const handlePurchase = (total: number) => {
             <div id="partner-stores">
               <PartnerStores
                 stores={stores}
-                onViewAll={() => navigate('/partners')}
+                onViewAll={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate('/partners'); }}
                 onOpenMap={handleSelectStore}
                 limit={2}
               />

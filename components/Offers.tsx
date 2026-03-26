@@ -77,7 +77,7 @@ const Offers: React.FC = () => {
             </p>
           </div>
           <button
-            onClick={() => navigate('/catalog')}
+            onClick={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate('/catalog'); }}
             className="group flex items-center gap-3 bg-black/5 hover:bg-black/10 border border-black/10 px-6 py-3 rounded-2xl transition-all active:scale-95 text-venezuela-brown"
           >
             <span className="text-xs font-black uppercase tracking-widest">Explorar todas las secciones</span>
@@ -133,7 +133,7 @@ const Offers: React.FC = () => {
                 {activeCard.items.map((product) => (
                   <div
                     key={product.id}
-                    onClick={() => navigate('/catalog', { state: { category: product.category } })}
+                    onClick={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate('/catalog', { state: { category: product.category } }); }}
                     className="snap-start shrink-0 w-[152px] bg-white border-2 border-black/5 rounded-[24px] p-3 cursor-pointer hover:border-ven-yellow active:scale-95 transition-all"
                   >
                     <div className="aspect-square rounded-[18px] overflow-hidden mb-2 border border-black/5 bg-gray-50">
