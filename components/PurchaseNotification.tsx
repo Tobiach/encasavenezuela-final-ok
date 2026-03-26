@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingBag, Trophy, MapPin } from 'lucide-react';
+import { Trophy, MapPin } from 'lucide-react';
 
 interface NotificationData {
   title: string;
@@ -14,10 +14,10 @@ interface NotificationData {
 }
 
 const mockPurchases: NotificationData[] = [
-  { title: "¡NUEVA COMPRA!", name: "Elena", location: "Villa Crespo, CABA", item: "Mavesa y Diablitos", timeAgo: "hace 1 min", type: 'sale' },
-  { title: "¡PEDIDO CONFIRMADO!", name: "Andrés", location: "Palermo, CABA", item: "un Combo Arepero Full", timeAgo: "hace 2 min", type: 'sale' },
-  { title: "¡VENTA RECIENTE!", name: "Valentina", location: "Belgrano, CABA", item: "Tequeños y Maltín Polar", timeAgo: "hace 4 min", type: 'verified' },
-  { title: "¡DIRECTO A CASA!", name: "Ricardo", location: "Lanús, GBA", item: "Mega Tequeñazo (50u)", timeAgo: "hace 1 min", type: 'sale' },
+  { title: "sale", name: "Elena", location: "Villa Crespo", item: "Mavesa y Diablitos", timeAgo: "ahora", type: 'sale' },
+  { title: "sale", name: "Andrés", location: "Palermo", item: "Combo Arepero Full", timeAgo: "hace 1 min", type: 'sale' },
+  { title: "sale", name: "Valentina", location: "Belgrano", item: "Tequeños y Maltín Polar", timeAgo: "hace 2 min", type: 'verified' },
+  { title: "sale", name: "Ricardo", location: "Lanús", item: "Mega Tequeñazo (50u)", timeAgo: "hace 1 min", type: 'sale' },
 ];
 
 interface PurchaseNotificationProps {
@@ -36,7 +36,6 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
   }, [show, current]);
 
   useEffect(() => {
-    // Solo mostramos notificación real si hay puntos ganados
     if (realEarned && realEarned > 0) {
       setCurrent({
         title: "¡PEDIDO EXITOSO!",
@@ -57,24 +56,17 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
   useEffect(() => {
     let index = Math.floor(Math.random() * mockPurchases.length);
     let timer: NodeJS.Timeout;
-    
+
     const triggerNotification = () => {
-      // Si hay una notificación real mostrándose, esperamos al siguiente ciclo
       if (showRef.current && currentRef.current?.isReal) return;
-      
       const nextIndex = (index + 1) % mockPurchases.length;
       index = nextIndex;
       setCurrent(mockPurchases[nextIndex]);
       setShow(true);
-      
-      // El popup debe durar 4 segundos en vista
       timer = setTimeout(() => setShow(false), 4000);
     };
 
-    // Aparece cada 9 segundos
     const interval = setInterval(triggerNotification, 9000);
-    
-    // Primer disparo después de un pequeño delay inicial
     const initialDelay = setTimeout(triggerNotification, 3000);
 
     return () => {
@@ -87,44 +79,56 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
   if (!current) return null;
 
   return (
-    <div 
-      className={`fixed bottom-24 left-6 z-[60] max-w-[280px] w-full transition-all duration-700 transform ${show ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-12 opacity-0 scale-95 pointer-events-none'}`}
+    <div
+      className={`fixed bottom-24 left-4 z-[60] max-w-[272px] w-full transition-all duration-300 ease-out ${
+        show ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0 pointer-events-none'
+      }`}
     >
-      <div className={`rounded-[20px] p-3 shadow-[0_15px_40px_rgba(0,0,0,0.4)] border flex items-center gap-3 relative overflow-hidden ${current.isReal ? 'bg-gradient-to-br from-ven-yellow/20 via-ven-blue/20 to-ven-red/20 backdrop-blur-xl text-white border-white/20' : 'bg-venezuela-dark/80 backdrop-blur-md text-white border-white/5'}`}>
-        <div className={`p-2 rounded-xl shrink-0 flex items-center justify-center shadow-lg ${current.isReal ? 'bg-ven-yellow/20' : 'bg-white/5 border border-white/10'}`}>
-          {current.isReal ? (
+      {current.isReal ? (
+        <div className="rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.35)] border border-white/10 bg-gradient-to-br from-ven-yellow/20 via-ven-blue/20 to-ven-red/20 backdrop-blur-xl text-white flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-ven-yellow/20 shrink-0">
             <Trophy size={16} className="text-ven-yellow" />
-          ) : (
-            <ShoppingBag className="text-ven-yellow" size={16} />
-          )}
-        </div>
-        
-        <div className="flex-grow min-w-0">
-          <div className="flex justify-between items-center mb-0.5">
-             <span className={`text-[8px] font-black uppercase tracking-[0.2em] ${current.isReal ? 'text-ven-yellow' : 'text-gray-500'}`}>
-               {current.title}
-             </span>
-             <span className="text-[7px] font-bold text-gray-600 uppercase">
-               {current.timeAgo}
-             </span>
           </div>
-          
-          <div className="space-y-0.5">
-            <p className="text-[11px] leading-tight truncate">
-              {current.isReal ? (
-                <>¡Gracias por tu <span className="font-black text-ven-yellow">preferencia</span>!</>
-              ) : (
-                <><span className="font-black text-gray-200">{current.name}</span> compró <span className="text-ven-yellow font-bold">{current.item}</span></>
-              )}
-            </p>
-            {!current.isReal && (
-              <p className="text-[9px] text-gray-600 flex items-center gap-1 font-bold truncate">
-                <MapPin size={8} className="text-ven-yellow/50" /> {current.location}
+          <div className="min-w-0">
+            <p className="text-[10px] font-black uppercase tracking-widest text-ven-yellow mb-0.5">¡Pedido exitoso!</p>
+            <p className="text-[12px] font-bold truncate">¡Gracias por tu <span className="text-ven-yellow">preferencia</span>!</p>
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-2xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-black/5 overflow-hidden">
+          {/* Header */}
+          <div className="px-4 pt-3 pb-2.5">
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="flex items-center gap-1.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                </span>
+                <span className="text-[10px] font-black text-green-600 uppercase tracking-wider">Pedido en vivo</span>
+              </div>
+              <span className="text-[9px] text-gray-400 font-medium">{current.timeAgo}</span>
+            </div>
+
+            {/* Content */}
+            <div className="space-y-0.5">
+              <p className="text-[12px] font-bold text-gray-800 leading-snug">
+                <span className="text-gray-900">{current.name}</span>
+                <span className="text-gray-400 font-medium"> — {current.location}</span>
               </p>
-            )}
+              <p className="text-[11px] text-gray-400 font-medium">acaba de pedir</p>
+              <p className="text-[13px] font-black text-gray-900 truncate">{current.item}</p>
+            </div>
+          </div>
+
+          {/* CTA footer */}
+          <div className="border-t border-black/5 px-4 py-2 flex items-center justify-between bg-gray-50/60">
+            <span className="text-[10px] text-gray-300 font-medium flex items-center gap-1">
+              <MapPin size={9} /> CABA, ARG
+            </span>
+            <span className="text-[10px] font-black text-ven-yellow uppercase tracking-wide">Ver combo →</span>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
