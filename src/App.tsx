@@ -480,7 +480,6 @@ const handlePurchase = (total: number) => {
             <Hero onCatalogClick={() => navigate('/catalog')} onLearnMoreClick={() => document.getElementById('how-it-works')?.scrollIntoView({behavior: 'smooth'})} />
             <div id="categories"><CategoriesNew /></div>
             <Offers />
-            <ContextRecommendations onAddToCart={handleAddToCart} />
             <div id="partner-stores">
               <PartnerStores
                 stores={stores}
@@ -489,6 +488,7 @@ const handlePurchase = (total: number) => {
                 limit={2}
               />
             </div>
+            <ContextRecommendations onAddToCart={handleAddToCart} />
             <Features />
             <Promotions onAddToCart={handleAddToCart} />
             <div id="how-it-works"><HowItWorks /></div>
