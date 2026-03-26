@@ -34,10 +34,21 @@ import { useStores } from '../lib/hooks/useStores';
 const FEATURE_LOYALTY = false;
 const FEATURE_RADAR = false;
 
-const ScrollToTop = () => {
+// ScrollManager: restaura scroll al volver de un detalle, o va al top en rutas nuevas.
+// Guarda la posición en sessionStorage con clave `encasa_scroll_<pathname>`.
+// iOS Safari: doble requestAnimationFrame garantiza que el DOM esté pintado antes de scrollear.
+const ScrollManager = () => {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const key = `encasa_scroll_${pathname}`;
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      sessionStorage.removeItem(key);
+      const y = parseInt(saved, 10);
+      requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, y)));
+    } else {
+      window.scrollTo(0, 0);
+    }
   }, [pathname]);
   return null;
 };
@@ -449,7 +460,7 @@ const handlePurchase = (total: number) => {
 
   return (
     <div className="min-h-screen bg-venezuela-dark selection:bg-ven-yellow/30 pt-28">
-      <ScrollToTop />
+      <ScrollManager />
       <Navbar 
         onNavHome={() => navigate('/')} 
         onNavLoyalty={() => navigate('/loyalty')}

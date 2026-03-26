@@ -90,7 +90,7 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
       const pNorm = norm(p.name);
       return pNorm.includes(itemNorm) || itemNorm.includes(pNorm);
     });
-    if (combo) { navigate(`/promotion/${combo.id}`); return; }
+    if (combo) { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate(`/promotion/${combo.id}`); return; }
 
     // 2. Buscar en allProducts → /catalog con filtro de categoría
     const product = allProducts.find(p => {

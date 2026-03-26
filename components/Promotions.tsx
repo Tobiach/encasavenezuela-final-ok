@@ -50,8 +50,8 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
 
               return (
                 <div 
-                  key={`${combo.id}-${index}`} 
-                  onClick={() => navigate(`/promotion/${combo.id}`)}
+                  key={`${combo.id}-${index}`}
+                  onClick={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate(`/promotion/${combo.id}`); }}
                   className="min-w-[320px] md:min-w-0 bg-white rounded-[40px] border-2 border-black/5 p-5 md:p-7 flex flex-row items-center gap-5 md:gap-8 group hover:border-ven-yellow transition-all duration-500 relative overflow-hidden cursor-pointer shadow-2xl hover:-translate-y-2"
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-ven-yellow/5 via-transparent to-ven-red/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -114,8 +114,8 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
 
             return (
               <div 
-                key={combo.id} 
-                onClick={() => navigate(`/promotion/${combo.id}`)}
+                key={combo.id}
+                onClick={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate(`/promotion/${combo.id}`); }}
                 className="min-w-[320px] md:min-w-0 bg-white rounded-[40px] border-2 border-black/5 p-5 md:p-7 flex flex-row items-center gap-5 md:gap-8 group hover:border-ven-yellow transition-all duration-500 relative overflow-hidden cursor-pointer shadow-2xl hover:-translate-y-2"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-ven-yellow/5 via-transparent to-ven-red/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

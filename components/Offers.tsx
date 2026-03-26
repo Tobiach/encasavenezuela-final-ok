@@ -198,7 +198,7 @@ const Offers: React.FC = () => {
                 return (
                   <div
                     key={`${promo.id}-${idx}`}
-                    onClick={() => navigate(`/promotion/${promo.id}`)}
+                    onClick={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate(`/promotion/${promo.id}`); }}
                     style={{ width: '255px', flexShrink: 0 }}
                     className="bg-white border border-black/5 rounded-[26px] p-4 cursor-pointer active:scale-95 transition-transform shadow-lg"
                   >
