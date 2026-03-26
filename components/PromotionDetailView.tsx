@@ -263,16 +263,16 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
           </div>
 
           {/* Bloque de precio + CTA */}
-          <div className="bg-white/5 p-6 rounded-2xl border border-white/8 backdrop-blur-md shadow-xl space-y-5">
+          <div className="bg-white p-6 rounded-2xl border border-black/8 shadow-lg space-y-5">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-[10px] text-gray-500 font-black uppercase tracking-[0.3em] mb-1.5">Precio del Combo</p>
                 <div className="flex items-baseline gap-3">
-                  <p className="text-4xl font-black text-white tracking-tighter leading-none">
+                  <p className="text-4xl font-black text-venezuela-brown tracking-tighter leading-none">
                     ${combo.price.toLocaleString('es-AR')}
                   </p>
                   {combo.oldPrice && (
-                    <p className="text-sm text-gray-600 line-through font-bold">
+                    <p className="text-sm text-gray-400 line-through font-semibold">
                       ${combo.oldPrice.toLocaleString('es-AR')}
                     </p>
                   )}
@@ -297,13 +297,13 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
 
               <button
                 onClick={handleGoToStore}
-                className="w-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white/90 py-3.5 rounded-2xl font-black text-[10px] tracking-[0.2em] transition-all flex items-center justify-center gap-2 uppercase border border-white/5"
+                className="w-full bg-black/5 hover:bg-black/10 text-venezuela-brown/70 hover:text-venezuela-brown py-3.5 rounded-2xl font-black text-[10px] tracking-[0.2em] transition-all flex items-center justify-center gap-2 uppercase border border-black/10 active:scale-95"
               >
                 Seguir agregando productos
                 <ArrowRight size={13} />
               </button>
 
-              <p className="text-[9px] text-gray-600 font-bold italic text-center leading-relaxed uppercase tracking-widest px-2">
+              <p className="text-[9px] text-gray-400 font-bold italic text-center leading-relaxed uppercase tracking-widest px-2">
                 Disponibilidad confirmada por el local al momento del pedido.
               </p>
             </div>
@@ -311,14 +311,14 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
 
           {/* Progreso del Club */}
           {showLoyalty && (
-            <div className="bg-white/[0.03] p-5 rounded-2xl border border-white/5">
+            <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
                   Club: {userPoints} pts
                 </span>
                 <Trophy size={14} className="text-venezuela-orange" />
               </div>
-              <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-black/5 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-venezuela-orange rounded-full transition-all duration-1000"
                   style={{ width: `${progressPercent}%` }}
@@ -341,13 +341,13 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
             {comboItems.map((item, index) => (
               <div
                 key={index}
-                className="bg-white/[0.03] hover:bg-white/[0.06] px-4 py-3.5 rounded-2xl border border-white/5 flex items-center gap-3 transition-colors"
+                className="bg-white hover:bg-gray-50 px-4 py-3.5 rounded-2xl border border-black/5 shadow-sm flex items-center gap-3 transition-colors"
               >
                 <span className="text-xl shrink-0 w-8 text-center leading-none">{item.emoji || '✓'}</span>
                 <div className="min-w-0">
-                  <p className="text-sm font-black text-white leading-none mb-0.5 truncate">{item.name}</p>
+                  <p className="text-sm font-black text-venezuela-brown leading-snug mb-0.5 truncate">{item.name}</p>
                   {(item.qty || item.yield) && (
-                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                       {item.qty}{item.yield ? ` · rinde ${item.yield}` : ''}
                     </p>
                   )}
