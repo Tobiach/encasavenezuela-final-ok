@@ -79,37 +79,37 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   const buildWhatsAppMessage = (orderId?: string) => {
     const isPickup = formData.fulfillmentMethod === 'pickup';
 
-    // Escape sequences para evitar corrupción de emojis en builds de producción
+    // Emojis como caracteres UTF-8 directos — sin pares sustitutos que los builds pueden corromper
     const EM = {
-      bag:   '\uD83D\uDECD',         // 🛍
-      flag:  '\uD83C\uDDFB\uD83C\uDDEA', // 🇻🇪
-      user:  '\uD83D\uDC64',         // 👤
-      phone: '\uD83D\uDCDE',         // 📞
-      truck: '\uD83D\uDE9A',         // 🚚
-      pin:   '\uD83D\uDCCD',         // 📍
-      store: '\uD83C\uDFEA',         // 🏪
-      box:   '\uD83D\uDCE6',         // 📦
-      money: '\uD83D\uDCB0',         // 💰
-      note:  '\uD83D\uDCDD',         // 📝
-      check: '\u2705',               // ✅
+      bag:   '🛍',
+      flag:  '🇻🇪',
+      user:  '👤',
+      phone: '📞',
+      truck: '🚚',
+      pin:   '📍',
+      store: '🏪',
+      box:   '📦',
+      money: '💰',
+      note:  '📝',
+      check: '✅',
     };
 
     const orderItemsText = cart
-      .map((i) => `\u2022 ${i.qty}x ${i.product.name} ($${i.product.price * i.qty})`)
+      .map((i) => `• ${i.qty}x ${i.product.name} ($${i.product.price * i.qty})`)
       .join('\n');
 
     const deliveryText = isPickup
       ? `\n${EM.bag} *Tipo de entrega:* Retiro en el local`
-      : `\n${EM.truck} *Tipo de entrega:* Delivery\n${EM.pin} *Direcci\u00f3n:* ${formData.address}`;
+      : `\n${EM.truck} *Tipo de entrega:* Delivery\n${EM.pin} *Dirección:* ${formData.address}`;
     const storeText = store ? `\n${EM.store} *Local:* ${store.name}` : '';
-    const orderIdText = orderId ? `\n\uD83D\uDD17 *ID Pedido:* ${orderId}` : '';
+    const orderIdText = orderId ? `\n🔗 *ID Pedido:* ${orderId}` : '';
     const tipText = !isPickup && tipAmount > 0 ? `\n${EM.money} *Propina:* $${tipAmount}` : '';
     const noteText = !isPickup && formData.note ? `\n${EM.note} *Nota:* ${formData.note}` : '';
 
     return (
       `${EM.bag} *Pedido EnCasa Venezuela* ${EM.flag}\n\n` +
       `${EM.user} *Nombre:* ${formData.name}\n` +
-      `${EM.phone} *Tel\u00e9fono:* ${formData.phone}` +
+      `${EM.phone} *Teléfono:* ${formData.phone}` +
       deliveryText +
       storeText +
       orderIdText +
@@ -117,7 +117,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
       `${EM.money} *Total Estimado:* $${total}` +
       tipText +
       noteText +
-      `\n\n${EM.check} \u00bfMe confirman stock?`
+      `\n\n${EM.check} ¿Me confirman stock?`
     );
   };
 
