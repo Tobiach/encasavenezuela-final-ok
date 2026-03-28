@@ -57,11 +57,12 @@ const Footer: React.FC = () => {
               Conectamos a la comunidad venezolana con los sabores que definen nuestra identidad. Calidad Premium, atención de panas.
             </p>
             <div className="flex gap-5">
-              {[Instagram, Facebook].map((Icon, i) => (
-                <a key={i} href="#" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-gradient-to-br hover:from-ven-yellow hover:to-venezuela-orange hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
-                  <Icon size={24} />
-                </a>
-              ))}
+              <a href="https://www.instagram.com/encasavenezuela.ar?igsh=cnVxb2NiM3A2NjRq" target="_blank" rel="noopener noreferrer" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-gradient-to-br hover:from-ven-yellow hover:to-venezuela-orange hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
+                <Instagram size={24} />
+              </a>
+              <a href="#" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-gradient-to-br hover:from-ven-yellow hover:to-venezuela-orange hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
+                <Facebook size={24} />
+              </a>
               <a
                 href="https://wa.me/5491136026302"
                 target="_blank"
