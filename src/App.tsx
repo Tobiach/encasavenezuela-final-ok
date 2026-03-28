@@ -26,6 +26,7 @@ import AuthView from '../components/AuthView';
 import AIAssistantButton from '../components/AIAssistantButton';
 import ProductAIChat from '../components/ProductAIChat'; // El componente de chat
 import OrderConfirmationView from '../components/OrderConfirmationView';
+import LastOrders from '../components/LastOrders';
 import { PartnerStore, Product, PurchaseHistoryItem, User, UserRole } from '../types';
 import { supabase } from '../lib/supabase';
 import { useStores } from '../lib/hooks/useStores';
@@ -343,6 +344,7 @@ const handlePurchase = (total: number) => {
     id: Date.now(),
     date: new Date().toISOString(),
     total,
+    store_id: cart[0]?.product.storeId,
     items: cart.map((i) => ({
       id: i.product.id,
       name: i.product.name,
@@ -385,8 +387,15 @@ const handlePurchase = (total: number) => {
     const performAdd = (sId: string, p: Product) => {
       setCart(prev => {
         const exists = prev.find(i => i.product.id === p.id && i.product.storeId === sId);
+        const newQty = exists ? exists.qty + 1 : 1;
+        encasaTrack('add_to_cart', {
+          product_id: p.id,
+          product_name: p.name,
+          price: p.price,
+          store_id: sId,
+          qty: newQty,
+        });
         if (exists) return prev.map(i => (i.product.id === p.id && i.product.storeId === sId) ? {...i, qty: i.qty + 1} : i);
-        
         const productWithStore = { ...p, storeId: sId };
         return [...prev, {product: productWithStore, qty: 1}];
       });
@@ -499,6 +508,7 @@ const handlePurchase = (total: number) => {
               />
             </div>
             <ContextRecommendations onAddToCart={handleAddToCart} />
+            <LastOrders onAddToCart={handleAddToCart} />
             <div id="how-it-works"><HowItWorks /></div>
             <Promotions onAddToCart={handleAddToCart} />
             <Features />

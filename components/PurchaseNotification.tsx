@@ -1,8 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trophy, MapPin } from 'lucide-react';
+import { Trophy, MapPin, X } from 'lucide-react';
 import { useProducts } from '../lib/hooks/useProducts';
+
+const DISMISS_KEY = 'encasa_notif_dismissed';
+const SESSION_KEY = 'encasa_notif_shown';
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 interface NotificationData {
   title: string;
@@ -57,21 +61,42 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
     }
   }, [realEarned]);
 
+  const handleDismiss = () => {
+    setShow(false);
+    localStorage.setItem(DISMISS_KEY, String(Date.now()));
+    sessionStorage.setItem(SESSION_KEY, 'true');
+  };
+
   useEffect(() => {
+    // Regla 3: máximo 1 vez por sesión
+    if (sessionStorage.getItem(SESSION_KEY)) return;
+
+    // Regla 4: si el usuario cerró el popup, no mostrar por 7 días
+    const dismissed = localStorage.getItem(DISMISS_KEY);
+    if (dismissed && Date.now() - Number(dismissed) < SEVEN_DAYS_MS) return;
+
     let index = Math.floor(Math.random() * mockPurchases.length);
     let timer: NodeJS.Timeout;
 
     const triggerNotification = () => {
       if (showRef.current && currentRef.current?.isReal) return;
+
+      // Regla 2: no mostrar si el usuario ya agregó algo al carrito (ya está enganchado)
+      const events: { event: string }[] = JSON.parse(localStorage.getItem('encasa_events') || '[]');
+      const hasInteracted = events.some(e => e.event === 'add_to_cart');
+      if (hasInteracted) return;
+
       const nextIndex = (index + 1) % mockPurchases.length;
       index = nextIndex;
       setCurrent(mockPurchases[nextIndex]);
       setShow(true);
-      timer = setTimeout(() => setShow(false), 4000);
+      sessionStorage.setItem(SESSION_KEY, 'true');
+      timer = setTimeout(() => setShow(false), 5000);
     };
 
-    const interval = setInterval(triggerNotification, 9000);
-    const initialDelay = setTimeout(triggerNotification, 3000);
+    // Regla 1: NO mostrar en los primeros 6 segundos
+    const interval = setInterval(triggerNotification, 18000);
+    const initialDelay = setTimeout(triggerNotification, 6000);
 
     return () => {
       clearInterval(interval);
@@ -133,7 +158,16 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({ realEarned 
                 </span>
                 <span className="text-[9px] font-black text-green-600 uppercase tracking-wider">Pedido en vivo</span>
               </div>
-              <span className="text-[9px] text-gray-400 font-medium">{current.timeAgo}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] text-gray-400 font-medium">{current.timeAgo}</span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
+                  className="text-gray-300 hover:text-gray-500 transition-colors"
+                  aria-label="Cerrar"
+                >
+                  <X size={12} />
+                </button>
+              </div>
             </div>
 
             {/* Content */}

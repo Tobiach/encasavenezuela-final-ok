@@ -31,8 +31,15 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (cart.length === 0) navigate('/catalog');
-  }, [cart, navigate]);
+    if (cart.length === 0) { navigate('/catalog'); return; }
+    const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
+    win.encasaTrack?.('checkout_initiated', {
+      cart_total: cart.reduce((acc, i) => acc + i.product.price * i.qty, 0),
+      items_count: cart.reduce((sum, i) => sum + i.qty, 0),
+      store_id: cart[0]?.product?.storeId ?? null,
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const subtotal = useMemo(() => cart.reduce((acc, curr) => acc + (curr.product.price * curr.qty), 0), [cart]);
   const total = subtotal + tipAmount;
@@ -393,24 +400,34 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                   </div>
                 </div>
 
-                {/* 🆕 INFO DE COBERTURA Y TIEMPO */}
+                {/* INFO CONDICIONAL: Delivery muestra tiempo+cobertura, Retiro muestra dirección */}
                 {!isMultiStore && !hasInvalidItems && store && (
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white/50 p-3 rounded-xl flex items-center gap-2">
-                      <Clock size={14} className="text-ven-yellow shrink-0" />
-                      <div>
-                        <p className="text-[8px] text-gray-500 font-black uppercase tracking-wide">Tiempo</p>
-                        <p className="text-[10px] text-venezuela-brown font-black">{store.deliveryTime || '30-45 min'}</p>
+                  formData.fulfillmentMethod === 'delivery' ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-white/50 p-3 rounded-xl flex items-center gap-2">
+                        <Clock size={14} className="text-ven-yellow shrink-0" />
+                        <div>
+                          <p className="text-[8px] text-gray-500 font-black uppercase tracking-wide">Tiempo estimado</p>
+                          <p className="text-[10px] text-venezuela-brown font-black">{store.deliveryTime || '30-45 min'}</p>
+                        </div>
+                      </div>
+                      <div className="bg-white/50 p-3 rounded-xl flex items-center gap-2">
+                        <MapPin size={14} className="text-ven-red shrink-0" />
+                        <div>
+                          <p className="text-[8px] text-gray-500 font-black uppercase tracking-wide">Cobertura</p>
+                          <p className="text-[10px] text-venezuela-brown font-black">{store.coverageArea || 'CABA'}</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="bg-white/50 p-3 rounded-xl flex items-center gap-2">
-                      <MapPin size={14} className="text-ven-red shrink-0" />
+                  ) : (
+                    <div className="bg-white/50 p-3 rounded-xl flex items-center gap-3">
+                      <MapPin size={14} className="text-ven-yellow shrink-0" />
                       <div>
-                        <p className="text-[8px] text-gray-500 font-black uppercase tracking-wide">Cobertura</p>
-                        <p className="text-[10px] text-venezuela-brown font-black">{store.coverageArea || 'CABA'}</p>
+                        <p className="text-[8px] text-gray-500 font-black uppercase tracking-wide">Dirección del local</p>
+                        <p className="text-[10px] text-venezuela-brown font-black">{store.address || store.location}</p>
                       </div>
                     </div>
-                  </div>
+                  )
                 )}
               </div>
 

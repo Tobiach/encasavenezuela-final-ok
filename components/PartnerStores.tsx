@@ -48,8 +48,12 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
   }, [stores, isFullView, filteredLocales, limit]);
 
   const MarketplaceCard: React.FC<{ store: PartnerStore }> = ({ store }) => (
-    <div 
-      onClick={() => onOpenMap(store)}
+    <div
+      onClick={() => {
+        const win = window as unknown as { encasaTrack?: (e: string, d: Record<string, unknown>) => void };
+        win.encasaTrack?.('element_clicked', { element_type: 'store', element_id: store.id, element_name: store.name, timestamp: Date.now() });
+        onOpenMap(store);
+      }}
       className={`group flex flex-col bg-black/[0.03] border rounded-[28px] overflow-hidden transition-all duration-300 active:scale-[0.97] hover:bg-black/[0.06] shadow-xl relative ${store.plan === 'premium' ? 'border-ven-yellow/40 ring-1 ring-ven-yellow/10' : 'border-black/5 hover:border-ven-yellow/30'}`}
     >
       {store.plan === 'premium' && (

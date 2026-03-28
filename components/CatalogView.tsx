@@ -36,10 +36,17 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
   const [searchTerm, setSearchTerm] = useState('');
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
 
+  const track = (type: string, id: string, name: string) => {
+    const win = window as unknown as { encasaTrack?: (e: string, d: Record<string, unknown>) => void };
+    win.encasaTrack?.('element_clicked', { element_type: type, element_id: id, element_name: name, timestamp: Date.now() });
+  };
+
   // Scroll al inicio cuando se selecciona un local
   useEffect(() => {
     if (selectedStore) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
+      win.encasaTrack?.('store_view', { store_id: selectedStore.id, store_name: selectedStore.name });
     }
   }, [selectedStore]);
 
@@ -179,7 +186,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
               return (
                 <button
                   key={cat}
-                  onClick={() => setCategory(cat)}
+                  onClick={() => { track('category', cat, cat); setCategory(cat); }}
                   className={`flex items-center gap-2.5 shrink-0 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border-2 ${isActive
                       ? 'bg-gradient-to-r from-ven-yellow to-venezuela-orange border-ven-yellow text-white shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105'
                       : 'bg-black/5 border-black/5 text-gray-600 hover:bg-black/10'
@@ -210,7 +217,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                 {premiumStores.map(store => (
                   <div
                     key={`premium-${store.id}`}
-                    onClick={() => onSelectStore(store)}
+                    onClick={() => { track('store', store.id, store.name); onSelectStore(store); }}
                     className="group min-w-[280px] md:min-w-[320px] bg-white rounded-[32px] border-2 border-ven-yellow/30 overflow-hidden transition-all duration-300 hover:border-ven-yellow hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(212,175,55,0.25)] cursor-pointer flex flex-col shadow-2xl relative"
                   >
                     <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wide flex items-center gap-1.5 shadow-lg shadow-ven-yellow/40 border border-white/30">
@@ -270,7 +277,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                 {displayedStores.map(store => (
                   <div
                     key={store.id}
-                    onClick={() => onSelectStore(store)}
+                    onClick={() => { track('store', store.id, store.name); onSelectStore(store); }}
                     className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]'}`}
                   >
                     <div className="aspect-[4/3] overflow-hidden relative">
@@ -337,7 +344,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                 return (
                   <button
                     key={cat}
-                    onClick={() => setCategory(cat)}
+                    onClick={() => { track('category', cat, cat); setCategory(cat); }}
                     className={`flex items-center gap-4 w-full text-left px-6 py-5 rounded-[24px] text-[11px] font-black uppercase tracking-widest transition-all border-2 ${isActive
                         ? 'bg-gradient-to-br from-ven-yellow to-venezuela-orange border-ven-yellow/50 text-white shadow-2xl shadow-venezuela-orange/20 translate-x-2'
                         : 'bg-black/5 border-transparent hover:bg-black/10 text-gray-600 hover:text-venezuela-brown'
@@ -392,7 +399,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                 {filteredProducts.map(product => (
                   <div
                     key={product.id}
-                    onClick={() => setViewingProduct(product)}
+                    onClick={() => { track('product', String(product.id), product.name); setViewingProduct(product); }}
                     className="bg-white rounded-[32px] border-2 border-black/5 p-4 group flex flex-col h-[350px] md:h-[450px] overflow-hidden hover:border-ven-yellow transition-all duration-300 cursor-pointer shadow-xl hover:-translate-y-2"
                   >
                     <div className="aspect-square shrink-0 rounded-[24px] overflow-hidden mb-5 relative border border-black/5">
