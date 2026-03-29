@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock, CheckCircle } from 'lucide-react';
+import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock, CheckCircle, Truck } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
 import ProductDetailView from './ProductDetailView';
 import { useProducts } from '../lib/hooks/useProducts';
@@ -141,7 +141,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
   const categories = ['Todos', 'Harinas', 'Lácteos', 'Congelados', 'Bebidas', 'Chucherías', 'Salsas', 'Almacén', 'Promociones'];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
+    <div className={`max-w-7xl mx-auto px-4 md:px-6 ${selectedStore ? 'pt-0 pb-12' : 'py-8 md:py-12'}`}>
       {viewingProduct && (
         <ProductDetailView
           product={viewingProduct}
@@ -157,67 +157,147 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
         />
       )}
 
-      {/* Header Dinámico - STICKY cuando hay local seleccionado */}
-      <div
-        className={`flex flex-col gap-6 mb-8 md:mb-12 ${selectedStore ? 'sticky top-0 z-40 bg-venezuela-dark pt-4 pb-6 -mx-4 px-4 md:-mx-6 md:px-6 shadow-lg' : ''}`}
-      >
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => {
-              if (selectedStore) {
-                onSelectStore(null);
-              } else {
-                navigate(-1);
-              }
-            }}
-            className="p-3 bg-white/5 rounded-2xl text-gray-400 hover:bg-ven-yellow hover:text-venezuela-dark transition-all shadow-lg active:scale-90"
-          >
-            <ArrowLeft size={20} />
-          </button>
-          <div>
-            <h1 className="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-venezuela-brown">
-              {selectedStore ? selectedStore.name : 'Marketplace Locales'}
-            </h1>
-            <p className="text-[9px] md:text-[10px] font-black text-gray-600 uppercase tracking-[0.3em] mt-2 italic">
-              {selectedStore ? `Explorando el sabor en ${selectedStore.neighborhood}` : 'Busca por local o por tu producto favorito, pana'}
-            </p>
+      {/* STORE HERO — solo cuando hay local seleccionado */}
+      {selectedStore && (
+        <div className="-mx-4 md:-mx-6 animate-in fade-in duration-500">
+          {/* Imagen hero del local */}
+          <div className="relative h-52 md:h-72 overflow-hidden">
+            <img
+              src={selectedStore.img}
+              alt={selectedStore.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+
+            {/* Botón volver */}
+            <button
+              onClick={() => onSelectStore(null)}
+              className="absolute top-4 left-4 p-2.5 bg-black/40 backdrop-blur-md rounded-xl text-white border border-white/20 hover:bg-black/60 transition-all active:scale-90 shadow-lg"
+            >
+              <ArrowLeft size={20} />
+            </button>
+
+            {/* Badges top-right */}
+            <div className="absolute top-4 right-4 flex flex-col gap-1.5 items-end">
+              <div className="bg-emerald-500/90 backdrop-blur-sm text-white px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-wide flex items-center gap-1 border border-white/20 shadow-md">
+                <CheckCircle size={9} /> VERIFICADO
+              </div>
+              {selectedStore.plan === 'premium' && (
+                <div className="bg-gradient-to-r from-[#D4AF37] to-[#C9A227] text-white px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-wide flex items-center gap-1 border border-white/20 shadow-md">
+                  <Zap size={9} fill="currentColor" /> PREMIUM
+                </div>
+              )}
+            </div>
+
+            {/* Nombre + rating sobre la imagen */}
+            <div className="absolute bottom-0 left-0 right-0 px-5 pb-5 md:px-6 md:pb-6">
+              <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight leading-none mb-1.5">
+                {selectedStore.name}
+              </h1>
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <div className="flex items-center gap-1.5">
+                  <Star size={13} className="fill-ven-yellow text-ven-yellow" />
+                  <span className="text-sm font-black text-white">{selectedStore.rating.toFixed(1)}</span>
+                  <span className="text-xs text-white/60 font-medium">({selectedStore.review_count})</span>
+                </div>
+                <span className="text-white/30 font-bold">·</span>
+                <div className="flex items-center gap-1.5 text-white/80 text-xs font-bold">
+                  <MapPin size={11} className="text-ven-yellow shrink-0" />
+                  {selectedStore.neighborhood}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="relative">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={selectedStore ? "¿Qué buscas en este local?" : "¿Qué se te antoja hoy? (Harina, Malta, etc.)"}
-            className="w-full bg-white border border-black/10 rounded-[24px] py-4.5 pl-14 pr-6 focus:outline-none focus:border-ven-yellow transition-all text-sm shadow-inner text-venezuela-brown"
-          />
-        </div>
+          {/* Chips de info del local */}
+          <div className="bg-white border-b border-gray-100 px-4 md:px-6 py-3 flex items-center gap-2.5 overflow-x-auto no-scrollbar">
+            <div className="flex items-center gap-2 shrink-0 bg-gray-50 border border-gray-200 px-3 py-2 rounded-xl">
+              <Clock size={13} className="text-ven-yellow shrink-0" />
+              <span className="text-[11px] font-black text-gray-700">{selectedStore.deliveryTime || '30-45 min'}</span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0 bg-gray-50 border border-gray-200 px-3 py-2 rounded-xl">
+              <MapPin size={13} className="text-ven-yellow shrink-0" />
+              <span className="text-[11px] font-black text-gray-700">{selectedStore.coverageArea || 'CABA'}</span>
+            </div>
+            {hasFreeDelivery(selectedStore.id) && (
+              <div className="flex items-center gap-2 shrink-0 bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-xl">
+                <Truck size={13} className="text-emerald-600 shrink-0" />
+                <span className="text-[11px] font-black text-emerald-700">Envío gratis</span>
+              </div>
+            )}
+            {getActivePromo(selectedStore.id) && (
+              <div className="flex items-center gap-2 shrink-0 bg-orange-50 border border-orange-200 px-3 py-2 rounded-xl">
+                <Zap size={13} className="text-venezuela-orange shrink-0" />
+                <span className="text-[11px] font-black text-venezuela-orange">{getActivePromo(selectedStore.id)!.label}</span>
+              </div>
+            )}
+          </div>
 
-        {/* Categorías Mobile */}
-        {selectedStore && (
-          <div className="flex gap-2 overflow-x-auto no-scrollbar py-2 -mx-4 px-4 md:hidden">
-            {categories.map(cat => {
-              const Icon = categoryIcons[cat] || LayoutGrid;
-              const isActive = category === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => { track('category', cat, cat); setCategory(cat); }}
-                  className={`flex items-center gap-2.5 shrink-0 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border-2 ${isActive
-                      ? 'bg-gradient-to-r from-ven-yellow to-venezuela-orange border-ven-yellow text-white shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105'
-                      : 'bg-black/5 border-black/5 text-gray-600 hover:bg-black/10'
+          {/* Barra sticky: search + categorías tipo tabs */}
+          <div className="sticky top-28 z-30 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm px-4 md:px-6 pt-3 pb-0">
+            <div className="relative mb-3">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={`Buscar en ${selectedStore.name}...`}
+                className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-ven-yellow focus:bg-white transition-all text-sm text-gray-800"
+              />
+            </div>
+            <div className="flex gap-0 overflow-x-auto no-scrollbar">
+              {categories.map(cat => {
+                const isActive = category === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => { track('category', cat, cat); setCategory(cat); }}
+                    className={`shrink-0 px-4 py-2.5 text-[11px] font-black uppercase tracking-wide transition-all border-b-2 whitespace-nowrap ${
+                      isActive
+                        ? 'border-ven-yellow text-ven-yellow'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
                     }`}
-                >
-                  <Icon size={12} className={isActive ? 'text-white' : 'text-ven-yellow'} />
-                  {cat}
-                </button>
-              );
-            })}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Header marketplace (sin local seleccionado) */}
+      {!selectedStore && (
+        <div className="flex flex-col gap-6 mb-8 md:mb-12">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-3 bg-white/5 rounded-2xl text-gray-400 hover:bg-ven-yellow hover:text-venezuela-dark transition-all shadow-lg active:scale-90"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div>
+              <h1 className="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-venezuela-brown">
+                Marketplace Locales
+              </h1>
+              <p className="text-[9px] md:text-[10px] font-black text-gray-600 uppercase tracking-[0.3em] mt-2 italic">
+                Busca por local o por tu producto favorito, pana
+              </p>
+            </div>
+          </div>
+          <div className="relative">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="¿Qué se te antoja hoy? (Harina, Malta, etc.)"
+              className="w-full bg-white border border-black/10 rounded-[24px] py-4.5 pl-14 pr-6 focus:outline-none focus:border-ven-yellow transition-all text-sm shadow-inner text-venezuela-brown"
+            />
+          </div>
+        </div>
+      )}
 
       {!selectedStore ? (
         // VISTA DE LOCALES (MARKETPLACE)
@@ -375,123 +455,72 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
         </div>
       ) : (
         // VISTA DE PRODUCTOS DEL LOCAL
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 animate-in slide-in-from-right duration-500">
-          {/* Categorías Sidebar Desktop */}
-          <div className="hidden md:block space-y-2">
-            <h3 className="font-black text-[9px] uppercase tracking-[0.3em] text-gray-700 mb-6 px-4">Selecciona Categoría</h3>
-            <div className="space-y-1.5">
-              {categories.map(cat => {
-                const Icon = categoryIcons[cat] || LayoutGrid;
-                const isActive = category === cat;
-                return (
-                  <button
-                    key={cat}
-                    onClick={() => { track('category', cat, cat); setCategory(cat); }}
-                    className={`flex items-center gap-4 w-full text-left px-6 py-5 rounded-[24px] text-[11px] font-black uppercase tracking-widest transition-all border-2 ${isActive
-                        ? 'bg-gradient-to-br from-ven-yellow to-venezuela-orange border-ven-yellow/50 text-white shadow-2xl shadow-venezuela-orange/20 translate-x-2'
-                        : 'bg-black/5 border-transparent hover:bg-black/10 text-gray-600 hover:text-venezuela-brown'
-                      }`}
-                  >
-                    <div className={`p-2 rounded-xl ${isActive ? 'bg-white/10' : 'bg-black/5'}`}>
-                      <Icon size={16} className={isActive ? 'text-white' : 'text-ven-yellow'} />
-                    </div>
-                    {cat}
-                  </button>
-                );
-              })}
+        <div className="animate-in slide-in-from-right duration-500 -mx-4 md:-mx-6 px-4 md:px-6 bg-gray-50 min-h-[60vh] pb-10">
+          {filteredProducts.length === 0 ? (
+            <div className="text-center py-20 bg-white rounded-[32px] border border-gray-100 flex flex-col items-center gap-4 mt-4 mx-0">
+              <Package className="text-gray-400" size={48} />
+              <p className="text-gray-600 font-bold uppercase text-[10px] tracking-[0.2em]">No hay productos en esta sección, pana.</p>
             </div>
-          </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 pt-4">
+              {filteredProducts.map(product => (
+                <div
+                  key={product.id}
+                  onClick={() => { track('product', String(product.id), product.name); setViewingProduct(product); }}
+                  className="bg-white rounded-2xl border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-md hover:border-ven-yellow/40 transition-all duration-200 flex flex-col"
+                >
+                  {/* Imagen con botón + en esquina */}
+                  <div className="aspect-square overflow-hidden relative bg-gray-50">
+                    <img
+                      src={product.img}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {product.oldPrice && (
+                      <div className="absolute top-2 left-2 bg-venezuela-orange text-white text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wide">
+                        OFERTA
+                      </div>
+                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        try {
+                          const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
+                          win.encasaTrack?.("add_to_cart", {
+                            productId: product.id,
+                            productName: product.name,
+                            price: product.price,
+                            category: product.category,
+                            storeId: selectedStore?.id || (product as { storeId?: string }).storeId || null,
+                            source: "catalog",
+                            ts: Date.now(),
+                          });
+                        } catch (err) {
+                          // silencio
+                        }
+                        onAddToCart(product, selectedStore?.id);
+                      }}
+                      className="absolute bottom-2 right-2 w-9 h-9 bg-ven-yellow rounded-full flex items-center justify-center shadow-lg shadow-ven-yellow/40 hover:bg-yellow-400 active:scale-90 transition-all border-2 border-white shrink-0"
+                    >
+                      <Plus size={17} strokeWidth={3} className="text-venezuela-dark" />
+                    </button>
+                  </div>
 
-          <div className="md:col-span-3">
-            {/* HEADER STICKY DE CATEGORÍA */}
-            {category !== 'Todos' && (
-              <div className="sticky top-0 z-30 bg-venezuela-dark/95 backdrop-blur-xl border-b-2 border-ven-yellow/30 -mx-4 px-4 md:-mx-0 md:px-6 py-4 mb-6 rounded-b-[24px] shadow-xl">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {(() => {
-                      const Icon = categoryIcons[category] || LayoutGrid;
-                      return <Icon size={24} className="text-ven-yellow" />;
-                    })()}
-                    <div>
-                      <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-venezuela-brown">
-                        {category}
-                      </h2>
-                      <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">
-                        {filteredProducts.length} productos disponibles
-                      </p>
+                  {/* Info del producto */}
+                  <div className="p-3 flex flex-col flex-grow">
+                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">{product.category}</p>
+                    <h4 className="font-black text-[12px] md:text-[13px] text-gray-900 leading-tight line-clamp-2 mb-auto">{product.name}</h4>
+                    <div className="mt-2.5 pt-2.5 border-t border-gray-100 flex items-center gap-1.5">
+                      {product.oldPrice && (
+                        <span className="text-[10px] text-gray-400 line-through font-bold">${product.oldPrice.toLocaleString('es-AR')}</span>
+                      )}
+                      <span className="text-[15px] font-black text-gray-900">${product.price.toLocaleString('es-AR')}</span>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setCategory('Todos')}
-                    className="text-[10px] font-black text-ven-yellow uppercase tracking-widest hover:underline"
-                  >
-                    Ver todas →
-                  </button>
                 </div>
-              </div>
-            )}
-
-            {filteredProducts.length === 0 ? (
-              <div className="text-center py-20 bg-black/5 rounded-[40px] border border-black/5 flex flex-col items-center gap-4">
-                <Package className="text-gray-400" size={48} />
-                <p className="text-gray-600 font-bold uppercase text-[10px] tracking-[0.2em]">No hay productos en esta sección, pana.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                {filteredProducts.map(product => (
-                  <div
-                    key={product.id}
-                    onClick={() => { track('product', String(product.id), product.name); setViewingProduct(product); }}
-                    className="bg-white rounded-[32px] border-2 border-black/5 p-4 group flex flex-col h-[350px] md:h-[450px] overflow-hidden hover:border-ven-yellow transition-all duration-300 cursor-pointer shadow-xl hover:-translate-y-2"
-                  >
-                    <div className="aspect-square shrink-0 rounded-[24px] overflow-hidden mb-5 relative border border-black/5">
-                      <img src={product.img} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                      <div className="absolute top-3 right-3">
-                        <span className="bg-transparent border-2 border-ven-blue text-ven-blue text-[9px] font-black px-3 py-1.5 rounded-xl uppercase tracking-widest">
-                          {product.category}
-                        </span>
-                      </div>
-                    </div>
-                    <h4 className="font-black text-sm md:text-base mb-2 leading-tight h-12 overflow-hidden uppercase tracking-tight text-venezuela-brown group-hover:text-venezuela-orange transition-colors">{product.name}</h4>
-                    <p className="text-[10px] md:text-xs text-gray-500 italic line-clamp-2 mb-4 font-bold min-h-[3em] leading-relaxed">
-                      {product.usageInfo || `${product.category} de calidad superior, ideal para disfrutar en cualquier momento.`}
-                    </p>
-                    <div className="mt-auto pt-5 border-t border-black/5 flex items-center justify-between">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Precio</span>
-                        <span className="text-venezuela-brown font-black text-xl md:text-2xl tracking-tighter">${product.price}</span>
-                      </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-
-                          try {
-                            const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
-                            win.encasaTrack?.("add_to_cart", {
-                              productId: product.id,
-                              productName: product.name,
-                              price: product.price,
-                              category: product.category,
-                              storeId: selectedStore?.id || (product as { storeId?: string }).storeId || null,
-                              source: "catalog",
-                              ts: Date.now(),
-                            });
-                          } catch (err) {
-                            // silencio
-                          }
-
-                          onAddToCart(product, selectedStore?.id);
-                        }}
-                        className="bg-gradient-to-br from-ven-yellow to-venezuela-orange text-white p-3 md:p-4 rounded-2xl shadow-xl shadow-venezuela-orange/20 active:scale-90 transition-all hover:brightness-110 border border-white/20"
-                      >
-                        <Plus size={22} strokeWidth={4} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
       <style>{`
