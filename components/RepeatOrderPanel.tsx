@@ -3,15 +3,6 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Repeat, Zap, Gift, Plus } from 'lucide-react';
 import { Product, PurchaseHistoryItem } from '../types';
 
-// Mock database de productos para recomponer objetos Product desde el ID del historial
-const productDB: Record<number, Partial<Product>> = {
-  1: { id: 1, name: "Harina P.A.N.", price: 1800, img: "https://images.unsplash.com/photo-1621501103258-0e282496a45c?auto=format&fit=crop&q=80&w=600", category: "Harinas", storeId: 'real-1' },
-  2: { id: 2, name: "Maltín Polar", price: 1200, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&q=80&w=600", category: "Bebidas", storeId: 'real-1' },
-  3: { id: 3, name: "Tequeños", price: 4500, img: "/imagenes_productos/tequeños_y_quesos.png", category: "Congelados", storeId: 'real-1' },
-  4: { id: 4, name: "Queso Llanero", price: 3200, img: "https://images.unsplash.com/photo-1486297678162-ad2a19b85f5d?auto=format&fit=crop&q=80&w=600", category: "Lácteos", storeId: 'real-4' },
-  7: { id: 7, name: "Diablitos", price: 1900, img: "https://images.unsplash.com/photo-1563220436-398328c0397f?auto=format&fit=crop&q=80&w=400", category: "Almacén", storeId: 'real-1' }
-};
-
 interface RepeatOrderPanelProps {
   onAddToCart: (p: Product, storeId?: string) => void;
 }
@@ -24,15 +15,17 @@ const RepeatOrderPanel: React.FC<RepeatOrderPanelProps> = ({ onAddToCart }) => {
     setHistory(savedHistory);
   }, []);
 
+  // Devuelve los 3 items más pedidos con su data completa (sin productDB)
   const topItems = useMemo(() => {
-    const counts: Record<number, number> = {};
+    const counts: Record<number, { count: number; item: PurchaseHistoryItem['items'][0] }> = {};
     history.forEach(p => p.items.forEach(i => {
-      counts[i.id] = (counts[i.id] || 0) + i.qty;
+      if (!counts[i.id]) counts[i.id] = { count: 0, item: i };
+      counts[i.id].count += i.qty;
     }));
-    return Object.entries(counts)
-      .sort(([, a], [, b]) => b - a)
+    return Object.values(counts)
+      .sort((a, b) => b.count - a.count)
       .slice(0, 3)
-      .map(([id]) => Number(id));
+      .map(({ item }) => item);
   }, [history]);
 
   if (history.length === 0) {
@@ -73,21 +66,20 @@ const RepeatOrderPanel: React.FC<RepeatOrderPanelProps> = ({ onAddToCart }) => {
             Top Favoritos
           </h3>
           <div className="space-y-4 mb-8">
-            {topItems.map(id => (
-              <div key={id} className="flex items-center gap-3">
+            {topItems.map(item => (
+              <div key={item.id} className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/5 overflow-hidden shrink-0">
-                  <img src={productDB[id]?.img} className="w-full h-full object-cover" />
+                  {item.img && <img src={item.img} className="w-full h-full object-cover" />}
                 </div>
-                <span className="text-sm font-bold text-gray-300 flex-grow truncate">{productDB[id]?.name || "Producto"}</span>
-                <span className="text-xs text-ven-yellow font-black">${productDB[id]?.price}</span>
+                <span className="text-sm font-bold text-gray-300 flex-grow truncate">{item.name}</span>
+                <span className="text-xs text-ven-yellow font-black">${item.price}</span>
               </div>
             ))}
           </div>
-          <button 
+          <button
             onClick={() => {
-              topItems.forEach(id => {
-                const p = productDB[id];
-                if (p) onAddToCart(p as Product, p.storeId);
+              topItems.forEach(item => {
+                onAddToCart(item as unknown as Product, item.storeId);
               });
               alert("¡Tus favoritos han sido agregados al carrito!");
             }}
@@ -112,11 +104,10 @@ const RepeatOrderPanel: React.FC<RepeatOrderPanelProps> = ({ onAddToCart }) => {
             <p className="text-sm font-black">{lastPurchase.items.length} productos diferentes</p>
             <p className="text-sm text-ven-yellow font-black">Total: ${lastPurchase.total}</p>
           </div>
-          <button 
+          <button
             onClick={() => {
               lastPurchase.items.forEach(i => {
-                const p = productDB[i.id];
-                if (p) onAddToCart(p as Product, p.storeId);
+                onAddToCart(i as unknown as Product, i.storeId);
               });
               alert("¡Último pedido cargado en el carrito!");
             }}
@@ -143,12 +134,8 @@ const RepeatOrderPanel: React.FC<RepeatOrderPanelProps> = ({ onAddToCart }) => {
              </div>
              <span className="text-[10px] font-black uppercase text-ven-blue">Combo Arepero Express</span>
           </div>
-          <button 
-            onClick={() => { 
-              onAddToCart(productDB[1] as Product, productDB[1].storeId); 
-              onAddToCart(productDB[7] as Product, productDB[7].storeId);
-              alert("¡Combo sugerido agregado!");
-            }}
+          <button
+            onClick={() => alert("¡Próximamente! Esta sugerencia estará personalizada para vos.")}
             className="w-full bg-ven-blue hover:bg-ven-blue/80 text-white py-4 rounded-2xl font-black text-xs tracking-widest transition-all active:scale-95 shadow-lg shadow-ven-blue/20"
           >
             LLEVAR SUGERENCIA

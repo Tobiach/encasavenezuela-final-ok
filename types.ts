@@ -53,6 +53,8 @@ export interface PurchaseHistoryItem {
     name: string;
     qty: number;
     price: number;
+    img?: string;
+    storeId?: string;
   }[];
   store_id?: string;
 }

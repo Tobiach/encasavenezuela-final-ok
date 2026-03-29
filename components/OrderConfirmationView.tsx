@@ -256,6 +256,27 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
       const message = buildWhatsAppMessage(orderId);
       openWhatsApp(message);
 
+      // Guardar en historial local para feature de Reorder
+      try {
+        const historyItem = {
+          id: orderId ?? Date.now().toString(),
+          date: new Date().toISOString(),
+          total,
+          store_id: uniqueStoreIds[0] ?? undefined,
+          items: cart.map(i => ({
+            id: i.product.id,
+            name: i.product.name,
+            qty: i.qty,
+            price: i.product.price,
+            img: i.product.img,
+            storeId: i.product.storeId,
+          })),
+        };
+        const prev = JSON.parse(localStorage.getItem('encasa_history') || '[]');
+        prev.push(historyItem);
+        localStorage.setItem('encasa_history', JSON.stringify(prev.slice(-20)));
+      } catch { /* silencioso — no bloquea el flujo */ }
+
       try { onClearCart?.(); } catch (e) {
         console.error("onClearCart error:", e);
       }
