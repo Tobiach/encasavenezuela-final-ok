@@ -5,6 +5,15 @@ import ProductDetailView from './ProductDetailView';
 import { useProducts } from '../lib/hooks/useProducts';
 import { useOrderCounts } from '../lib/hooks/useOrderCounts';
 import { useNavigate, useLocation } from 'react-router-dom';
+import storesPromotions from '../data/stores-promotions.json' assert { type: 'json' };
+
+type PromoEntry = { label: string; sublabel?: string; validUntil: string };
+const promoData = storesPromotions as unknown as Record<string, PromoEntry>;
+function getActivePromo(storeId: string): PromoEntry | null {
+  const promo = promoData[storeId];
+  if (!promo || !promo.validUntil) return null;
+  return new Date(promo.validUntil) > new Date() ? promo : null;
+}
 
 
 /// MODO DEMO: Si es true, todos los locales muestran todos los productos
@@ -294,6 +303,12 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                         {store.plan === 'premium' && (
                           <div className="bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
                             <Zap size={8} fill="currentColor" /> RECOMENDADO
+                          </div>
+                        )}
+                        {/* OFERTA — promo activa con validUntil en el futuro */}
+                        {getActivePromo(store.id) && (
+                          <div className="bg-venezuela-orange/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20 animate-pulse">
+                            🔥 OFERTA
                           </div>
                         )}
                       </div>

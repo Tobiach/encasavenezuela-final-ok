@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import { PartnerStore } from '../types';
 import { MapPin, Clock, ExternalLink, Smartphone, AlertCircle, ChevronDown } from 'lucide-react';
 import storesFaq from '../data/stores-faq.json' assert { type: 'json' };
+import storesPromotions from '../data/stores-promotions.json' assert { type: 'json' };
+
+type PromoEntry = { label: string; sublabel?: string; validUntil: string };
+const promoData = storesPromotions as unknown as Record<string, PromoEntry>;
+function getActivePromo(storeId: string): PromoEntry | null {
+  const promo = promoData[storeId];
+  if (!promo || !promo.validUntil) return null;
+  return new Date(promo.validUntil) > new Date() ? promo : null;
+}
 
 interface StoreMapViewProps {
   store: PartnerStore;
@@ -11,6 +20,7 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
   const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(store.name + ' ' + store.location + ' Buenos Aires')}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const faqs = (storesFaq as Record<string, { q: string; a: string }[]>)[store.id] ?? storesFaq['_default'];
+  const activePromo = getActivePromo(store.id);
 
   const handleOrderRedirect = () => {
     const message = `¡Hola EnCasa Venezuela! 🇻🇪 Vi el local *${store.name}* en el mapa y quiero hacer un pedido para retirar ahí o que me envíen de esa zona.`;
@@ -71,6 +81,22 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
             </button>
           </div>
         </div>
+
+        {/* Banner de promo activa */}
+        {activePromo && (
+          <div className="bg-gradient-to-r from-venezuela-orange to-red-500 px-6 py-3 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🔥</span>
+              <div>
+                <p className="text-white font-black text-sm uppercase tracking-wide">{activePromo.label}</p>
+                {activePromo.sublabel && (
+                  <p className="text-white/80 text-[10px] font-bold">{activePromo.sublabel}</p>
+                )}
+              </div>
+            </div>
+            <span className="text-white/70 text-[9px] font-black uppercase tracking-widest shrink-0">Oferta activa</span>
+          </div>
+        )}
 
         <div className="h-[550px] w-full bg-gray-100 relative">
           <iframe

@@ -1,0 +1,8 @@
+{
+  "_comment": "Agregar promos por slug del local. validUntil en formato ISO. Dejar vacío = sin promo activa.",
+  "_example": {
+    "label": "15% OFF en Tequeños",
+    "sublabel": "Solo hoy hasta las 20hs",
+    "validUntil": "2026-04-01T20:00:00"
+  }
+}
