@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PartnerStore } from '../types';
-import { MapPin, Clock, ExternalLink, Smartphone, AlertCircle } from 'lucide-react';
+import { MapPin, Clock, ExternalLink, Smartphone, AlertCircle, ChevronDown } from 'lucide-react';
+import storesFaq from '../data/stores-faq.json' assert { type: 'json' };
 
 interface StoreMapViewProps {
   store: PartnerStore;
@@ -8,6 +9,8 @@ interface StoreMapViewProps {
 
 const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
   const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(store.name + ' ' + store.location + ' Buenos Aires')}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const faqs = (storesFaq as Record<string, { q: string; a: string }[]>)[store.id] ?? storesFaq['_default'];
 
   const handleOrderRedirect = () => {
     const message = `¡Hola EnCasa Venezuela! 🇻🇪 Vi el local *${store.name}* en el mapa y quiero hacer un pedido para retirar ahí o que me envíen de esa zona.`;
@@ -96,6 +99,32 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
               </button>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div className="bg-white rounded-[40px] border border-gray-100 shadow-xl p-8 mb-10">
+        <h3 className="text-xl font-black text-gray-900 tracking-tight mb-6 flex items-center gap-3">
+          <span className="w-8 h-8 bg-ven-yellow/10 rounded-xl flex items-center justify-center text-ven-yellow font-black text-lg">?</span>
+          Preguntas Frecuentes
+        </h3>
+        <div className="space-y-3">
+          {faqs.map((faq, i) => (
+            <div key={i} className="border border-gray-100 rounded-2xl overflow-hidden">
+              <button
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+              >
+                <span className="text-sm font-black text-gray-800">{faq.q}</span>
+                <ChevronDown size={16} className={`text-ven-yellow shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`} />
+              </button>
+              {openFaq === i && (
+                <div className="px-4 pb-4 text-sm text-gray-600 font-medium leading-relaxed border-t border-gray-50 pt-3">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 

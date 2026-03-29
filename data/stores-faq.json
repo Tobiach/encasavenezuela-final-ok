@@ -1,0 +1,9 @@
+{
+  "_default": [
+    { "q": "¿Cuál es el monto mínimo de pedido?", "a": "El monto mínimo es $5.999 ARS." },
+    { "q": "¿Cómo hago un pedido?", "a": "Elegí tus productos, completá el formulario y te conectamos directamente por WhatsApp con el local." },
+    { "q": "¿Hacen delivery a domicilio?", "a": "Depende del local. Verificá la cobertura en la descripción del local." },
+    { "q": "¿Qué métodos de pago aceptan?", "a": "Efectivo y transferencia bancaria, coordinado directamente con el local por WhatsApp." },
+    { "q": "¿Cuánto tarda el pedido?", "a": "Entre 30 y 45 minutos para delivery. El local te confirma el tiempo exacto por WhatsApp." }
+  ]
+}
