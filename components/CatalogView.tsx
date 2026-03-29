@@ -3,6 +3,7 @@ import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, I
 import { Product, PartnerStore } from '../types';
 import ProductDetailView from './ProductDetailView';
 import { useProducts } from '../lib/hooks/useProducts';
+import { useOrderCounts } from '../lib/hooks/useOrderCounts';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 
@@ -32,6 +33,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
   const navigate = useNavigate();
   const location = useLocation();
   const { allProducts } = useProducts();
+  const orderCounts = useOrderCounts();
   const [category, setCategory] = useState(location.state?.category || 'Todos');
   const [searchTerm, setSearchTerm] = useState('');
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
@@ -301,7 +303,12 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       </div>
                     </div>
                     <div className="p-5 flex-grow flex flex-col">
-                      <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-2 text-sm md:text-base group-hover:text-ven-yellow transition-colors">{store.name}</h3>
+                      <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-1 text-sm md:text-base group-hover:text-ven-yellow transition-colors">{store.name}</h3>
+                      {orderCounts[store.id] > 0 && (
+                        <p className="text-[9px] font-bold text-gray-400 flex items-center gap-1 mb-1">
+                          📦 {orderCounts[store.id]} pedidos este mes
+                        </p>
+                      )}
 
                       {/* INFO DE UBICACIÓN */}
                       <div className="space-y-1.5 mb-3">
