@@ -532,7 +532,7 @@ const handlePurchase = (total: number) => {
         <Route path="/gifts" element={<GiftsView onAddToCart={handleAddToCart} />} />
         
         {/* MODIFICADO: Checkout accesible sin login */}
-        <Route path="/checkout" element={<OrderConfirmationView stores={stores} cart={cart} user={user} onFinalizePurchase={handlePurchase} onClearCart={() => setCart([])} />} />
+        <Route path="/checkout" element={<OrderConfirmationView stores={stores} cart={cart} user={user} onFinalizePurchase={handlePurchase} onClearCart={() => setCart([])} allProducts={allProducts} onAddToCart={handleAddToCart} />} />
         
         <Route path="/radar" element={FEATURE_RADAR ? <ProtectedRoute user={user}><RadarDashboardView user={user!} /></ProtectedRoute> : <Navigate to="/" />} />
         <Route path="/promotion/:id" element={<PromotionDetailView userPoints={userPoints} onAddToCart={handleAddToCart} onSelectStore={handleSelectStore} showLoyalty={FEATURE_LOYALTY} />} />

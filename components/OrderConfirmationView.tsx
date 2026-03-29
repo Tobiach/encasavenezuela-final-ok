@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, Sparkles, ShoppingBag, Zap, MessageSquare, AlertCircle, Clock } from 'lucide-react'; import { Product, PartnerStore, User as UserType } from '../types';
+import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, ShoppingBag, Zap, MessageSquare, AlertCircle, Clock, Plus } from 'lucide-react'; import { Product, PartnerStore, User as UserType } from '../types';
 import { supabase } from '../lib/supabase';
 
 interface OrderConfirmationViewProps {
@@ -9,13 +9,15 @@ interface OrderConfirmationViewProps {
   user: UserType | null;
   onFinalizePurchase: (total: number) => void;
   onClearCart: () => void;
+  allProducts: Product[];
+  onAddToCart: (product: Product, storeId?: string) => void;
 }
 
 const WHATSAPP_NUMBER = '5491136026302';
 const MINIMUM_ORDER = 5999;
 
 const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
-  stores, cart, user, onFinalizePurchase, onClearCart
+  stores, cart, user, onFinalizePurchase, onClearCart, allProducts, onAddToCart
 }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -70,11 +72,13 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const aiSuggestion = useMemo(() => {
-    const hasMaltin = cart.some(i => i.product.name.toLowerCase().includes('maltín'));
-    if (!hasMaltin) return "Muchos clientes agregan Maltín a este pedido. ¿Querés agregar algo más antes de confirmar?";
-    return "¡Excelente elección! Este local tiene un combo relámpago activo si agregas Tequeños.";
-  }, [cart]);
+  const upsellProducts = useMemo(() => {
+    if (!store) return [];
+    const inCart = new Set(cart.map(i => i.product.id));
+    return allProducts
+      .filter(p => p.availableInStoreIds?.includes(store.id) && !inCart.has(p.id))
+      .slice(0, 3);
+  }, [allProducts, cart, store]);
 
   const tips = [
     { label: 'Sin propina', value: 0 },
@@ -520,26 +524,40 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
             </div>}
           </div>
 
-          {/* Sugerencia IA */}
-          <div className="bg-black/5 border border-ven-yellow/20 rounded-[32px] p-6 flex gap-4 items-start relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Sparkles size={64} className="text-ven-yellow" />
+          {/* Upselling — productos del mismo local */}
+          {upsellProducts.length > 0 && (
+            <div className="bg-black/5 border border-ven-yellow/20 rounded-[32px] p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 rounded-full bg-ven-yellow flex items-center justify-center text-white shrink-0 shadow-lg">
+                  <Zap size={16} fill="currentColor" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-ven-yellow uppercase tracking-[0.2em]">¿Le sumamos algo?</p>
+                  <p className="text-[9px] text-gray-500 font-bold">Productos del mismo local</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {upsellProducts.map(product => (
+                  <div key={product.id} className="flex items-center gap-3 bg-white/50 rounded-2xl p-3">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-black/5">
+                      <img src={product.img} alt={product.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-grow min-w-0">
+                      <p className="text-xs font-black text-venezuela-brown truncate uppercase tracking-tight">{product.name}</p>
+                      <p className="text-[10px] font-bold text-ven-yellow">${product.price.toLocaleString()}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onAddToCart(product, product.storeId ?? store?.id)}
+                      className="shrink-0 bg-gradient-to-br from-ven-yellow to-venezuela-orange text-white p-2 rounded-xl shadow-md active:scale-90 transition-all hover:brightness-110"
+                    >
+                      <Plus size={16} strokeWidth={3} />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-full bg-ven-yellow flex items-center justify-center text-white shrink-0 shadow-lg">
-              <Zap size={20} fill="currentColor" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-ven-yellow uppercase tracking-[0.2em] mb-1">Pana Chef AI Sugiere</p>
-              <p className="text-xs text-gray-600 font-medium leading-relaxed italic">"{aiSuggestion}"</p>
-              <button
-                type="button"
-                onClick={() => navigate('/catalog')}
-                className="mt-3 text-[10px] font-black text-venezuela-brown uppercase tracking-widest hover:text-ven-yellow transition-colors flex items-center gap-1"
-              >
-                Explorar más <ArrowLeft size={12} className="rotate-180" />
-              </button>
-            </div>
-          </div>
+          )}
 
           {/* Resumen Final */}
           <div className="bg-gradient-to-br from-white to-gray-50 rounded-[32px] border-2 border-ven-yellow/20 p-8 space-y-6 shadow-2xl shadow-yellow-500/10">
