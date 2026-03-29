@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock } from 'lucide-react';
+import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock, CheckCircle } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
 import ProductDetailView from './ProductDetailView';
 import { useProducts } from '../lib/hooks/useProducts';
@@ -284,9 +284,14 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       <img src={store.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40"></div>
                       <div className="absolute top-2 left-2 flex flex-col gap-1">
+                        {/* LOCAL VERIFICADO — todos los locales activos */}
+                        <div className="bg-emerald-500/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20">
+                          <CheckCircle size={8} /> VERIFICADO
+                        </div>
+                        {/* RECOMENDADO — locales premium */}
                         {store.plan === 'premium' && (
                           <div className="bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
-                            <Zap size={8} fill="currentColor" /> Premium
+                            <Zap size={8} fill="currentColor" /> RECOMENDADO
                           </div>
                         )}
                       </div>
