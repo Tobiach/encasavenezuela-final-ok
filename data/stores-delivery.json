@@ -1,0 +1,7 @@
+{
+  "_comment": "Agregar locales con delivery gratis por slug. zones = barrios cubiertos. Ejemplo:",
+  "_example": {
+    "freeDelivery": true,
+    "zones": ["Palermo", "Villa Crespo"]
+  }
+}

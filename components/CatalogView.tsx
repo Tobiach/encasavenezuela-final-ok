@@ -6,6 +6,13 @@ import { useProducts } from '../lib/hooks/useProducts';
 import { useOrderCounts } from '../lib/hooks/useOrderCounts';
 import { useNavigate, useLocation } from 'react-router-dom';
 import storesPromotions from '../data/stores-promotions.json' assert { type: 'json' };
+import storesDelivery from '../data/stores-delivery.json' assert { type: 'json' };
+
+type DeliveryEntry = { freeDelivery: boolean; zones?: string[] };
+const deliveryData = storesDelivery as unknown as Record<string, DeliveryEntry>;
+function hasFreeDelivery(storeId: string): boolean {
+  return deliveryData[storeId]?.freeDelivery === true;
+}
 
 type PromoEntry = { label: string; sublabel?: string; validUntil: string };
 const promoData = storesPromotions as unknown as Record<string, PromoEntry>;
@@ -336,11 +343,19 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       </div>
 
                       {/* BADGE DE COBERTURA */}
-                      <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-lg px-2 py-1.5 mb-auto">
+                      <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-lg px-2 py-1.5">
                         <p className="text-[8px] font-black text-ven-yellow uppercase tracking-widest text-center">
                           🛵 {store.coverageArea || 'CABA'}
                         </p>
                       </div>
+                      {/* BADGE ENVÍO GRATIS */}
+                      {hasFreeDelivery(store.id) && (
+                        <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1.5 mt-1.5 mb-auto">
+                          <p className="text-[8px] font-black text-emerald-600 uppercase tracking-widest text-center">
+                            🚚 Delivery gratis
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div className="px-5 pb-5 mt-auto">
                       <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-ven-yellow group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-[#C9A227] group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-ven-yellow/20">
