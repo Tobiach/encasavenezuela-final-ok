@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ArrowRight, Percent, Zap, Flame, Store } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowRight, Percent, Zap, Flame, Store, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../lib/hooks/useProducts';
 import { useStores } from '../lib/hooks/useStores';
@@ -10,22 +10,47 @@ const Offers: React.FC = () => {
   const { stores } = useStores();
   const { allProducts, promoCombos } = useProducts();
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [rotationOffset, setRotationOffset] = useState(0);
+  const [isFading, setIsFading] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Cards de sección — datos reales cacheados de Supabase, sin requests extra
+  const ROTATION_INTERVAL = 5000;
+  const PAGE_SIZE = 5;
+
+  // Iniciar/detener rotación según sección activa
+  useEffect(() => {
+    setRotationOffset(0);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (!activeSection || activeSection === 'budget') return;
+
+    intervalRef.current = setInterval(() => {
+      setIsFading(true);
+      setTimeout(() => {
+        setRotationOffset(prev => prev + 1);
+        setIsFading(false);
+      }, 250);
+    }, ROTATION_INTERVAL);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [activeSection]);
+
+  // Pool ampliado — más productos para que la rotación tenga variedad
   const sectionCards = [
     {
       key: 'pedido',
       emoji: '🔥', label: 'Lo más pedido',
       subtitle: 'Los favoritos de la comunidad',
       img: getImageUrl('abarrotes_1.png'),
-      items: allProducts.slice(0, 8),
+      items: allProducts.slice(0, 20),
     },
     {
       key: 'nuevo',
       emoji: '🆕', label: 'Nuevos ingresos',
       subtitle: 'Descubrí lo nuevo de esta semana',
       img: getImageUrl('harinas1.png'),
-      items: allProducts.slice(4, 12),
+      items: allProducts.slice(3, 22),
     },
     {
       key: 'oferta',
@@ -33,8 +58,8 @@ const Offers: React.FC = () => {
       subtitle: 'Tiempo limitado',
       img: getImageUrl('golosinas_1.png'),
       items: (() => {
-        const withDiscount = allProducts.filter(p => !!p.oldPrice).slice(0, 8);
-        return withDiscount.length > 0 ? withDiscount : allProducts.slice(0, 4);
+        const withDiscount = allProducts.filter(p => !!p.oldPrice);
+        return withDiscount.length >= 4 ? withDiscount : allProducts.slice(0, 16);
       })(),
     },
     {
@@ -42,11 +67,19 @@ const Offers: React.FC = () => {
       emoji: '💸', label: 'Todo a $5.999',
       subtitle: 'Opciones para comprar y ahorrar',
       img: getImageUrl('snacks1.png'),
-      items: allProducts.filter(p => p.price <= 5999).slice(0, 8),
+      items: allProducts.filter(p => p.price <= 5999).slice(0, 12),
     },
   ].filter(s => s.items.length > 0);
 
   const activeCard = sectionCards.find(s => s.key === activeSection);
+
+  // Devuelve la página de productos rotados para la sección activa
+  const getRotatingItems = (card: typeof sectionCards[0]) => {
+    if (card.key === 'budget' || card.items.length <= PAGE_SIZE) return card.items;
+    return Array.from({ length: PAGE_SIZE }, (_, i) =>
+      card.items[(rotationOffset + i) % card.items.length]
+    );
+  };
 
   // Mismo patrón que Promotions.tsx: duplicar items + estado de pausa en touch
   const carouselItems = [...promoCombos, ...promoCombos];
@@ -123,16 +156,24 @@ const Offers: React.FC = () => {
           {/* Productos de la sección activa */}
           {activeCard && (
             <div className="animate-in fade-in slide-in-from-top-2 duration-200">
-              <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.25em] mb-4">
-                {activeCard.emoji} {activeCard.label}
-              </p>
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.25em]">
+                  {activeCard.emoji} {activeCard.label}
+                </p>
+                {activeCard.key !== 'budget' && (
+                  <div className="flex items-center gap-1.5 text-[9px] text-gray-400 font-bold uppercase tracking-widest">
+                    <RefreshCw size={10} className="animate-spin" style={{ animationDuration: `${ROTATION_INTERVAL}ms` }} />
+                    Rotando
+                  </div>
+                )}
+              </div>
               <div
-                className="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 -mx-6 px-6"
+                className={`flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 -mx-6 px-6 transition-opacity duration-250 ${isFading ? 'opacity-0' : 'opacity-100'}`}
                 style={{ touchAction: 'pan-x' }}
               >
-                {activeCard.items.map((product) => (
+                {getRotatingItems(activeCard).map((product, idx) => (
                   <div
-                    key={product.id}
+                    key={`${product.id}-${idx}`}
                     onClick={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate('/catalog', { state: { category: product.category } }); }}
                     className="snap-start shrink-0 w-[152px] bg-white border-2 border-black/5 rounded-[24px] p-3 cursor-pointer hover:border-ven-yellow active:scale-95 transition-all"
                   >
