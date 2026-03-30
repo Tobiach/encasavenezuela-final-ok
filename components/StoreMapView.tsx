@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import { PartnerStore } from '../types';
-import { MapPin, Clock, ExternalLink, Smartphone, AlertCircle, ChevronDown } from 'lucide-react';
+import { MapPin, Clock, ExternalLink, Smartphone, AlertCircle, ChevronDown, Truck, ChevronRight } from 'lucide-react';
 import storesFaq from '../data/stores-faq.json' assert { type: 'json' };
+import storesDelivery from '../data/stores-delivery.json' assert { type: 'json' };
+import PromoDetailModal, { PromoEntry } from './PromoDetailModal';
+import DeliveryZonesModal from './DeliveryZonesModal';
 import storesPromotions from '../data/stores-promotions.json' assert { type: 'json' };
 
-type PromoEntry = { label: string; sublabel?: string; validUntil: string };
+type DeliveryEntry = { freeDelivery: boolean; zones?: string[] };
+const deliveryData = storesDelivery as unknown as Record<string, DeliveryEntry>;
+function hasFreeDelivery(storeId: string): boolean {
+  return deliveryData[storeId]?.freeDelivery === true;
+}
+
 const promoData = storesPromotions as unknown as Record<string, PromoEntry>;
 function getActivePromo(storeId: string): PromoEntry | null {
   const promo = promoData[storeId];
@@ -19,6 +27,8 @@ interface StoreMapViewProps {
 const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
   const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(store.name + ' ' + store.location + ' Buenos Aires')}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [promoModal, setPromoModal] = useState(false);
+  const [deliveryModal, setDeliveryModal] = useState(false);
   const faqs = (storesFaq as Record<string, { q: string; a: string }[]>)[store.id] ?? storesFaq['_default'];
   const activePromo = getActivePromo(store.id);
 
@@ -28,6 +38,7 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
   };
 
   return (
+    <>
     <div className="max-w-5xl mx-auto px-6 py-12 animate-in fade-in zoom-in-95 duration-700">
       <div className="bg-white rounded-[48px] overflow-hidden shadow-2xl border border-gray-100 mb-10">
         <div className="bg-white p-8 md:p-12 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 border-b border-gray-50">
@@ -82,20 +93,40 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
           </div>
         </div>
 
-        {/* Banner de promo activa */}
+        {/* Banner de promo activa — clickeable */}
         {activePromo && (
-          <div className="bg-gradient-to-r from-venezuela-orange to-red-500 px-6 py-3 flex items-center justify-between gap-4">
+          <button
+            onClick={() => setPromoModal(true)}
+            className="w-full bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 bg-[length:200%_auto] animate-shimmer px-6 py-3 flex items-center justify-between gap-4 hover:brightness-105 transition-all active:scale-[0.99]"
+          >
             <div className="flex items-center gap-3">
               <span className="text-xl">🔥</span>
-              <div>
+              <div className="text-left">
                 <p className="text-white font-black text-sm uppercase tracking-wide">{activePromo.label}</p>
                 {activePromo.sublabel && (
                   <p className="text-white/80 text-[10px] font-bold">{activePromo.sublabel}</p>
                 )}
               </div>
             </div>
-            <span className="text-white/70 text-[9px] font-black uppercase tracking-widest shrink-0">Oferta activa</span>
-          </div>
+            <div className="flex items-center gap-1.5 text-white/80 shrink-0">
+              <span className="text-[9px] font-black uppercase tracking-widest">Ver detalles</span>
+              <ChevronRight size={14} className="text-white" />
+            </div>
+          </button>
+        )}
+
+        {/* Badge de delivery gratis — clickeable */}
+        {hasFreeDelivery(store.id) && (
+          <button
+            onClick={() => setDeliveryModal(true)}
+            className="w-full bg-emerald-50 border-b border-emerald-200 px-6 py-2.5 flex items-center justify-between gap-4 hover:bg-emerald-100 transition-colors active:scale-[0.99]"
+          >
+            <div className="flex items-center gap-2">
+              <Truck size={15} className="text-emerald-600 shrink-0" />
+              <p className="text-emerald-700 font-black text-[11px] uppercase tracking-wide">🚚 Delivery gratis disponible en zonas cercanas</p>
+            </div>
+            <ChevronRight size={13} className="text-emerald-400 shrink-0" />
+          </button>
         )}
 
         <div className="h-[550px] w-full bg-gray-100 relative">
@@ -159,6 +190,29 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
         <p className="text-[10px] font-bold uppercase tracking-widest">Punto de retiro verificado por EnCasa Venezuela</p>
       </div>
     </div>
+
+    {activePromo && promoModal && (
+      <PromoDetailModal
+        store={store}
+        promo={activePromo}
+        onClose={() => setPromoModal(false)}
+        onGoToStore={() => setPromoModal(false)}
+      />
+    )}
+
+    {deliveryModal && (
+      <DeliveryZonesModal
+        store={store}
+        onClose={() => setDeliveryModal(false)}
+        onGoToStore={() => setDeliveryModal(false)}
+      />
+    )}
+
+    <style>{`
+      @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
+      .animate-shimmer { animation: shimmer 3s linear infinite; }
+    `}</style>
+    </>
   );
 };
 

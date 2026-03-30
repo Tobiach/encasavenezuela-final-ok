@@ -3,6 +3,7 @@ import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, I
 import { Product, PartnerStore } from '../types';
 import ProductDetailView from './ProductDetailView';
 import PromoDetailModal, { PromoEntry } from './PromoDetailModal';
+import DeliveryZonesModal from './DeliveryZonesModal';
 import { useProducts } from '../lib/hooks/useProducts';
 import { useOrderCounts } from '../lib/hooks/useOrderCounts';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -54,6 +55,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
   const [searchTerm, setSearchTerm] = useState('');
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
+  const [deliveryModal, setDeliveryModal] = useState<PartnerStore | null>(null);
 
   const track = (type: string, id: string, name: string) => {
     const win = window as unknown as { encasaTrack?: (e: string, d: Record<string, unknown>) => void };
@@ -222,17 +224,25 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
               <span className="text-[11px] font-black text-gray-700">{selectedStore.coverageArea || 'CABA'}</span>
             </div>
             {hasFreeDelivery(selectedStore.id) && (
-              <div className="flex items-center gap-2 shrink-0 bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-xl">
+              <button
+                onClick={() => setDeliveryModal(selectedStore)}
+                className="flex items-center gap-2 shrink-0 bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-xl cursor-pointer hover:bg-emerald-100 transition-colors animate-delivery-glow active:scale-95"
+              >
                 <Truck size={13} className="text-emerald-600 shrink-0" />
-                <span className="text-[11px] font-black text-emerald-700">Envío gratis</span>
-              </div>
+                <span className="text-[11px] font-black text-emerald-700">🚚 Envío gratis</span>
+                <ChevronRight size={10} className="text-emerald-400" />
+              </button>
             )}
-            {getActivePromo(selectedStore.id) && (
-              <div className="flex items-center gap-2 shrink-0 bg-orange-50 border border-orange-200 px-3 py-2 rounded-xl">
-                <Zap size={13} className="text-venezuela-orange shrink-0" />
-                <span className="text-[11px] font-black text-venezuela-orange">{getActivePromo(selectedStore.id)!.label}</span>
-              </div>
-            )}
+            {(() => { const p = getActivePromo(selectedStore.id); return p ? (
+              <button
+                onClick={() => setPromoModal({ store: selectedStore, promo: p })}
+                className="flex items-center gap-2 shrink-0 bg-orange-50 border border-orange-200 px-3 py-2 rounded-xl cursor-pointer hover:bg-orange-100 transition-colors animate-promo-glow active:scale-95"
+              >
+                <span className="text-[11px]">🔥</span>
+                <span className="text-[11px] font-black text-venezuela-orange">{p.label}</span>
+                <ChevronRight size={10} className="text-orange-400" />
+              </button>
+            ) : null; })()}
           </div>
 
           {/* Barra sticky: search + categorías tipo tabs */}
@@ -332,7 +342,10 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                           <Zap size={8} fill="currentColor" /> RECOMENDADO
                         </div>
                         {getActivePromo(store.id) && (
-                          <div className="bg-orange-500/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20">
+                          <div
+                            className="bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-orange-500/40 border border-white/20 cursor-pointer"
+                            onClick={e => { e.stopPropagation(); const p = getActivePromo(store.id); if (p) setPromoModal({ store, promo: p }); }}
+                          >
                             🔥 OFERTA
                           </div>
                         )}
@@ -382,10 +395,12 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                         </div>
                         {/* Badge envío gratis */}
                         {hasFreeDelivery(store.id) && (
-                          <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 mb-3">
-                            <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest text-center">
-                              🚚 Delivery gratis
-                            </p>
+                          <div
+                            className="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 mb-3 cursor-pointer hover:bg-emerald-100 transition-colors animate-delivery-glow flex items-center justify-center gap-2 active:scale-95"
+                            onClick={e => { e.stopPropagation(); setDeliveryModal(store); }}
+                          >
+                            <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">🚚 Delivery gratis</p>
+                            <ChevronRight size={9} className="text-emerald-400" />
                           </div>
                         )}
                         <div className="flex items-center justify-between">
@@ -431,7 +446,10 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                         )}
                         {/* OFERTA — promo activa con validUntil en el futuro */}
                         {getActivePromo(store.id) && (
-                          <div className="bg-orange-500/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20">
+                          <div
+                            className="bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-orange-500/40 border border-white/20 cursor-pointer"
+                            onClick={e => { e.stopPropagation(); const p = getActivePromo(store.id); if (p) setPromoModal({ store, promo: p }); }}
+                          >
                             🔥 OFERTA
                           </div>
                         )}
@@ -477,10 +495,12 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       </div>
                       {/* BADGE ENVÍO GRATIS */}
                       {hasFreeDelivery(store.id) && (
-                        <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1.5 mt-1.5 mb-auto">
-                          <p className="text-[8px] font-black text-emerald-600 uppercase tracking-widest text-center">
-                            🚚 Delivery gratis
-                          </p>
+                        <div
+                          className="bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1.5 mt-1.5 mb-auto cursor-pointer hover:bg-emerald-100 transition-colors animate-delivery-glow flex items-center justify-center gap-1.5 active:scale-95"
+                          onClick={e => { e.stopPropagation(); setDeliveryModal(store); }}
+                        >
+                          <p className="text-[8px] font-black text-emerald-600 uppercase tracking-widest">🚚 Delivery gratis</p>
+                          <ChevronRight size={8} className="text-emerald-400" />
                         </div>
                       )}
                     </div>
@@ -576,6 +596,16 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
         .animate-shimmer { animation: shimmer 3s linear infinite; }
+        @keyframes promo-glow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); }
+          50% { box-shadow: 0 0 0 3px rgba(249,115,22,0.3), 0 0 10px rgba(249,115,22,0.12); }
+        }
+        .animate-promo-glow { animation: promo-glow 2s ease-in-out infinite; }
+        @keyframes delivery-glow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+          50% { box-shadow: 0 0 0 3px rgba(16,185,129,0.25), 0 0 10px rgba(16,185,129,0.1); }
+        }
+        .animate-delivery-glow { animation: delivery-glow 2.5s ease-in-out infinite; }
       `}</style>
     </div>
 
@@ -586,6 +616,15 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
         promo={promoModal.promo}
         onClose={() => setPromoModal(null)}
         onGoToStore={() => { setPromoModal(null); onSelectStore(promoModal.store); }}
+      />
+    )}
+
+    {/* Modal de zonas de delivery gratis */}
+    {deliveryModal && (
+      <DeliveryZonesModal
+        store={deliveryModal}
+        onClose={() => setDeliveryModal(null)}
+        onGoToStore={() => { setDeliveryModal(null); onSelectStore(deliveryModal); }}
       />
     )}
     </>
