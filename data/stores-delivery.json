@@ -1,7 +1,23 @@
 {
-  "_comment": "Agregar locales con delivery gratis por slug. zones = barrios cubiertos. Ejemplo:",
-  "_example": {
+  "_comment": "Agregar locales con delivery gratis por slug. zones = barrios cubiertos.",
+  "real-1": {
     "freeDelivery": true,
-    "zones": ["Palermo", "Villa Crespo"]
+    "zones": ["Balvanera", "Once", "Congreso", "Almagro"]
+  },
+  "real-4": {
+    "freeDelivery": true,
+    "zones": ["Balvanera", "San Cristóbal", "Once", "Boedo"]
+  },
+  "real-5": {
+    "freeDelivery": true,
+    "zones": ["San Cristóbal", "Boedo", "Parque Patricios", "La Boca"]
+  },
+  "real-7": {
+    "freeDelivery": true,
+    "zones": ["Palermo", "Villa Crespo", "Colegiales", "Belgrano"]
+  },
+  "real-11": {
+    "freeDelivery": true,
+    "zones": ["Balvanera", "Almagro", "Caballito", "Flores"]
   }
 }
