@@ -1,8 +1,18 @@
 {
-  "_comment": "Agregar promos por slug del local. validUntil en formato ISO. Dejar vacío = sin promo activa.",
-  "_example": {
-    "label": "15% OFF en Tequeños",
-    "sublabel": "Solo hoy hasta las 20hs",
-    "validUntil": "2026-04-01T20:00:00"
+  "_comment": "Promos activas por slug. validUntil en ISO. Si la fecha ya pasó, no se muestra.",
+  "real-1": {
+    "label": "Happy Hour: 2x1 en Tequeños",
+    "sublabel": "Todos los días de 16 a 19hs",
+    "validUntil": "2026-12-31T19:00:00"
+  },
+  "real-3": {
+    "label": "Combo Arepa + Jugo a $8.900",
+    "sublabel": "Solo lunes, miércoles y viernes",
+    "validUntil": "2026-12-31T22:00:00"
+  },
+  "real-12": {
+    "label": "15% OFF en pedidos +$15.000",
+    "sublabel": "Válido todo el mes de abril",
+    "validUntil": "2026-04-30T23:59:00"
   }
 }
