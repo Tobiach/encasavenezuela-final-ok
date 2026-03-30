@@ -179,8 +179,8 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
 
             {/* Badges top-right */}
             <div className="absolute top-4 right-4 flex flex-col gap-1.5 items-end">
-              <div className="bg-emerald-500/90 backdrop-blur-sm text-white px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-wide flex items-center gap-1 border border-white/20 shadow-md">
-                <CheckCircle size={9} /> VERIFICADO
+              <div className="bg-black/30 backdrop-blur-sm text-white/60 px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-wide flex items-center gap-1 border border-white/10">
+                <CheckCircle size={7} /> VERIFICADO
               </div>
               {selectedStore.plan === 'premium' && (
                 <div className="bg-gradient-to-r from-[#D4AF37] to-[#C9A227] text-white px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-wide flex items-center gap-1 border border-white/20 shadow-md">
@@ -383,8 +383,8 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40"></div>
                       <div className="absolute top-2 left-2 flex flex-col gap-1">
                         {/* LOCAL VERIFICADO — todos los locales activos */}
-                        <div className="bg-emerald-500/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20">
-                          <CheckCircle size={8} /> VERIFICADO
+                        <div className="bg-black/30 backdrop-blur-sm text-white/55 px-1.5 py-0.5 rounded-md text-[7px] font-bold uppercase tracking-wide flex items-center gap-0.5 border border-white/10">
+                          <CheckCircle size={6} /> VERIFICADO
                         </div>
                         {/* RECOMENDADO — locales premium */}
                         {store.plan === 'premium' && (
@@ -394,7 +394,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                         )}
                         {/* OFERTA — promo activa con validUntil en el futuro */}
                         {getActivePromo(store.id) && (
-                          <div className="bg-venezuela-orange/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20 animate-pulse">
+                          <div className="bg-orange-500/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20">
                             🔥 OFERTA
                           </div>
                         )}
@@ -406,6 +406,12 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                     </div>
                     <div className="p-5 flex-grow flex flex-col">
                       <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-1 text-sm md:text-base group-hover:text-ven-yellow transition-colors">{store.name}</h3>
+                      {(() => { const p = getActivePromo(store.id); return p ? (
+                        <div className="bg-orange-50 border border-orange-200 rounded-xl px-2.5 py-1.5 mb-2 flex items-center gap-1.5">
+                          <span className="text-[10px] shrink-0">🔥</span>
+                          <p className="text-[8px] font-black text-orange-600 uppercase tracking-wide truncate">{p.label}</p>
+                        </div>
+                      ) : null; })()}
                       {orderCounts[store.id] > 0 && (
                         <p className="text-[9px] font-bold text-gray-400 flex items-center gap-1 mb-1">
                           📦 {orderCounts[store.id]} pedidos este mes
