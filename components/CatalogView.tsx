@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock, CheckCircle, Truck } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
 import ProductDetailView from './ProductDetailView';
+import PromoDetailModal, { PromoEntry } from './PromoDetailModal';
 import { useProducts } from '../lib/hooks/useProducts';
 import { useOrderCounts } from '../lib/hooks/useOrderCounts';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -14,7 +15,6 @@ function hasFreeDelivery(storeId: string): boolean {
   return deliveryData[storeId]?.freeDelivery === true;
 }
 
-type PromoEntry = { label: string; sublabel?: string; validUntil: string };
 const promoData = storesPromotions as unknown as Record<string, PromoEntry>;
 function getActivePromo(storeId: string): PromoEntry | null {
   const promo = promoData[storeId];
@@ -53,6 +53,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
   const [category, setCategory] = useState(location.state?.category || 'Todos');
   const [searchTerm, setSearchTerm] = useState('');
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
+  const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
 
   const track = (type: string, id: string, name: string) => {
     const win = window as unknown as { encasaTrack?: (e: string, d: Record<string, unknown>) => void };
@@ -141,6 +142,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
   const categories = ['Todos', 'Harinas', 'Lácteos', 'Congelados', 'Bebidas', 'Chucherías', 'Salsas', 'Almacén', 'Promociones'];
 
   return (
+    <>
     <div className={`max-w-7xl mx-auto px-4 md:px-6 ${selectedStore ? 'pt-0 pb-12' : 'py-8 md:py-12'}`}>
       {viewingProduct && (
         <ProductDetailView
@@ -345,9 +347,13 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       <h3 className="text-lg md:text-xl font-black text-venezuela-brown leading-tight mb-2 group-hover:text-ven-yellow transition-colors truncate uppercase tracking-tight">{store.name}</h3>
                       {/* Promo activa */}
                       {(() => { const p = getActivePromo(store.id); return p ? (
-                        <div className="bg-orange-50 border border-orange-200 rounded-xl px-3 py-2 mb-3 flex items-center gap-2">
+                        <div
+                          className="bg-orange-50 border border-orange-200 rounded-xl px-3 py-2 mb-3 flex items-center gap-2 cursor-pointer hover:bg-orange-100 transition-colors active:scale-95"
+                          onClick={e => { e.stopPropagation(); setPromoModal({ store, promo: p }); }}
+                        >
                           <span className="text-[11px] shrink-0">🔥</span>
-                          <p className="text-[9px] font-black text-orange-600 uppercase tracking-wide truncate">{p.label}</p>
+                          <p className="text-[9px] font-black text-orange-600 uppercase tracking-wide truncate flex-1">{p.label}</p>
+                          <ChevronRight size={10} className="text-orange-400 shrink-0" />
                         </div>
                       ) : null; })()}
                       {/* Contador de pedidos */}
@@ -438,9 +444,13 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                     <div className="p-5 flex-grow flex flex-col">
                       <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-1 text-sm md:text-base group-hover:text-ven-yellow transition-colors">{store.name}</h3>
                       {(() => { const p = getActivePromo(store.id); return p ? (
-                        <div className="bg-orange-50 border border-orange-200 rounded-xl px-2.5 py-1.5 mb-2 flex items-center gap-1.5">
+                        <div
+                          className="bg-orange-50 border border-orange-200 rounded-xl px-2.5 py-1.5 mb-2 flex items-center gap-1.5 cursor-pointer hover:bg-orange-100 transition-colors active:scale-95"
+                          onClick={e => { e.stopPropagation(); setPromoModal({ store, promo: p }); }}
+                        >
                           <span className="text-[10px] shrink-0">🔥</span>
-                          <p className="text-[8px] font-black text-orange-600 uppercase tracking-wide truncate">{p.label}</p>
+                          <p className="text-[8px] font-black text-orange-600 uppercase tracking-wide truncate flex-1">{p.label}</p>
+                          <ChevronRight size={9} className="text-orange-400 shrink-0" />
                         </div>
                       ) : null; })()}
                       {orderCounts[store.id] > 0 && (
@@ -568,6 +578,17 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
         .animate-shimmer { animation: shimmer 3s linear infinite; }
       `}</style>
     </div>
+
+    {/* Modal de detalle de promo */}
+    {promoModal && (
+      <PromoDetailModal
+        store={promoModal.store}
+        promo={promoModal.promo}
+        onClose={() => setPromoModal(null)}
+        onGoToStore={() => { setPromoModal(null); onSelectStore(promoModal.store); }}
+      />
+    )}
+    </>
   );
 };
 

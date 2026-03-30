@@ -3,16 +3,52 @@
   "real-1": {
     "label": "Happy Hour: 2x1 en Tequeños",
     "sublabel": "Todos los días de 16 a 19hs",
-    "validUntil": "2026-12-31T19:00:00"
+    "validUntil": "2026-12-31T19:00:00",
+    "type": "happy_hour",
+    "title": "Happy Hour Tequetok",
+    "description": "De 16 a 19hs los tequeños van 2x1. Pedís una porción, te mandamos dos. Sin vueltas, sin excusas. La merienda venezolana más conveniente de Balvanera.",
+    "howItWorks": [
+      "Hacé tu pedido entre las 16:00 y las 19:00hs cualquier día",
+      "Elegí cualquier presentación de tequeños del menú",
+      "El local duplica la cantidad automáticamente — sin cargo extra",
+      "Combinable con el resto de productos sin ningún problema"
+    ],
+    "conditions": "Válido todos los días. No acumulable con otras promos. Sujeto a stock disponible. Solo en horario Happy Hour (16 a 19hs).",
+    "heroEmojis": ["🥨", "⚡", "🍺"],
+    "gradient": "from-orange-500 to-amber-400"
   },
   "real-3": {
     "label": "Combo Arepa + Jugo a $8.900",
     "sublabel": "Solo lunes, miércoles y viernes",
-    "validUntil": "2026-12-31T22:00:00"
+    "validUntil": "2026-12-31T22:00:00",
+    "type": "combo",
+    "title": "Combo del Día – Mordiscos House",
+    "description": "Los días de entre semana Mordiscos House te trae el combo más criollo: una arepa rellena a tu elección más un jugo natural por solo $8.900. El sabor venezolano al precio justo.",
+    "howItWorks": [
+      "Disponible lunes, miércoles y viernes en horario completo de atención",
+      "Elegís el relleno: pollo mechado, pernil o queso con guasacaca",
+      "El jugo natural es de naranja, mango o maracuyá según disponibilidad",
+      "Podés pedir múltiples combos en el mismo pedido"
+    ],
+    "conditions": "Solo lunes, miércoles y viernes. No aplica para delivery express. Precio fijo, sin cambios ni sustituciones de relleno fuera de los tres indicados.",
+    "heroEmojis": ["🫓", "🥤", "✨"],
+    "gradient": "from-green-600 to-emerald-400"
   },
   "real-12": {
     "label": "15% OFF en pedidos +$15.000",
     "sublabel": "Válido todo el mes de abril",
-    "validUntil": "2026-04-30T23:59:00"
+    "validUntil": "2026-04-30T23:59:00",
+    "type": "discount",
+    "title": "Abril con Descuento – El Rincón del Morocho",
+    "description": "Este mes el Morocho te premia. Superá los $15.000 ARS en tu pedido y el 15% de descuento se aplica directo al total. Pedí abundante, que la comida venezolana lo vale.",
+    "howItWorks": [
+      "Armá tu pedido sumando $15.000 ARS o más en productos",
+      "El 15% se aplica sobre el total del pedido al confirmar",
+      "Válido tanto para delivery como para retiro en local (Rincón 289, Balvanera)",
+      "Sin límite de pedidos — aprovechá todas las veces que quieras durante abril"
+    ],
+    "conditions": "Válido hasta el 30 de abril de 2026. Mínimo de compra $15.000 ARS. No acumulable con otras promociones vigentes.",
+    "heroEmojis": ["💰", "🔥", "🎉"],
+    "gradient": "from-red-600 to-rose-400"
   }
 }
