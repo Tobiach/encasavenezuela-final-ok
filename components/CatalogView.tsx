@@ -316,41 +316,72 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                   <div
                     key={`premium-${store.id}`}
                     onClick={() => { track('store', store.id, store.name); onSelectStore(store); }}
-                    className="group min-w-[280px] md:min-w-[320px] bg-white rounded-[32px] border-2 border-ven-yellow/30 overflow-hidden transition-all duration-300 hover:border-ven-yellow hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(212,175,55,0.25)] cursor-pointer flex flex-col shadow-2xl relative"
+                    className="group min-w-[280px] md:min-w-[320px] bg-white rounded-[32px] border-2 border-ven-yellow/30 overflow-hidden transition-all duration-300 hover:border-ven-yellow hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(212,175,55,0.25)] cursor-pointer flex flex-col shadow-2xl"
                   >
-                    <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wide flex items-center gap-1.5 shadow-lg shadow-ven-yellow/40 border border-white/30">
-                      <Zap size={10} fill="currentColor" /> RECOMENDADO
-                    </div>
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img src={store.img} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                      {/* Badge stack izquierda */}
+                      <div className="absolute top-2 left-2 flex flex-col gap-1">
+                        <div className="bg-black/30 backdrop-blur-sm text-white/55 px-1.5 py-0.5 rounded-md text-[7px] font-bold uppercase tracking-wide flex items-center gap-0.5 border border-white/10">
+                          <CheckCircle size={6} /> VERIFICADO
+                        </div>
+                        <div className="bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
+                          <Zap size={8} fill="currentColor" /> RECOMENDADO
+                        </div>
+                        {getActivePromo(store.id) && (
+                          <div className="bg-orange-500/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg border border-white/20">
+                            🔥 OFERTA
+                          </div>
+                        )}
+                      </div>
+                      {/* Rating derecha */}
                       <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-[0_0_10px_rgba(212,175,55,0.5)]">
                         <Star size={13} className="fill-ven-yellow text-ven-yellow" />
                         <span className="text-base font-black text-white">{store.rating.toFixed(1)}</span>
                       </div>
                     </div>
                     <div className="p-6 flex flex-col flex-grow">
-                      <div className="mb-3">
-                        <h3 className="text-lg md:text-xl font-black text-venezuela-brown leading-tight mb-2 group-hover:text-ven-yellow transition-colors truncate uppercase tracking-tight">{store.name}</h3>
-
-                        {/* INFO DE UBICACIÓN Y COBERTURA */}
-                        <div className="space-y-1.5">
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <MapPin size={12} className="text-ven-red shrink-0" />
-                            <span className="text-[10px] font-black uppercase tracking-wide">{store.neighborhood}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <Clock size={12} className="text-ven-yellow shrink-0" />
-                            <span className="text-[10px] font-bold">{store.deliveryTime || '30-45 min'}</span>
-                          </div>
+                      <h3 className="text-lg md:text-xl font-black text-venezuela-brown leading-tight mb-2 group-hover:text-ven-yellow transition-colors truncate uppercase tracking-tight">{store.name}</h3>
+                      {/* Promo activa */}
+                      {(() => { const p = getActivePromo(store.id); return p ? (
+                        <div className="bg-orange-50 border border-orange-200 rounded-xl px-3 py-2 mb-3 flex items-center gap-2">
+                          <span className="text-[11px] shrink-0">🔥</span>
+                          <p className="text-[9px] font-black text-orange-600 uppercase tracking-wide truncate">{p.label}</p>
+                        </div>
+                      ) : null; })()}
+                      {/* Contador de pedidos */}
+                      {orderCounts[store.id] > 0 && (
+                        <p className="text-[10px] font-bold text-gray-400 flex items-center gap-1 mb-3">
+                          📦 {orderCounts[store.id]} pedidos este mes
+                        </p>
+                      )}
+                      {/* Info ubicación */}
+                      <div className="space-y-1.5 mb-4">
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <MapPin size={12} className="text-ven-red shrink-0" />
+                          <span className="text-[10px] font-black uppercase tracking-wide">{store.neighborhood}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Clock size={12} className="text-ven-yellow shrink-0" />
+                          <span className="text-[10px] font-bold">{store.deliveryTime || '30-45 min'}</span>
                         </div>
                       </div>
                       <div className="mt-auto pt-4 border-t border-black/5">
-                        <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-xl px-3 py-2 mb-3">
+                        {/* Badge cobertura */}
+                        <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-xl px-3 py-2 mb-2">
                           <p className="text-[9px] font-black text-ven-yellow uppercase tracking-widest text-center">
                             🛵 {store.coverageArea || 'CABA completa'}
                           </p>
                         </div>
+                        {/* Badge envío gratis */}
+                        {hasFreeDelivery(store.id) && (
+                          <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 mb-3">
+                            <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest text-center">
+                              🚚 Delivery gratis
+                            </p>
+                          </div>
+                        )}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-500 uppercase tracking-widest">
                             <MapPin size={12} className="text-ven-red" /> {store.location}
