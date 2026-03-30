@@ -5,5 +5,49 @@
     { "q": "¿Hacen delivery a domicilio?", "a": "Depende del local. Verificá la cobertura en la descripción del local." },
     { "q": "¿Qué métodos de pago aceptan?", "a": "Efectivo y transferencia bancaria, coordinado directamente con el local por WhatsApp." },
     { "q": "¿Cuánto tarda el pedido?", "a": "Entre 30 y 45 minutos para delivery. El local te confirma el tiempo exacto por WhatsApp." }
+  ],
+  "real-4": [
+    {
+      "q": "¿Hacen delivery y a qué zonas?",
+      "a": "Sí, hacemos delivery a Balvanera, San Cristóbal, Once y Boedo sin costo adicional en pedidos desde $8.000 ARS. Para otras zonas consultá por WhatsApp."
+    },
+    {
+      "q": "¿Qué métodos de pago aceptan?",
+      "a": "Aceptamos efectivo, transferencia bancaria (Alias: bahareque.ven) y Mercado Pago. El pago se coordina directamente con el local por WhatsApp al confirmar el pedido."
+    },
+    {
+      "q": "¿Cuál es el horario de atención?",
+      "a": "Atendemos de lunes a sábado de 11 a 15hs para almuerzo y de 18 a 22hs para cena. Los domingos solo abrimos al mediodía de 11 a 15hs."
+    },
+    {
+      "q": "¿Cuáles son los platos más pedidos?",
+      "a": "Nuestros clásicos son la bandeja paisa, el pabellón criollo y las arepas rellenas de pollo o pernil. Los fines de semana también tenemos hallacas cuando hay temporada."
+    },
+    {
+      "q": "¿Tienen mínimo de pedido para delivery?",
+      "a": "El mínimo para delivery es $8.000 ARS. Para retiro en local (Riobamba 296, Balvanera) no hay mínimo, podés pasar a buscar lo que quieras."
+    }
+  ],
+  "real-12": [
+    {
+      "q": "¿Hacen delivery y a qué zonas cubren?",
+      "a": "Hacemos delivery a Balvanera, Almagro, Caballito y Flores. Para pedidos desde $12.000 ARS el envío es sin costo. A otras zonas consultá disponibilidad por WhatsApp."
+    },
+    {
+      "q": "¿Qué métodos de pago aceptan?",
+      "a": "Aceptamos efectivo y transferencia bancaria. Mercado Pago disponible con un pequeño recargo del 5%. Todo se coordina por WhatsApp al momento del pedido."
+    },
+    {
+      "q": "¿Cuáles son los horarios?",
+      "a": "Abrimos todos los días de 12 a 16hs para el almuerzo y de 19 a 23hs para la cena. Los domingos cerramos a las 15hs. Te recomendamos pedir con al menos 20 minutos de anticipación."
+    },
+    {
+      "q": "¿Qué incluye la bandeja completa?",
+      "a": "La bandeja del Morocho trae arepa, arroz, caraotas negras, tajadas de plátano, ensalada de repollo y tu elección de proteína: pollo mechado, pernil o carne asada. Todo abundante, como en casa."
+    },
+    {
+      "q": "¿Puedo hacer pedidos grandes para eventos o reuniones?",
+      "a": "Sí, manejamos pedidos para reuniones y eventos venezolanos. Escribinos por WhatsApp con al menos 24 horas de anticipación y armamos el menú a medida. Tenemos bandejas, arepas por docena y más opciones."
+    }
   ]
 }
