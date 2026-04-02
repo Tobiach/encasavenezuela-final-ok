@@ -115,16 +115,21 @@ export function useProducts() {
   return { allProducts, promoCombos, loading, source };
 }
 
-// ── Categorías estáticas ─────────────────────────────────────────────────────
+// ── Categorías ───────────────────────────────────────────────────────────────
 export const categories = [
-  { name: 'Quesos y Tequeños', subtitle: 'El alma de la fiesta',         image: getImageUrl('tequenos_y_quesos1.png') },
-  { name: 'Harinas',           subtitle: 'Para tus arepas y más',        image: getImageUrl('harinas1.png') },
-  { name: 'Lácteos',           subtitle: 'Quesos y derivados frescos',   image: getImageUrl('queso_lacteos.png') },
-  { name: 'Congelados',        subtitle: 'Listos para preparar',         image: getImageUrl('chuletas_1.png') },
-  { name: 'Bebidas',           subtitle: 'Refrescos y maltas',           image: getImageUrl('bebidas_cervezas.png') },
-  { name: 'Salsas',            subtitle: 'El toque especial',            image: getImageUrl('salsas1.png') },
-  { name: 'Enlatados',         subtitle: 'Conservas de calidad',         image: getImageUrl('enlatado_diablitos1.png') },
-  { name: 'Snacks',            subtitle: 'Para picar entre horas',       image: getImageUrl('snacks1.png') },
-  { name: 'Almacén',           subtitle: 'Lo esencial de la despensa',   image: getImageUrl('abarrotes_1.png') },
-  { name: 'Chucherías',        subtitle: 'Dulces recuerdos',             image: getImageUrl('golosinas_1.png') },
+  { name: 'Harinas',       subtitle: 'PAN, Maseca, Cachapas y más',    image: getImageUrl('harinas1.png') },
+  { name: 'Lácteos',       subtitle: 'Quesos, nata y derivados',        image: getImageUrl('queso_lacteos.png') },
+  { name: 'Bebidas',       subtitle: 'Maltas, refrescos y café',        image: getImageUrl('bebidas_cervezas.png') },
+  { name: 'Chucherías',    subtitle: 'Dulces recuerdos',                image: getImageUrl('golosinas_1.png') },
+  { name: 'Snacks',        subtitle: 'Para picar entre horas',          image: getImageUrl('snacks1.png') },
+  { name: 'Salsas',        subtitle: 'Guasacaca, picante y más',        image: getImageUrl('salsas1.png') },
+  { name: 'Untables',      subtitle: 'Mantequilla, mayo y cremas',      image: getImageUrl('enlatado_diablitos1.png') },
+  { name: 'Congelados',    subtitle: 'Tequeños, cachapas y más',        image: getImageUrl('chuletas_1.png') },
+  { name: 'Carnes',        subtitle: 'Ahumados y chicharrón',           image: getImageUrl('chuletas_1.png') },
+  { name: 'Granos',        subtitle: 'Caraotas y legumbres',            image: getImageUrl('abarrotes_1.png') },
+  { name: 'Cereales',      subtitle: 'Fororo, Cerelac y desayunos',     image: getImageUrl('cerelac.png') },
+  { name: 'Condimentos',   subtitle: 'Adobo, ají y especias',           image: getImageUrl('abarrotes_1.png') },
+  { name: 'Secos',         subtitle: 'Papelón y productos secos',       image: getImageUrl('abarrotes_1.png') },
+  { name: 'Preparados',    subtitle: 'Arepas y comida lista',           image: getImageUrl('harinas1.png') },
+  { name: 'Hogar',         subtitle: 'Budares y utensilios criollos',   image: getImageUrl('abarrotes_1.png') },
 ];
