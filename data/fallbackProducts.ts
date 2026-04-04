@@ -10,7 +10,6 @@ export const FALLBACK_PRODUCTS: Product[] = [
   // ── HARINAS ──────────────────────────────────────────────────────────────
   { id: 20,  name: 'Harina PAN Blanca 1kg',              price: 2900,  category: 'Harinas',     img: getImageUrl('harina_pan_blanca.webp') },
   { id: 4,   name: 'Harina Doña Arepa Blanca 1kg',       price: 2900,  category: 'Harinas',     img: getImageUrl('harina_dona_arepa.webp') },
-  { id: 22,  name: 'Harina Maseca 1kg',                  price: 2400,  category: 'Harinas',     img: getImageUrl('harina_maseca.webp') },
   { id: 23,  name: 'Harina Morixe 1kg',                  price: 2500,  category: 'Harinas',     img: getImageUrl('harina_morixe.webp') },
   { id: 24,  name: 'Harina para Cachapas 1kg',           price: 3500,  category: 'Harinas',     img: getImageUrl('harina_cachapas.webp') },
   { id: 25,  name: 'Casabe Gourmet',                     price: 6300,  category: 'Harinas',     img: getImageUrl('casabe_real.webp') },
@@ -32,7 +31,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 47,  name: 'Nata Criolla',                       price: 4800,  category: 'Lácteos',     img: getImageUrl('nata_criolla.webp') },
 
   // ── CARNES ───────────────────────────────────────────────────────────────
-  { id: 50,  name: 'Chuleta Ahumada',                    price: 13000, category: 'Carnes',      img: getImageUrl('chuleta_ahumada.webp') },
+  { id: 50,  name: 'Chuleta Ahumada 1kg',                price: 13000, category: 'Carnes',      img: getImageUrl('chuleta_ahumada.webp') },
   { id: 51,  name: 'Huesos Ahumados 1kg',                price: 4500,  category: 'Carnes',      img: getImageUrl('huesos_ahumados.webp') },
   { id: 52,  name: 'Chicharrón',                         price: 5400,  category: 'Carnes',      img: getImageUrl('chicharron.webp') },
 
@@ -52,7 +51,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 70,  name: 'Mantequilla Qualy',                  price: 2600,  category: 'Untables',    img: getImageUrl('mantequilla_qualy.webp') },
   { id: 71,  name: 'Mantequilla Danica',                 price: 2600,  category: 'Untables',    img: getImageUrl('mantequilla_danica.webp') },
   { id: 72,  name: 'Mavesa Mayonesa',                    price: 14000, category: 'Untables',    img: getImageUrl('mavesa_mayonesa.webp') },
-  { id: 73,  name: 'Diablito',                           price: 12000, category: 'Untables',    img: getImageUrl('diablitos.webp') },
+  { id: 73,  name: 'Diablito x Diablitos',               price: 12000, category: 'Untables',    img: getImageUrl('diablitos.webp') },
   { id: 74,  name: 'Rikesa Cheddar 200gr',               price: 12000, category: 'Untables',    img: getImageUrl('rikesa.webp') },
 
   // ── BEBIDAS ──────────────────────────────────────────────────────────────
@@ -77,7 +76,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 3,   name: 'Chocolate Savoy Carré',              price: 9800,  category: 'Chucherías',  img: getImageUrl('chocolate_savoy_carre1.webp') },
   { id: 11,  name: 'Samba de Fresa',                     price: 2800,  category: 'Chucherías',  img: getImageUrl('savoy_samba.webp') },
   { id: 12,  name: 'Galleta Susy',                       price: 3000,  category: 'Chucherías',  img: getImageUrl('susy.webp') },
-  { id: 90,  name: 'Obleas',                             price: 2999,  category: 'Chucherías',  img: getImageUrl('obleas_real.webp') },
+  { id: 90,  name: 'Obleas Artesanales Galleta Untable Sin Relleno 120gr', price: 2999, category: 'Chucherías', img: getImageUrl('obleas_real.webp') },
   { id: 91,  name: 'Pinguinito',                         price: 4300,  category: 'Chucherías',  img: getImageUrl('pinguinito.webp') },
   { id: 93,  name: 'Cocosette c46gr',                    price: 2999,  category: 'Chucherías',  img: getImageUrl('cocosette_real.webp') },
   { id: 94,  name: 'Chupetas',                           price: 500,   category: 'Chucherías',  img: getImageUrl('chupetas.webp') },
@@ -85,12 +84,12 @@ export const FALLBACK_PRODUCTS: Product[] = [
 
   // ── SNACKS ───────────────────────────────────────────────────────────────
   { id: 100, name: 'Torontos',                           price: 1000,  category: 'Snacks',      img: getImageUrl('torontos.webp') },
-  { id: 103, name: 'Platanito',                          price: 2000,  category: 'Snacks',      img: getImageUrl('platanito.webp') },
+  { id: 103, name: 'Platanito x Plátano 3u Maduros',    price: 2000,  category: 'Snacks',      img: getImageUrl('platanito.webp') },
 
   // ── CONGELADOS ───────────────────────────────────────────────────────────
-  { id: 120, name: 'Tequeños Congelados',                price: 6500,  category: 'Congelados',  img: getImageUrl('tequenos_congelados.webp') },
+  { id: 120, name: 'Tequeños Congelados 12u',            price: 6500,  category: 'Congelados',  img: getImageUrl('tequenos_congelados.webp') },
   { id: 121, name: 'Tetas de Leche',                     price: 2000,  category: 'Congelados',  img: getImageUrl('tetas_congeladas.webp') },
-  { id: 122, name: 'Cachapas Congeladas',                price: 7600,  category: 'Congelados',  img: getImageUrl('cachapas_congeladas.webp') },
+  { id: 122, name: 'Cachapas x5u',                      price: 7600,  category: 'Congelados',  img: getImageUrl('cachapas_congeladas.webp') },
 
   // ── HOGAR ─────────────────────────────────────────────────────────────────
   { id: 130, name: 'Budare',                             price: 55000, category: 'Hogar',       img: getImageUrl('budare.webp') },
