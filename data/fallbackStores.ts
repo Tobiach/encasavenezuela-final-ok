@@ -9,9 +9,9 @@ export const FALLBACK_STORES: PartnerStore[] = [
   {
     id: 'crispric',
     name: 'Cris Pric - Fiambres y Quesos',
-    location: 'Caballito, CABA',
-    address: 'Saavedra y México, Caballito',
-    neighborhood: 'Caballito',
+    location: 'San Cristóbal, CABA',
+    address: 'Saavedra y México, San Cristóbal',
+    neighborhood: 'San Cristóbal',
     rating: 4.5,
     review_count: 0,
     google_maps_url: 'https://maps.google.com/?q=Saavedra+y+México,+Caballito,+CABA',
