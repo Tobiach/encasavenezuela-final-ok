@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PartnerStore } from '../types';
-import { MapPin, Clock, ExternalLink, Smartphone, AlertCircle, ChevronDown, Truck, ChevronRight } from 'lucide-react';
+import { MapPin, Clock, ExternalLink, Smartphone, AlertCircle, ChevronDown, Truck, ChevronRight, Package, X, MessageCircle } from 'lucide-react';
 import storesFaq from '../data/stores-faq.json' assert { type: 'json' };
 import storesDelivery from '../data/stores-delivery.json' assert { type: 'json' };
 import PromoDetailModal, { PromoEntry } from './PromoDetailModal';
@@ -29,6 +29,8 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [promoModal, setPromoModal] = useState(false);
   const [deliveryModal, setDeliveryModal] = useState(false);
+  const [mayorModal, setMayorModal] = useState(false);
+  const hasMayor = store.tags?.includes('Venta por Mayor');
   const faqs = (storesFaq as Record<string, { q: string; a: string }[]>)[store.id] ?? storesFaq['_default'];
   const activePromo = getActivePromo(store.id);
 
@@ -112,6 +114,20 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
               <span className="text-[9px] font-black uppercase tracking-widest">Ver detalles</span>
               <ChevronRight size={14} className="text-white" />
             </div>
+          </button>
+        )}
+
+        {/* Banner venta por mayor — solo locales con el tag */}
+        {hasMayor && (
+          <button
+            onClick={() => setMayorModal(true)}
+            className="w-full bg-blue-50 border-b border-blue-200 px-6 py-2.5 flex items-center justify-between gap-4 hover:bg-blue-100 transition-colors active:scale-[0.99]"
+          >
+            <div className="flex items-center gap-2">
+              <Package size={15} className="text-blue-600 shrink-0" />
+              <p className="text-blue-700 font-black text-[11px] uppercase tracking-wide">📦 Venta por Mayor disponible — consultá precios mayoristas</p>
+            </div>
+            <ChevronRight size={13} className="text-blue-400 shrink-0" />
           </button>
         )}
 
@@ -206,6 +222,76 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
         onClose={() => setDeliveryModal(false)}
         onGoToStore={() => setDeliveryModal(false)}
       />
+    )}
+
+    {mayorModal && (
+      <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4" onClick={() => setMayorModal(false)}>
+        <div className="bg-white rounded-[40px] w-full max-w-md shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+          {/* Header */}
+          <div className="bg-blue-600 px-8 pt-8 pb-6 relative">
+            <button onClick={() => setMayorModal(false)} className="absolute top-5 right-5 text-white/70 hover:text-white transition-colors">
+              <X size={20} />
+            </button>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-white/20 p-2.5 rounded-2xl">
+                <Package size={22} className="text-white" />
+              </div>
+              <div>
+                <p className="text-white/70 text-[10px] font-black uppercase tracking-widest">Sección Mayorista</p>
+                <h3 className="text-white font-black text-xl leading-tight">{store.name}</h3>
+              </div>
+            </div>
+            <p className="text-white/80 text-sm font-medium leading-relaxed">
+              Precios especiales para revendedores, distribuidores y emprendedores. Consultá disponibilidad y mínimos directamente por WhatsApp.
+            </p>
+          </div>
+
+          {/* Productos disponibles por mayor */}
+          <div className="px-8 pt-6 pb-2">
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Productos disponibles por mayor</p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { emoji: '🧀', label: 'Queso de Mano' },
+                { emoji: '🧀', label: 'Queso Duro' },
+                { emoji: '🥛', label: 'Nata Criolla' },
+                { emoji: '🍺', label: 'Maltas y Bebidas' },
+                { emoji: '🫓', label: 'Cachapas x pack' },
+                { emoji: '🍬', label: 'Chucherías x caja' },
+              ].map(({ emoji, label }) => (
+                <div key={label} className="flex items-center gap-2 bg-blue-50 rounded-2xl px-3 py-2.5">
+                  <span className="text-base">{emoji}</span>
+                  <span className="text-xs font-bold text-blue-800">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Info mínimos */}
+          <div className="px-8 py-4">
+            <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 flex items-start gap-3">
+              <span className="text-lg">📦</span>
+              <p className="text-xs text-amber-800 font-medium leading-relaxed">
+                Los precios mayoristas y mínimos de compra se coordinan directamente con el local. Cantidades desde media docena según producto.
+              </p>
+            </div>
+          </div>
+
+          {/* CTA WhatsApp */}
+          <div className="px-8 pb-8">
+            <button
+              onClick={() => {
+                const msg = `Hola ${store.name} 👋 Vi su sección de *Venta por Mayor* en EnCasa Venezuela y quiero consultar precios y cantidades mínimas.`;
+                window.open(`https://wa.me/5491136026302?text=${encodeURIComponent(msg)}`, '_blank');
+              }}
+              className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-[20px] font-black text-sm tracking-wide shadow-lg shadow-green-500/30 transition-all active:scale-95 flex items-center justify-center gap-2.5"
+            >
+              <MessageCircle size={18} />
+              Consultar precios mayoristas
+            </button>
+            <p className="text-center text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-3">Respondemos por WhatsApp en horario comercial</p>
+          </div>
+        </div>
+      </div>
     )}
 
     <style>{`
