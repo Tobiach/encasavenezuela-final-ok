@@ -7,6 +7,25 @@ import { getImageUrl } from '../lib/supabase';
 
 export const FALLBACK_STORES: PartnerStore[] = [
   {
+    id: 'crispric',
+    name: 'Cris Pric - Fiambres y Quesos',
+    location: 'Caballito, CABA',
+    address: 'Saavedra y México, Caballito',
+    neighborhood: 'Caballito',
+    rating: 4.5,
+    review_count: 0,
+    google_maps_url: 'https://maps.google.com/?q=Saavedra+y+México,+Caballito,+CABA',
+    img: getImageUrl('portada_crispric.webp'),
+    tags: ['Lácteos', 'Quesos', 'Bebidas', 'Chucherías', 'Venta por Mayor'],
+    type: 'productos',
+    isPreparedFood: false,
+    plan: 'basic',
+    reviews: [],
+    deliveryTime: '30-45 min',
+    coverageArea: 'Caballito, Flores, Almagro y Boedo',
+    deliveryRadius: 'Zona sur CABA',
+  },
+  {
     id: 'encasa-venezuela',
     name: 'EnCasa Venezuela',
     location: 'Buenos Aires',

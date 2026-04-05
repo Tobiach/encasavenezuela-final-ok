@@ -49,5 +49,31 @@
       "q": "¿Puedo hacer pedidos grandes para eventos o reuniones?",
       "a": "Sí, manejamos pedidos para reuniones y eventos venezolanos. Escribinos por WhatsApp con al menos 24 horas de anticipación y armamos el menú a medida. Tenemos bandejas, arepas por docena y más opciones."
     }
+  ],
+  "crispric": [
+    {
+      "q": "¿Hacen delivery y a qué zonas cubren?",
+      "a": "Sí, hacemos delivery a Caballito, Flores, Almagro y Boedo. En pedidos desde $8.000 ARS el envío es sin costo. Para otras zonas consultá por WhatsApp antes de hacer el pedido."
+    },
+    {
+      "q": "¿Venden por mayor?",
+      "a": "Sí, contamos con una sección especial de venta por mayor. Quesos, lácteos y productos venezolanos en cantidad, con precios mayoristas. Consultá por WhatsApp los precios y mínimos de compra para mayoreo."
+    },
+    {
+      "q": "¿Qué productos venezolanos tienen?",
+      "a": "Tenemos queso duro, queso de mano, nata criolla, maltas, bebidas Reko, Toddy, cachapas congeladas y una selección de chucherías venezolanas. El stock varía según disponibilidad — consultá antes de hacer el pedido."
+    },
+    {
+      "q": "¿Qué métodos de pago aceptan?",
+      "a": "Aceptamos efectivo y transferencia bancaria. Todo se coordina directamente por WhatsApp al confirmar el pedido."
+    },
+    {
+      "q": "¿Cuáles son los horarios?",
+      "a": "Abrimos de lunes a sábado de 9 a 13hs y de 17 a 21hs. Los domingos atendemos solo por la mañana de 9 a 13hs. Te recomendamos consultar disponibilidad antes de pasar."
+    },
+    {
+      "q": "¿Tienen mínimo de pedido para delivery?",
+      "a": "El mínimo para delivery es $8.000 ARS. Para retiro en local (Saavedra y México, Caballito) no hay mínimo."
+    }
   ]
 }

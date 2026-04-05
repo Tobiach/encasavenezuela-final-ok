@@ -19,5 +19,9 @@
   "real-11": {
     "freeDelivery": true,
     "zones": ["Balvanera", "Almagro", "Caballito", "Flores"]
+  },
+  "crispric": {
+    "freeDelivery": true,
+    "zones": ["Caballito", "Flores", "Almagro", "Boedo"]
   }
 }

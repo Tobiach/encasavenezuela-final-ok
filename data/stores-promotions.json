@@ -34,6 +34,23 @@
     "heroEmojis": ["🫓", "🥤", "✨"],
     "gradient": "from-green-600 to-emerald-400"
   },
+  "crispric": {
+    "label": "Happy Hour: 2x1 en Quesos 🧀",
+    "sublabel": "Lunes a viernes de 10 a 12hs",
+    "validUntil": "2026-12-31T12:00:00",
+    "type": "happy_hour",
+    "title": "Happy Hour Cris Pric — El Queso de la Mañana",
+    "description": "Los horarios tranquilos de la mañana tienen su recompensa. De 10 a 12hs de lunes a viernes, llevás el doble de queso al mismo precio. Queso de mano, queso duro o nata criolla — elegís vos. Ideal para el desayuno venezolano o para stockearte para la semana.",
+    "howItWorks": [
+      "Pedí entre las 10:00 y las 12:00hs de lunes a viernes",
+      "Elegí queso de mano, queso duro o nata criolla",
+      "El local te envía el doble de la cantidad sin cargo extra",
+      "Combinable con el resto de los productos del pedido"
+    ],
+    "conditions": "Válido lunes a viernes de 10 a 12hs. No acumulable con precio mayorista. Sujeto a stock disponible. Solo para pedidos realizados dentro del horario indicado.",
+    "heroEmojis": ["🧀", "☀️", "🔥"],
+    "gradient": "from-yellow-500 to-amber-400"
+  },
   "real-12": {
     "label": "15% OFF en pedidos +$15.000",
     "sublabel": "Válido todo el mes de abril",
