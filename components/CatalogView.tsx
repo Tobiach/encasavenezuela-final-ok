@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock, CheckCircle, Truck } from 'lucide-react';
+import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock, CheckCircle, Truck, X, MessageCircle } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
 import ProductDetailView from './ProductDetailView';
 import PromoDetailModal, { PromoEntry } from './PromoDetailModal';
@@ -56,6 +56,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
   const [deliveryModal, setDeliveryModal] = useState<PartnerStore | null>(null);
+  const [mayorModal, setMayorModal] = useState(false);
 
   const track = (type: string, id: string, name: string) => {
     const win = window as unknown as { encasaTrack?: (e: string, d: Record<string, unknown>) => void };
@@ -243,6 +244,16 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                 <ChevronRight size={10} className="text-orange-400" />
               </button>
             ) : null; })()}
+            {selectedStore.tags?.includes('Venta por Mayor') && (
+              <button
+                onClick={() => setMayorModal(true)}
+                className="flex items-center gap-2 shrink-0 bg-blue-50 border border-blue-200 px-3 py-2 rounded-xl cursor-pointer hover:bg-blue-100 transition-colors active:scale-95"
+              >
+                <Package size={13} className="text-blue-600 shrink-0" />
+                <span className="text-[11px] font-black text-blue-700">📦 Mayorista</span>
+                <ChevronRight size={10} className="text-blue-400" />
+              </button>
+            )}
           </div>
 
           {/* Barra sticky: search + categorías tipo tabs */}
@@ -626,6 +637,76 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
         onClose={() => setDeliveryModal(null)}
         onGoToStore={() => { setDeliveryModal(null); onSelectStore(deliveryModal); }}
       />
+    )}
+
+    {/* Modal Venta por Mayor */}
+    {mayorModal && selectedStore && (
+      <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4" onClick={() => setMayorModal(false)}>
+        <div className="bg-white rounded-[40px] w-full max-w-md shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+          <div className="bg-gradient-to-r from-blue-700 to-blue-500 px-8 pt-8 pb-6 relative">
+            <button onClick={() => setMayorModal(false)} className="absolute top-5 right-5 text-white/70 hover:text-white transition-colors">
+              <X size={20} />
+            </button>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-white/20 p-2.5 rounded-2xl">
+                <Package size={22} className="text-white" />
+              </div>
+              <div>
+                <p className="text-blue-200 text-[10px] font-black uppercase tracking-widest">Programa Mayorista</p>
+                <h3 className="text-white font-black text-xl leading-tight">{selectedStore.name}</h3>
+              </div>
+            </div>
+            <p className="text-blue-100 text-sm font-medium leading-relaxed">
+              Precios especiales para revendedores, distribuidores y emprendedores.
+            </p>
+          </div>
+
+          <div className="px-8 pt-6 pb-2">
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Productos disponibles por mayor</p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { emoji: '🧀', label: 'Queso de Mano', sub: 'Desde 6 u.' },
+                { emoji: '🧀', label: 'Queso Duro', sub: 'Desde 6 u.' },
+                { emoji: '🥛', label: 'Nata Criolla', sub: 'Por paquete' },
+                { emoji: '🍺', label: 'Maltas y Bebidas', sub: 'Por caja' },
+                { emoji: '🫓', label: 'Cachapas', sub: 'Pack x10 o x20' },
+                { emoji: '🍬', label: 'Chucherías', sub: 'Por caja cerrada' },
+              ].map(({ emoji, label, sub }) => (
+                <div key={label} className="bg-blue-50 border border-blue-100 rounded-2xl px-3 py-2.5 flex items-center gap-2">
+                  <span className="text-lg">{emoji}</span>
+                  <div>
+                    <p className="text-xs font-black text-blue-900 leading-tight">{label}</p>
+                    <p className="text-[10px] text-blue-400 font-bold">{sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="px-8 py-4">
+            <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 flex items-start gap-3">
+              <span className="text-base mt-0.5">⚠️</span>
+              <p className="text-xs text-amber-800 font-medium leading-relaxed">
+                Precios, mínimos y disponibilidad se confirman directamente por WhatsApp. Cantidades desde media docena según producto.
+              </p>
+            </div>
+          </div>
+
+          <div className="px-8 pb-8">
+            <button
+              onClick={() => {
+                const msg = `Hola *${selectedStore.name}* 👋 Vi la sección de *Venta por Mayor* en EnCasa Venezuela y quiero consultar precios mayoristas y cantidades mínimas.`;
+                window.open(`https://wa.me/5491136026302?text=${encodeURIComponent(msg)}`, '_blank');
+              }}
+              className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-[20px] font-black text-sm tracking-wide shadow-lg shadow-green-500/30 transition-all active:scale-95 flex items-center justify-center gap-2.5"
+            >
+              <MessageCircle size={18} />
+              Consultar precios mayoristas
+            </button>
+            <p className="text-center text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-3">Respondemos por WhatsApp en horario comercial</p>
+          </div>
+        </div>
+      </div>
     )}
     </>
   );

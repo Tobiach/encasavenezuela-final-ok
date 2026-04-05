@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnCasa Venezuela — Propuesta para Locales</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 16px;
+  }
+
+  .print-hint {
+    background: #1e293b;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    text-align: center;
+    max-width: 390px;
+    width: 100%;
+    line-height: 1.5;
+  }
+  .print-hint strong { color: #FCD34D; }
+
+  /* ─── PAGE SHELL ─────────────────────────────────── */
+  .page {
+    width: 390px;
+    min-height: 844px;
+    background: #FAFAFA;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── PAGE 1 ─────────────────────────────────────── */
+
+  .p1-header {
+    background: linear-gradient(145deg, #2D1618 0%, #4a1f22 100%);
+    padding: 28px 24px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .p1-header::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: #FCD34D;
+    border-radius: 50%;
+    opacity: 0.08;
+  }
+  .p1-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: -20px;
+    width: 90px; height: 90px;
+    background: #FF6B35;
+    border-radius: 50%;
+    opacity: 0.1;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .brand-flag { font-size: 22px; }
+  .brand-name {
+    font-size: 22px;
+    font-weight: 800;
+    color: #FCD34D;
+    letter-spacing: -0.3px;
+  }
+  .tagline {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+    letter-spacing: 0.2px;
+  }
+
+  /* comparativa */
+  .compare-block {
+    background: #fff;
+    margin: 16px 16px 0;
+    border-radius: 14px;
+    padding: 18px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .compare-title {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .compare-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .compare-row.rappi { background: #fef2f2; }
+  .compare-row.encasa { background: #fefce8; }
+  .compare-label { font-size: 13px; font-weight: 600; color: #2D1618; }
+  .compare-pct {
+    font-size: 22px;
+    font-weight: 900;
+  }
+  .compare-row.rappi .compare-pct { color: #dc2626; }
+  .compare-row.encasa .compare-pct { color: #16a34a; }
+
+  .result-box {
+    background: linear-gradient(135deg, #FCD34D, #FF6B35);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  .result-intro { font-size: 11px; color: rgba(45,22,24,0.7); font-weight: 600; margin-bottom: 4px; }
+  .result-main { font-size: 13px; font-weight: 800; color: #2D1618; line-height: 1.4; }
+  .result-highlight { font-size: 20px; font-weight: 900; color: #2D1618; display: block; margin-top: 2px; }
+
+  /* steps */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 14px 16px 8px;
+  }
+  .steps {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    background: #2D1618;
+    color: #FCD34D;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-text { font-size: 13px; color: #2D1618; line-height: 1.45; font-weight: 500; }
+  .step-sub { font-size: 11px; color: #888; margin-top: 2px; font-weight: 400; }
+
+  /* benefits grid */
+  .benefits {
+    padding: 0 16px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .benefit {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .benefit-icon { font-size: 20px; }
+  .benefit-title { font-size: 12px; font-weight: 700; color: #2D1618; line-height: 1.3; }
+  .benefit-desc { font-size: 11px; color: #666; line-height: 1.35; }
+
+  .stripe-bar {
+    height: 5px;
+    background: linear-gradient(90deg, #CF1020, #FCD34D, #003893);
+    margin: 0 16px;
+    border-radius: 3px;
+    opacity: 0.6;
+  }
+
+  /* ─── PAGE 2 ─────────────────────────────────────── */
+
+  .p2-header {
+    background: linear-gradient(145deg, #1a3a6e 0%, #00509E 100%);
+    padding: 22px 24px 18px;
+    text-align: center;
+  }
+  .p2-header .brand-name { color: #FCD34D; font-size: 18px; }
+  .p2-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    margin-top: 6px;
+    line-height: 1.3;
+  }
+
+  /* tools list */
+  .tools {
+    padding: 14px 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .tool {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fff;
+    border-radius: 11px;
+    padding: 10px 12px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+  }
+  .tool-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .tool-text { font-size: 12.5px; color: #2D1618; line-height: 1.4; font-weight: 500; }
+  .tool-text span { color: #888; font-weight: 400; font-size: 11.5px; display: block; margin-top: 1px; }
+
+  /* big quote */
+  .big-quote {
+    margin: 14px 16px 0;
+    background: linear-gradient(135deg, #2D1618, #4a1f22);
+    border-radius: 14px;
+    padding: 18px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .big-quote::after {
+    content: '🇻🇪';
+    position: absolute;
+    right: 14px; bottom: 10px;
+    font-size: 40px;
+    opacity: 0.15;
+  }
+  .quote-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+  .quote-bold {
+    font-size: 14px;
+    font-weight: 800;
+    color: #FCD34D;
+    line-height: 1.4;
+    font-style: normal;
+  }
+
+  /* free month */
+  .free-box {
+    margin: 14px 16px 0;
+    border: 2.5px solid #FCD34D;
+    border-radius: 14px;
+    padding: 16px 18px;
+    background: #fffbeb;
+    text-align: center;
+  }
+  .free-badge {
+    display: inline-block;
+    background: #FCD34D;
+    color: #2D1618;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+  .free-title {
+    font-size: 16px;
+    font-weight: 900;
+    color: #2D1618;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .free-sub {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.45;
+  }
+  .free-guarantee {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #16a34a;
+  }
+
+  /* footer */
+  .p2-footer {
+    margin: 14px 16px 20px;
+    background: #2D1618;
+    border-radius: 14px;
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .footer-cta {
+    font-size: 15px;
+    font-weight: 800;
+    color: #FCD34D;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .footer-contact {
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+  }
+  .footer-contact strong { color: #fff; }
+  .footer-divider {
+    width: 40px; height: 2px;
+    background: #FF6B35;
+    border-radius: 1px;
+    margin: 8px auto;
+  }
+  .alliance-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-style: italic;
+    margin-top: 8px;
+  }
+
+  /* ─── PRINT STYLES ───────────────────────────────── */
+  @media print {
+    body {
+      background: white;
+      padding: 0;
+      gap: 0;
+      display: block;
+    }
+    .print-hint { display: none; }
+    .page {
+      width: 100%;
+      border-radius: 0;
+      box-shadow: none;
+      page-break-after: always;
+      min-height: 100vh;
+    }
+    .page:last-child { page-break-after: avoid; }
+    @page {
+      size: 390px 844px;
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="print-hint">
+  💡 Para guardar como PDF: <strong>Ctrl + P</strong> (o Cmd + P en Mac)<br>
+  → Destino: <strong>"Guardar como PDF"</strong> → Guardar
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!--  PÁGINA 1                                          -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="p1-header">
+    <div class="brand">
+      <span class="brand-flag">🇻🇪</span>
+      <span class="brand-name">EnCasa Venezuela</span>
+    </div>
+    <div class="tagline">La plataforma venezolana que hace crecer tu negocio</div>
+  </div>
+
+  <!-- Comparativa -->
+  <div class="compare-block">
+    <div class="compare-title">La diferencia que importa</div>
+    <div class="compare-row rappi">
+      <span class="compare-label">Rappi / PedidosYa</span>
+      <span class="compare-pct">25–30%</span>
+    </div>
+    <div class="compare-row encasa">
+      <span class="compare-label">EnCasa Venezuela</span>
+      <span class="compare-pct">12%</span>
+    </div>
+    <div class="result-box">
+      <div class="result-intro">En $1.000.000 ARS de ventas mensuales</div>
+      <div class="result-main">Con nosotros ganás</div>
+      <span class="result-highlight">$180.000 ARS más — todos los meses</span>
+    </div>
+  </div>
+
+  <!-- Stripe venezolana -->
+  <div style="height:10px"></div>
+  <div class="stripe-bar"></div>
+
+  <!-- Cómo funciona -->
+  <div class="section-label">Cómo funciona</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-text">El cliente hace su pedido en la plataforma</div>
+        <div class="step-sub">Elige productos, arma su carrito, confirma</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-text">Te llega directo a tu WhatsApp</div>
+        <div class="step-sub">Con el detalle completo y el total — nosotros coordinamos</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-text">Confirmás y coordinás la entrega</div>
+        <div class="step-sub">Como ya lo hacés hoy. Sin apps nuevas, sin cambiar tu rutina.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Beneficios clave -->
+  <div class="section-label">Lo que incluye</div>
+  <div class="benefits">
+    <div class="benefit">
+      <div class="benefit-icon">📍</div>
+      <div class="benefit-title">Clientes de toda la ciudad</div>
+      <div class="benefit-desc">No solo los que pasan por tu puerta</div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">📦</div>
+      <div class="benefit-title">Combos y promociones</div>
+      <div class="benefit-desc">Armá ofertas que elevan tu ticket</div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">⬆️</div>
+      <div class="benefit-title">Upselling automático</div>
+      <div class="benefit-desc">Antes de confirmar, el sistema sugiere más</div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">🛵</div>
+      <div class="benefit-title">Delivery flexible</div>
+      <div class="benefit-desc">El tuyo, el nuestro, o retiro en local</div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">💳</div>
+      <div class="benefit-title">Monto mínimo</div>
+      <div class="benefit-desc">Cada pedido vale la pena</div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">⏰</div>
+      <div class="benefit-title">Pedidos anticipados</div>
+      <div class="benefit-desc">Con pago adelantado — ingreso garantizado</div>
+    </div>
+  </div>
+
+</div><!-- /page 1 -->
+
+
+<!-- ══════════════════════════════════════════════════ -->
+<!--  PÁGINA 2                                          -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="p2-header">
+    <div class="brand">
+      <span class="brand-flag">🇻🇪</span>
+      <span class="brand-name">EnCasa Venezuela</span>
+    </div>
+    <div class="p2-title">Más que una plataforma —<br>herramientas para crecer</div>
+  </div>
+
+  <div class="tools">
+    <div class="tool">
+      <div class="tool-icon">📊</div>
+      <div class="tool-text">
+        Métricas reales de tu negocio
+        <span>Productos más vendidos, horarios pico, ticket promedio — información que hoy no tenés</span>
+      </div>
+    </div>
+    <div class="tool">
+      <div class="tool-icon">💬</div>
+      <div class="tool-text">
+        Feedback directo de tus clientes
+        <span>Qué les gusta, qué mejorar — para crecer con datos</span>
+      </div>
+    </div>
+    <div class="tool">
+      <div class="tool-icon">🎯</div>
+      <div class="tool-text">
+        Fidelización de clientes
+        <span>Tus clientes vuelven a vos, no a la plataforma</span>
+      </div>
+    </div>
+    <div class="tool">
+      <div class="tool-icon">📧</div>
+      <div class="tool-text">
+        Email y WhatsApp marketing
+        <span>Recuperamos clientes que no compraron — sin que hagas nada</span>
+      </div>
+    </div>
+    <div class="tool">
+      <div class="tool-icon">💰</div>
+      <div class="tool-text">
+        Vos cobrás primero, siempre
+        <span>El dinero va directo a tu local. La comisión se coordina a los 7 días.</span>
+      </div>
+    </div>
+    <div class="tool">
+      <div class="tool-icon">🤝</div>
+      <div class="tool-text">
+        Red de proveedores con buenos precios
+        <span>Y posibilidad de crédito a 7 días según el caso</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="big-quote">
+    <div class="quote-text">
+      "Las arepas, tequeños y cachapas ya no son solo para venezolanos — los pide toda Argentina.
+      Este mercado ya está creciendo."
+    </div>
+    <div class="quote-bold">
+      Los locales que entren ahora tendrán el mejor posicionamiento cuando esto explote.<br>
+      Esta es una alianza, no una suscripción.
+    </div>
+  </div>
+
+  <div class="free-box">
+    <div class="free-badge">🎁 Oferta de lanzamiento</div>
+    <div class="free-title">El primer mes es completamente gratis</div>
+    <div class="free-sub">
+      Sin comisión, sin fee, sin compromiso.<br>
+      Si en 30 días no te generamos pedidos, no pagás nada.
+    </div>
+    <div class="free-guarantee">✅ Riesgo cero. Solo ganancia real.</div>
+  </div>
+
+  <div class="p2-footer">
+    <div class="footer-cta">¿Arrancamos esta semana?</div>
+    <div class="footer-divider"></div>
+    <div class="footer-contact">
+      Escribinos y en 3-4 días tu local está live<br>
+      <strong>WhatsApp: +54 9 11 XXXX-XXXX</strong><br>
+      encasavenezuela.com
+    </div>
+    <div class="alliance-text">Nosotros crecemos cuando vos crecés 🇻🇪</div>
+  </div>
+
+</div><!-- /page 2 -->
+
+</body>
+</html>
