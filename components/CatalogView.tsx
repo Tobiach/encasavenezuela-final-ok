@@ -9,6 +9,9 @@ import { useOrderCounts } from '../lib/hooks/useOrderCounts';
 import { useNavigate, useLocation } from 'react-router-dom';
 import storesPromotions from '../data/stores-promotions.json' assert { type: 'json' };
 import storesDelivery from '../data/stores-delivery.json' assert { type: 'json' };
+import storesAllowedCategories from '../data/stores-allowed-categories.json' assert { type: 'json' };
+
+const allowedCatsData = storesAllowedCategories as Record<string, string[]>;
 
 type DeliveryEntry = { freeDelivery: boolean; zones?: string[] };
 const deliveryData = storesDelivery as unknown as Record<string, DeliveryEntry>;
@@ -334,12 +337,12 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                 </div>
                 <h2 className="text-xl font-black uppercase tracking-tighter text-venezuela-brown">Locales <span className="text-ven-yellow">Premium</span></h2>
               </div>
-              <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4">
+              <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 lg:grid lg:grid-cols-3 lg:overflow-visible lg:mx-0 lg:px-0">
                 {premiumStores.map(store => (
                   <div
                     key={`premium-${store.id}`}
                     onClick={() => { track('store', store.id, store.name); onSelectStore(store); }}
-                    className="group min-w-[280px] md:min-w-[320px] bg-white rounded-[32px] border-2 border-ven-yellow/30 overflow-hidden transition-all duration-300 hover:border-ven-yellow hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(212,175,55,0.25)] cursor-pointer flex flex-col shadow-2xl"
+                    className="group min-w-[280px] md:min-w-[320px] lg:min-w-0 bg-white rounded-[32px] border-2 border-ven-yellow/30 overflow-hidden transition-all duration-300 hover:border-ven-yellow hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(212,175,55,0.25)] cursor-pointer flex flex-col shadow-2xl"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img src={store.img} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />

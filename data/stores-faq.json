@@ -50,6 +50,32 @@
       "a": "Sí, manejamos pedidos para reuniones y eventos venezolanos. Escribinos por WhatsApp con al menos 24 horas de anticipación y armamos el menú a medida. Tenemos bandejas, arepas por docena y más opciones."
     }
   ],
+  "minimarket-vibe": [
+    {
+      "q": "¿Cuáles son los horarios de atención?",
+      "a": "Lunes a viernes de 10:00 a 20:00hs. Sábado de 11:00 a 20:00hs. Domingo de 11:00 a 17:00hs. Te recomendamos escribir por WhatsApp antes de ir para confirmar disponibilidad de tu producto."
+    },
+    {
+      "q": "¿Dónde están ubicados?",
+      "a": "Estamos en Pichincha 373, entre Av. Belgrano y Moreno, en el barrio de Balvanera, CABA. Fácil acceso desde el subte."
+    },
+    {
+      "q": "¿Qué son los productos 'por encargo'?",
+      "a": "Algunos productos como Diablitos, Margarina Mavesa, Mayonesa Mavesa, Chimo, Cerveza Polar y Ron Santa Teresa están disponibles bajo pedido. Escribinos por WhatsApp con anticipación y lo conseguimos para vos. Los precios de referencia están en la plataforma."
+    },
+    {
+      "q": "¿Hacen delivery o solo retiro en local?",
+      "a": "Por el momento el local opera como punto de retiro. Coordinar pedido por WhatsApp vía EnCasa Venezuela para asegurarte el stock antes de ir."
+    },
+    {
+      "q": "¿Cuál es el mínimo de pedido?",
+      "a": "No hay mínimo para retiro en local. Para pedidos coordinados por WhatsApp el mínimo es $5.999 ARS."
+    },
+    {
+      "q": "¿Qué métodos de pago aceptan?",
+      "a": "Efectivo y transferencia bancaria. Todo se coordina directamente por WhatsApp al confirmar el pedido."
+    }
+  ],
   "crispric": [
     {
       "q": "¿Hacen delivery y a qué zonas cubren?",

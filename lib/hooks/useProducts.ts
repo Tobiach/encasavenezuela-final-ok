@@ -10,7 +10,7 @@ let _cache: Product[] | null = null;
 let _cacheSource: DataSource = 'fallback';
 let _promise: Promise<void> | null = null;
 
-const LS_KEY = 'encasa_products_v1';
+const LS_KEY = 'encasa_products_v2';
 
 // ── localStorage helpers ─────────────────────────────────────────────────────
 function lsLoad(): Product[] | null {

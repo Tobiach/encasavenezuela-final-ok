@@ -27,15 +27,21 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
  */
 export function getImageUrl(path: string): string {
   if (!path) return 'https://picsum.photos/seed/placeholder/400/400'
-  
+
   // Si ya es una URL completa (http/https), la devolvemos tal cual
   if (path.startsWith('http')) return path
 
-  // Limpiamos el path: quitamos el slash inicial y carpetas si existen
-  // ya que en Supabase subimos todo a la raíz del bucket "imagenes"
+  // Si el path tiene subdirectorio (ej: locales/portada.png), lo respetamos íntegro
+  // Si no tiene subdirectorio, solo normalizamos el nombre de archivo
+  const hasSubdir = path.includes('/') && !path.startsWith('/')
+
+  if (hasSubdir) {
+    const { data } = supabase.storage.from('imagenes').getPublicUrl(path)
+    return data.publicUrl
+  }
+
+  // Raíz del bucket — normalizar caracteres especiales
   const filename = path.split('/').pop() || path
-  
-  // Limpiamos caracteres especiales para que coincida con lo subido
   const cleanFilename = filename
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
