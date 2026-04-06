@@ -9,7 +9,7 @@ import { getImageUrl } from '../lib/supabase';
 export const FALLBACK_PRODUCTS: Product[] = [
   // ── HARINAS ──────────────────────────────────────────────────────────────
   { id: 20,  name: 'Harina PAN 1kg',                     price: 2900,  category: 'Harinas',     img: getImageUrl('harina_pan_1kg.webp') },
-  { id: 23,  name: 'Harina Morixe 1kg',                  price: 2500,  category: 'Harinas',     img: getImageUrl('harina_morixe.jpg') },
+  { id: 23,  name: 'Harina Morixe 1kg',                  price: 3500,  category: 'Harinas',     img: getImageUrl('harina_morixe.jpg') },
   { id: 24,  name: 'Harina para Cachapas 1kg',           price: 3500,  category: 'Harinas',     img: getImageUrl('harina_cachapas.webp') },
   { id: 25,  name: 'Casabe Gourmet',                     price: 6300,  category: 'Harinas',     img: getImageUrl('casabe_real.webp') },
 
@@ -39,7 +39,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 56,  name: 'Salsa Ají Picante',                  price: 2500,  category: 'Salsas',      img: getImageUrl('salsa_aji_picante.webp') },
 
   // ── SALSAS ───────────────────────────────────────────────────────────────
-  { id: 60,  name: 'Salsa Inglesa',                      price: 3500,  category: 'Salsas',      img: getImageUrl('salsa_inglesa.webp') },
+  { id: 60,  name: 'Salsa Inglesa',                      price: 2400,  category: 'Salsas',      img: getImageUrl('salsa_inglesa.webp') },
   { id: 61,  name: 'Salsa de Maíz',                      price: 4500,  category: 'Salsas',      img: getImageUrl('salsa_maiz.webp') },
   { id: 62,  name: 'Salsa Ahumada',                      price: 4500,  category: 'Salsas',      img: getImageUrl('salsa_ahumada.webp') },
   { id: 63,  name: 'Salsa Picante',                      price: 2000,  category: 'Salsas',      img: getImageUrl('salsa_picante.webp') },
@@ -48,10 +48,10 @@ export const FALLBACK_PRODUCTS: Product[] = [
 
   // ── UNTABLES ─────────────────────────────────────────────────────────────
   { id: 70,  name: 'Mantequilla Qualy',                  price: 2600,  category: 'Untables',    img: getImageUrl('mantequilla_qualy.webp') },
-  { id: 71,  name: 'Mantequilla Danica',                 price: 2600,  category: 'Untables',    img: getImageUrl('mantequilla_danica.webp') },
+  { id: 71,  name: 'Mantequilla Danica',                 price: 2700,  category: 'Untables',    img: getImageUrl('mantequilla_danica.webp') },
   { id: 72,  name: 'Mavesa Mayonesa',                    price: 14000, category: 'Untables',    img: getImageUrl('mavesa_mayonesa.webp') },
   { id: 73,  name: 'Diablito x Diablitos',               price: 12000, category: 'Untables',    img: getImageUrl('diablitos.webp') },
-  { id: 74,  name: 'Rikesa Cheddar 200gr',               price: 12000, category: 'Untables',    img: getImageUrl('rikesa.webp') },
+  { id: 74,  name: 'Rikesa Cheddar 200gr',               price: 13500, category: 'Untables',    img: getImageUrl('rikesa.webp') },
 
   // ── BEBIDAS ──────────────────────────────────────────────────────────────
   { id: 6,   name: 'Malta +58 (473ml)',                  price: 3000,  category: 'Bebidas',     img: getImageUrl('malta_58.webp') },
@@ -62,9 +62,9 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 82,  name: 'Nesquik',                            price: 12500, category: 'Bebidas',     img: getImageUrl('nesquik.webp') },
   { id: 83,  name: 'Nestea',                             price: 14500, category: 'Bebidas',     img: getImageUrl('nestea.webp') },
   { id: 84,  name: 'Tamarindo',                          price: 6999,  category: 'Bebidas',     img: getImageUrl('tamarindo_real.webp') },
-  { id: 85,  name: 'Reko Uva',                           price: 1499,  category: 'Bebidas',     img: getImageUrl('reko_uva_real.webp') },
+  { id: 85,  name: 'Reko Uva',                           price: 1800,  category: 'Bebidas',     img: getImageUrl('reko_uva_real.webp') },
   { id: 86,  name: 'Reko Piña',                         price: 2500,  category: 'Bebidas',     img: getImageUrl('reko_pina.webp') },
-  { id: 87,  name: 'Reko Manzana',                       price: 1499,  category: 'Bebidas',     img: getImageUrl('reko_manzana_real.webp') },
+  { id: 87,  name: 'Reko Manzana',                       price: 1800,  category: 'Bebidas',     img: getImageUrl('reko_manzana_real.webp') },
   { id: 9,   name: 'Ron Santa Teresa 1796',              price: 35000, category: 'Bebidas',     img: getImageUrl('botella_de_ron_santa_teresa_1796.webp') },
 
   // ── CHUCHERÍAS ───────────────────────────────────────────────────────────
@@ -78,7 +78,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 90,  name: 'Obleas Artesanales Galleta Untable Sin Relleno 120gr', price: 2999, category: 'Chucherías', img: getImageUrl('obleas_real.webp') },
   { id: 91,  name: 'Pinguinito',                         price: 4300,  category: 'Chucherías',  img: getImageUrl('pinguinito.webp') },
   { id: 93,  name: 'Cocosette c46gr',                    price: 2999,  category: 'Chucherías',  img: getImageUrl('cocosette_real.webp') },
-  { id: 94,  name: 'Chupetas',                           price: 500,   category: 'Chucherías',  img: getImageUrl('chupetas.webp') },
+  { id: 94,  name: 'Chupetas',                           price: 350,   category: 'Chucherías',  img: getImageUrl('chupetas.webp') },
   { id: 95,  name: 'Catalinas Doña Carmen x4u',          price: 2899,  category: 'Chucherías',  img: getImageUrl('catalina_real.webp') },
 
   // ── SNACKS ───────────────────────────────────────────────────────────────
