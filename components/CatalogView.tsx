@@ -27,8 +27,10 @@ function getActivePromo(storeId: string): PromoEntry | null {
 }
 
 
-/// MODO DEMO: Si es true, todos los locales muestran todos los productos
+// MODO DEMO: Si es true, todos los locales muestran todos los productos
+// Locales en STRICT_STORES siempre filtran por available_in_store_ids, ignorando DEMO_MODE
 const DEMO_MODE = true;
+const STRICT_STORES = new Set(['minimarket-vibe', 'crispric', 'real-3']);
 
 const categoryIcons: Record<string, React.ElementType> = {
   'Todos': LayoutGrid,
@@ -129,19 +131,25 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
       const matchesCat = category === 'Todos' || p.category === category;
       const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-      // Lógica de filtrado por Local + DEMO_MODE + Regla Legacy
+      // Lógica de filtrado por Local
+      // Locales en STRICT_STORES filtran siempre por available_in_store_ids.
+      // El resto usa DEMO_MODE (muestra todos los productos).
       let matchesStore = true;
-      if (!DEMO_MODE && selectedStore) {
+      const isStrict = selectedStore && STRICT_STORES.has(selectedStore.id);
+      if (isStrict || (!DEMO_MODE && selectedStore)) {
         const hasStoreIds = p.availableInStoreIds && p.availableInStoreIds.length > 0;
         if (hasStoreIds && p.availableInStoreIds) {
-          matchesStore = p.availableInStoreIds.includes(selectedStore.id);
+          matchesStore = p.availableInStoreIds.includes(selectedStore!.id);
         } else {
-          // REGLA LEGACY: Si no tiene IDs o está vacío, se muestra siempre (compatibilidad)
           matchesStore = true;
         }
       }
 
-      return matchesCat && matchesSearch && matchesStore;
+      // Categorías permitidas por local (independiente de DEMO_MODE)
+      const allowedCats = selectedStore ? allowedCatsData[selectedStore.id] : undefined;
+      const matchesAllowedCat = !allowedCats || allowedCats.includes(p.category);
+
+      return matchesCat && matchesSearch && matchesStore && matchesAllowedCat;
     });
   }, [category, searchTerm, selectedStore, allProducts]);
 
