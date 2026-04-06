@@ -50,7 +50,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 70,  name: 'Mantequilla Qualy',                  price: 2600,  category: 'Untables',    img: getImageUrl('mantequilla_qualy.webp') },
   { id: 71,  name: 'Mantequilla Danica',                 price: 2700,  category: 'Untables',    img: getImageUrl('mantequilla_danica.webp') },
   { id: 72,  name: 'Mavesa Mayonesa',                    price: 14000, category: 'Untables',    img: getImageUrl('mavesa_mayonesa.webp') },
-  { id: 73,  name: 'Diablito x Diablitos',               price: 12000, category: 'Untables',    img: getImageUrl('diablitos.webp') },
+  { id: 73,  name: 'Diablitos',                           price: 12000, category: 'Untables',    img: getImageUrl('diablitos.webp') },
   { id: 74,  name: 'Rikesa Cheddar 200gr',               price: 13500, category: 'Untables',    img: getImageUrl('rikesa.webp') },
 
   // ── BEBIDAS ──────────────────────────────────────────────────────────────
@@ -94,15 +94,15 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 130, name: 'Budare',                             price: 55000, category: 'Hogar',       img: getImageUrl('budare.webp') },
 
   // ── MINI MARKET VIBE — productos exclusivos ───────────────────────────────
-  { id: 131, name: 'Arroz Primor 1kg',                  price: 1500,  category: 'Almacén',     img: getImageUrl('abarrotes_1.png') },
-  { id: 132, name: 'Margarina Regia 410g',              price: 7400,  category: 'Untables',    img: getImageUrl('mantequilla_qualy.webp') },
-  { id: 133, name: 'Salsa de Ajo 180ml',                price: 2400,  category: 'Salsas',      img: getImageUrl('salsa_maiz.webp') },
-  { id: 134, name: 'Re-Kolita 1.5L',                   price: 3500,  category: 'Bebidas',     img: getImageUrl('re-kolita_white.webp') },
+  { id: 131, name: 'Arroz Primor 1kg',                  price: 1500,  category: 'Almacén',     img: getImageUrl('arroz_primor.webp') },
+  { id: 132, name: 'Margarina Regia 410g',              price: 7400,  category: 'Untables',    img: getImageUrl('margarina_regia.webp') },
+  { id: 133, name: 'Salsa de Ajo 180ml',                price: 2400,  category: 'Salsas',      img: getImageUrl('salsa_de_ajo_la_parmesana.webp') },
+  { id: 134, name: 'Re-Kolita 1.5L',                   price: 3500,  category: 'Bebidas',     img: getImageUrl('rekolita_1l.webp') },
   { id: 135, name: 'Caraotas Negras 1kg',               price: 3500,  category: 'Granos',      img: getImageUrl('caraotas_negras.webp') },
   { id: 136, name: 'Catalinas El Sabor 380g',           price: 3200,  category: 'Chucherías',  img: getImageUrl('catalina_real.webp') },
   { id: 137, name: 'Margarina Mavesa',                  price: 6500,  category: 'Untables',    img: getImageUrl('mantequilla_danica.webp') },
-  { id: 138, name: 'Chimo',                             price: 8000,  category: 'Untables',    img: getImageUrl('abarrotes_1.png') },
-  { id: 139, name: 'Cerveza Polar 710ml',               price: 4500,  category: 'Bebidas',     img: getImageUrl('bebidas_cervezas.png') },
+  { id: 138, name: 'Chimo',                             price: 8000,  category: 'Untables',    img: getImageUrl('chimo_venezolano.webp') },
+  { id: 139, name: 'Cerveza Polar 710ml',               price: 4500,  category: 'Bebidas',     img: getImageUrl('cerveza_polar.webp') },
 
   // ── COMBOS ────────────────────────────────────────────────────────────────
   { id: 201, name: 'Combo Arepa Completa',  price: 8900,  oldPrice: 11500, category: 'Promociones', img: getImageUrl('harinas1.png'),           isCombo: true, storeId: 'encasa-venezuela' },
