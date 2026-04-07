@@ -15,7 +15,7 @@ export const FALLBACK_STORES: PartnerStore[] = [
     rating: 5.0,
     review_count: 0,
     google_maps_url: 'https://maps.google.com/?q=Pichincha+373,+Balvanera,+CABA',
-    img: getImageUrl('locales/portada_minimarket_vibe.png'),
+    img: getImageUrl('locales/portada_minimarket_vibe.jpg'),
     tags: ['Harinas', 'Bebidas', 'Snacks', 'Chucherías', 'Condimentos', 'Salsas', 'Untables', 'Granos'],
     type: 'productos',
     isPreparedFood: false,
