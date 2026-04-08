@@ -9,7 +9,7 @@ import { getImageUrl } from '../lib/supabase';
 export const FALLBACK_PRODUCTS: Product[] = [
   // ── HARINAS ──────────────────────────────────────────────────────────────
   { id: 20,  name: 'Harina PAN 1kg',                     price: 2900,  category: 'Harinas',     img: getImageUrl('harina_pan_1kg.webp') },
-  { id: 23,  name: 'Harina Morixe 1kg',                  price: 3500,  category: 'Harinas',     img: getImageUrl('harina_morixe.jpg') },
+  { id: 23,  name: 'Harina Morixe 1kg',                  price: 3500,  category: 'Harinas',     img: getImageUrl('harina_morixe.webp') },
   { id: 24,  name: 'Harina para Cachapas 1kg',           price: 3500,  category: 'Harinas',     img: getImageUrl('harina_cachapas.webp') },
   { id: 25,  name: 'Casabe Gourmet',                     price: 6300,  category: 'Harinas',     img: getImageUrl('casabe_real.webp') },
 
