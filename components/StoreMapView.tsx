@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { PartnerStore } from '../types';
-import { MapPin, Clock, ExternalLink, Smartphone, AlertCircle, ChevronDown, Truck, ChevronRight, Package, MessageCircle } from 'lucide-react';
+import { MapPin, Clock, ExternalLink, Smartphone, AlertCircle, ChevronDown, Truck, ChevronRight, Package, MessageCircle, Zap } from 'lucide-react';
 import storesFaq from '../data/stores-faq.json' assert { type: 'json' };
 import storesDelivery from '../data/stores-delivery.json' assert { type: 'json' };
 import PromoDetailModal, { PromoEntry } from './PromoDetailModal';
 import DeliveryZonesModal from './DeliveryZonesModal';
 import storesPromotions from '../data/stores-promotions.json' assert { type: 'json' };
+import storesCombos from '../data/stores-combos.json' assert { type: 'json' };
+
+interface ComboItem { name: string; qty?: string; emoji?: string; img?: string; }
+interface StoreCombo { id: string; name: string; description?: string; img?: string | null; items: ComboItem[]; }
+interface StoreCombosEntry { sectionTitle: string; combos: StoreCombo[]; }
+const combosData = storesCombos as unknown as Record<string, StoreCombosEntry>;
 
 type DeliveryEntry = { freeDelivery: boolean; zones?: string[] };
 const deliveryData = storesDelivery as unknown as Record<string, DeliveryEntry>;
@@ -32,6 +38,7 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
   const hasMayor = store.tags?.includes('Venta por Mayor');
   const faqs = (storesFaq as Record<string, { q: string; a: string }[]>)[store.id] ?? storesFaq['_default'];
   const activePromo = getActivePromo(store.id);
+  const storeCombosEntry = combosData[store.id] ?? null;
 
   const handleOrderRedirect = () => {
     const message = `¡Hola EnCasa Venezuela! 🇻🇪 Vi el local *${store.name}* en el mapa y quiero hacer un pedido para retirar ahí o que me envíen de esa zona.`;
@@ -173,6 +180,79 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
           </div>
         </div>
       </div>
+
+      {/* Combos Relámpago */}
+      {storeCombosEntry && (
+        <div className="bg-venezuela-dark rounded-[40px] border border-white/5 shadow-xl overflow-hidden mb-10">
+          {/* Header */}
+          <div className="px-8 pt-8 pb-6 flex items-center gap-3">
+            <div className="bg-ven-yellow/15 p-2.5 rounded-xl">
+              <Zap size={20} className="text-ven-yellow" fill="currentColor" />
+            </div>
+            <div>
+              <p className="text-ven-yellow text-[10px] font-black uppercase tracking-widest">Mini Market Vibe</p>
+              <h3 className="text-white font-black text-xl leading-tight">{storeCombosEntry.sectionTitle}</h3>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4 px-8 pb-8">
+            {storeCombosEntry.combos.map((combo) => (
+              <div
+                key={combo.id}
+                className="bg-white/5 border border-white/10 rounded-3xl p-5 flex flex-col gap-4 hover:border-ven-yellow/40 transition-colors"
+              >
+                {/* Nombre y descripción */}
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Zap size={12} className="text-ven-yellow" fill="currentColor" />
+                    <h4 className="text-white font-black text-base uppercase tracking-tight">{combo.name}</h4>
+                  </div>
+                  {combo.description && (
+                    <p className="text-gray-400 text-[11px] font-medium leading-snug italic">{combo.description}</p>
+                  )}
+                </div>
+
+                {/* Items del combo */}
+                <div className="flex flex-col gap-2">
+                  {combo.items.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3 bg-white/5 rounded-2xl px-3 py-2.5">
+                      {item.img ? (
+                        <img
+                          src={item.img}
+                          alt={item.name}
+                          className="w-8 h-8 rounded-xl object-cover shrink-0"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      ) : (
+                        <span className="text-xl shrink-0 w-8 text-center leading-none">{item.emoji || '📦'}</span>
+                      )}
+                      <div className="min-w-0">
+                        <p className="text-white text-sm font-black leading-snug truncate">{item.name}</p>
+                        {item.qty && (
+                          <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">{item.qty}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <button
+                  onClick={() => {
+                    const itemsList = combo.items.map(i => `• ${i.qty ? i.qty + ' ' : ''}${i.name}`).join('\n');
+                    const msg = `Hola *${store.name}* 👋 Quiero pedir el *${combo.name}*:\n${itemsList}\n\n¿Cuánto sale y cómo coordino el pedido?`;
+                    window.open(`https://wa.me/5491136026302?text=${encodeURIComponent(msg)}`, '_blank');
+                  }}
+                  className="w-full bg-ven-yellow/15 hover:bg-ven-yellow/25 border border-ven-yellow/30 hover:border-ven-yellow/60 text-ven-yellow py-3 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all active:scale-95 flex items-center justify-center gap-2"
+                >
+                  <MessageCircle size={14} />
+                  Pedir este combo
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* FAQ */}
       <div className="bg-white rounded-[40px] border border-gray-100 shadow-xl p-8 mb-10">

@@ -1,0 +1,30 @@
+{
+  "_comment": "Combos Relámpago por local. Cada local puede tener múltiples combos con sus productos incluidos.",
+  "minimarket-vibe": {
+    "sectionTitle": "Combos Relámpago",
+    "combos": [
+      {
+        "id": "vibe-sazonatodo",
+        "name": "Combo Sazonatodo",
+        "description": "El kit perfecto para darle todo el sabor venezolano a tus comidas.",
+        "img": null,
+        "items": [
+          { "name": "Salsa de Ajo", "emoji": "🧄" },
+          { "name": "Salsa Inglesa", "emoji": "🫙" },
+          { "name": "Adobo", "emoji": "🌿" }
+        ]
+      },
+      {
+        "id": "vibe-arepero",
+        "name": "Combo Arepero",
+        "description": "Todo lo que necesitás para preparar las mejores arepas en casa 🇻🇪",
+        "img": null,
+        "items": [
+          { "name": "Harina Morixe", "qty": "x2", "emoji": "🫓" },
+          { "name": "Margarina Regia", "emoji": "🧈" },
+          { "name": "Cartón de Huevos", "emoji": "🥚", "img": "https://weerwaqwrdngbikqaxng.supabase.co/storage/v1/object/public/imagenes/maple_de_huevos.jpg" }
+        ]
+      }
+    ]
+  }
+}
