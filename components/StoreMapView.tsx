@@ -105,20 +105,24 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
         {activePromo && (
           <button
             onClick={() => setPromoModal(true)}
-            className="w-full bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 bg-[length:200%_auto] animate-shimmer px-6 py-3 flex items-center justify-between gap-4 hover:brightness-105 transition-all active:scale-[0.99]"
+            className="w-full bg-venezuela-dark px-5 py-4 flex items-center justify-between gap-4 hover:brightness-110 transition-all active:scale-[0.99] border-y border-ven-yellow/20"
           >
             <div className="flex items-center gap-3">
-              <span className="text-xl">🔥</span>
+              {/* Icono con fondo amarillo */}
+              <div className="bg-ven-yellow rounded-xl p-2 shrink-0 shadow-lg shadow-yellow-500/20">
+                <Zap size={16} className="text-venezuela-dark" fill="currentColor" />
+              </div>
               <div className="text-left">
-                <p className="text-white font-black text-sm uppercase tracking-wide">{activePromo.label}</p>
+                <p className="text-[9px] font-black text-ven-yellow uppercase tracking-[0.2em] leading-none mb-1">Promoción activa</p>
+                <p className="text-white font-black text-sm leading-tight">{activePromo.label}</p>
                 {activePromo.sublabel && (
-                  <p className="text-white/80 text-[10px] font-bold">{activePromo.sublabel}</p>
+                  <p className="text-gray-400 text-[10px] font-bold mt-0.5">{activePromo.sublabel}</p>
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-1.5 text-white/80 shrink-0">
-              <span className="text-[9px] font-black uppercase tracking-widest">Ver detalles</span>
-              <ChevronRight size={14} className="text-white" />
+            <div className="flex items-center gap-1 bg-ven-yellow/10 border border-ven-yellow/30 rounded-xl px-3 py-1.5 shrink-0">
+              <span className="text-[9px] font-black text-ven-yellow uppercase tracking-widest">Ver</span>
+              <ChevronRight size={12} className="text-ven-yellow" />
             </div>
           </button>
         )}
