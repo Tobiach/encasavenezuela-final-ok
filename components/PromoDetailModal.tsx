@@ -1,6 +1,9 @@
 import React from 'react';
-import { X, Clock, CheckCircle, AlertCircle, ArrowRight, Zap, Tag, Gift } from 'lucide-react';
+import { X, Clock, CheckCircle, AlertCircle, ArrowRight, Zap, Tag, Gift, Package } from 'lucide-react';
 import { PartnerStore } from '../types';
+
+export type PromoComboItem = { name: string; qty?: string; emoji?: string; img?: string };
+export type PromoCombo = { name: string; items: PromoComboItem[] };
 
 export type PromoEntry = {
   label: string;
@@ -13,6 +16,7 @@ export type PromoEntry = {
   conditions?: string;
   heroEmojis?: string[];
   gradient?: string;
+  combos?: PromoCombo[];
 };
 
 interface PromoDetailModalProps {
@@ -155,6 +159,49 @@ const PromoDetailModal: React.FC<PromoDetailModalProps> = ({ store, promo, onClo
                       {i + 1}
                     </span>
                     <p className="text-sm text-gray-700 font-medium leading-snug">{step}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Combos Relámpago */}
+          {promo.combos && promo.combos.length > 0 && (
+            <div>
+              <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                <Zap size={12} className="text-ven-yellow" fill="currentColor" /> Combos Relámpago
+              </h3>
+              <div className="space-y-3">
+                {promo.combos.map((combo, ci) => (
+                  <div key={ci} className="bg-venezuela-dark rounded-2xl overflow-hidden">
+                    {/* Nombre del combo */}
+                    <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5">
+                      <Zap size={11} className="text-ven-yellow shrink-0" fill="currentColor" />
+                      <p className="text-white font-black text-sm uppercase tracking-tight">{combo.name}</p>
+                    </div>
+                    {/* Items */}
+                    <div className="px-4 py-3 flex flex-col gap-2">
+                      {combo.items.map((item, ii) => (
+                        <div key={ii} className="flex items-center gap-3 bg-white/5 rounded-xl px-3 py-2">
+                          {item.img ? (
+                            <img
+                              src={item.img}
+                              alt={item.name}
+                              className="w-7 h-7 rounded-lg object-cover shrink-0"
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            />
+                          ) : (
+                            <span className="text-lg shrink-0 w-7 text-center leading-none">{item.emoji || '📦'}</span>
+                          )}
+                          <div className="min-w-0">
+                            <p className="text-white text-[13px] font-black leading-snug truncate">{item.name}</p>
+                            {item.qty && (
+                              <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">{item.qty}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>

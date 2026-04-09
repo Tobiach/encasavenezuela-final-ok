@@ -103,6 +103,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 137, name: 'Margarina Mavesa',                  price: 6500,  category: 'Untables',    img: getImageUrl('mantequilla_danica.webp') },
   { id: 138, name: 'Chimo',                             price: 8000,  category: 'Untables',    img: getImageUrl('chimo_venezolano.webp') },
   { id: 139, name: 'Cerveza Polar 710ml',               price: 4500,  category: 'Bebidas',     img: getImageUrl('cerveza_polar.webp') },
+  { id: 140, name: 'Maple de Huevos N°2 x30u',        price: 9500,  category: 'Almacén',     img: 'https://weerwaqwrdngbikqaxng.supabase.co/storage/v1/object/public/imagenes/maple_de_huevos.jpg' },
 
   // ── COMBOS ────────────────────────────────────────────────────────────────
   { id: 201, name: 'Combo Arepa Completa',  price: 8900,  oldPrice: 11500, category: 'Promociones', img: getImageUrl('harinas1.png'),           isCombo: true, storeId: 'encasa-venezuela' },

@@ -1,20 +1,32 @@
 {
   "_comment": "Promos activas por slug. validUntil en ISO. Si la fecha ya pasó, no se muestra.",
   "minimarket-vibe": {
-    "label": "Happy Hour: Combo Arepero a $8.900",
-    "sublabel": "Lunes a viernes de 11 a 14hs",
-    "validUntil": "2026-12-31T14:00:00",
+    "label": "⚡ Combos Relámpago disponibles",
+    "sublabel": "Combo Sazonatodo · Combo Arepero",
+    "validUntil": "2026-12-31T23:59:00",
     "type": "combo",
-    "title": "Combo Arepero — Mini Market Vibe",
-    "description": "De 11 a 14hs de lunes a viernes, el Combo Arepero va a precio especial. Harina PAN + ingrediente a elección + bebida Re-Ko. Precio fijo, sin vueltas. El almuerzo venezolano más conveniente de Balvanera.",
-    "howItWorks": [
-      "Pedí entre las 11:00 y las 14:00hs de lunes a viernes",
-      "El combo incluye Harina Morixe + tu elección de untable o condimento + Re-Ko",
-      "Precio fijo $8.900 ARS — sin cambios ni agregados",
-      "Coordinar pedido por WhatsApp antes de pasar a retirar"
+    "title": "Combos Relámpago — Mini Market Vibe",
+    "description": "Armamos los mejores combos para que cocines venezolano sin complicaciones. Pedí directo por WhatsApp al local.",
+    "combos": [
+      {
+        "name": "Combo Sazonatodo",
+        "items": [
+          { "name": "Salsa de Ajo", "emoji": "🧄" },
+          { "name": "Salsa Inglesa", "emoji": "🫙" },
+          { "name": "Adobo", "emoji": "🌿" }
+        ]
+      },
+      {
+        "name": "Combo Arepero",
+        "items": [
+          { "name": "Harina Morixe", "qty": "x2", "emoji": "🫓" },
+          { "name": "Margarina Regia", "emoji": "🧈" },
+          { "name": "Maple de Huevos N°2", "emoji": "🥚", "img": "https://weerwaqwrdngbikqaxng.supabase.co/storage/v1/object/public/imagenes/maple_de_huevos.jpg" }
+        ]
+      }
     ],
-    "conditions": "Válido lunes a viernes de 11 a 14hs. Sujeto a stock disponible. No acumulable con otras promociones. Solo retiro en local (Pichincha 373, Balvanera).",
-    "heroEmojis": ["🫓", "⚡", "🥤"],
+    "conditions": "Sujeto a stock disponible. Coordiná el pedido por WhatsApp antes de pasar a retirar. Pichincha 373, Balvanera.",
+    "heroEmojis": ["🧄", "⚡", "🫓"],
     "gradient": "from-yellow-500 to-amber-400"
   },
   "real-1": {
