@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, useNavigate, useLocation, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import Features from '../components/Features';
@@ -65,6 +65,36 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, user }) => {
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
   return <>{children}</>;
+};
+
+// ── StoreDirectEntry: resuelve /local/:slug?ref=qr ──────────────────────────
+const StoreDirectEntry: React.FC<{
+  stores: PartnerStore[];
+  onSelectStore: (store: PartnerStore | null) => void;
+}> = ({ stores, onSelectStore }) => {
+  const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const store = stores.find(s => s.id === slug);
+    if (!store) { navigate('/partners', { replace: true }); return; }
+
+    // Si viene con ?ref=qr, guardar promo en localStorage
+    if (searchParams.get('ref') === 'qr') {
+      const key = `encasa_first_order_promo_${store.id}`;
+      localStorage.setItem(key, JSON.stringify({
+        discount: 0.10,
+        freeDelivery: true,
+        storeName: store.name,
+      }));
+    }
+
+    onSelectStore(store);
+    navigate('/map', { replace: true });
+  }, [slug, stores, searchParams, onSelectStore, navigate]);
+
+  return null;
 };
 
 const CartStoreBadge: React.FC<{
@@ -538,6 +568,7 @@ const handlePurchase = (total: number) => {
         <Route path="/promotion/:id" element={<PromotionDetailView userPoints={userPoints} onAddToCart={handleAddToCart} onSelectStore={handleSelectStore} showLoyalty={FEATURE_LOYALTY} />} />
         <Route path="/partners" element={<PartnerStores stores={stores} onOpenMap={(s) => {handleSelectStore(s); navigate('/catalog');}} isFullView={true} />} />
         <Route path="/map" element={selectedStore ? <StoreMapView store={selectedStore} /> : null} />
+        <Route path="/local/:slug" element={<StoreDirectEntry stores={stores} onSelectStore={handleSelectStore} />} />
       </Routes>
       
       <Footer />

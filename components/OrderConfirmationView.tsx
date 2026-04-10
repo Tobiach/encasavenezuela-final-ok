@@ -44,9 +44,23 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   }, []);
 
   const subtotal = useMemo(() => cart.reduce((acc, curr) => acc + (curr.product.price * curr.qty), 0), [cart]);
-  const total = subtotal + tipAmount;
   const meetsMinimum = subtotal >= MINIMUM_ORDER;
   const remainingForMinimum = Math.max(0, MINIMUM_ORDER - subtotal);
+
+  // Promo primer pedido: solo aplica si no tiene historial de compras
+  const firstOrderPromo = useMemo(() => {
+    const storeId = cart[0]?.product?.storeId;
+    if (!storeId) return null;
+    const history = (() => { try { return JSON.parse(localStorage.getItem('encasa_history') || '[]'); } catch { return []; } })();
+    if (history.length > 0) return null; // ya compró antes
+    try {
+      const raw = localStorage.getItem(`encasa_first_order_promo_${storeId}`);
+      return raw ? JSON.parse(raw) as { discount: number; freeDelivery: boolean; storeName: string } : null;
+    } catch { return null; }
+  }, [cart]);
+
+  const discountAmount = firstOrderPromo ? Math.round(subtotal * firstOrderPromo.discount) : 0;
+  const total = subtotal - discountAmount + tipAmount;
 
   const { isMultiStore, store, uniqueStoreIds, hasInvalidItems } = useMemo(() => {
     const storeIds = cart.map(i => i.product.storeId).filter(Boolean) as string[];
@@ -116,6 +130,11 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
 
     lines.push('', '*Items:*', orderItemsText, '');
 
+    if (discountAmount > 0) {
+      lines.push(`*Subtotal:* $${subtotal}`);
+      lines.push(`*Descuento primer pedido (10%):* -$${discountAmount}`);
+      if (firstOrderPromo?.freeDelivery) lines.push(`*Delivery:* GRATIS 🎁`);
+    }
     lines.push(`*Total estimado:* $${total}`);
 
     if (!isPickup && tipAmount > 0) {
@@ -284,6 +303,10 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
       try { onClearCart?.(); } catch (e) {
         console.error("onClearCart error:", e);
       }
+
+      // Limpiar promo primer pedido después de usarla
+      const storeId = cart[0]?.product?.storeId;
+      if (storeId) localStorage.removeItem(`encasa_first_order_promo_${storeId}`);
 
     } catch (e) {
       console.error("handleConfirmOrder fatal:", e);
@@ -570,6 +593,16 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
               <div className="flex justify-between items-center pb-4 border-t border-black/5 pt-4">
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">Propina</span>
                 <span className="text-2xl font-black text-ven-yellow">${tipAmount}</span>
+              </div>
+            )}
+
+            {discountAmount > 0 && (
+              <div className="flex justify-between items-center pb-4 border-t border-black/5 pt-4 bg-green-50 -mx-8 px-8 rounded-2xl">
+                <div>
+                  <span className="text-xs font-black text-green-700 uppercase tracking-[0.2em]">🎁 Descuento primer pedido</span>
+                  {firstOrderPromo?.freeDelivery && <p className="text-[9px] text-green-600 font-bold mt-0.5">+ Delivery gratis incluido</p>}
+                </div>
+                <span className="text-2xl font-black text-green-600">-${discountAmount}</span>
               </div>
             )}
 

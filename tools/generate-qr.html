@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador de QR — EnCasa Venezuela</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #1a0a0b;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      gap: 32px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #FCD34D;
+    }
+    .subtitle { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.15em; }
+
+    .controls {
+      background: #2a1215;
+      border: 1px solid #3a1c20;
+      border-radius: 24px;
+      padding: 32px;
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    label { font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: #888; margin-bottom: 6px; display: block; }
+    input, select {
+      width: 100%;
+      background: #1a0a0b;
+      border: 1px solid #3a1c20;
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus { border-color: #FCD34D; }
+    select option { background: #1a0a0b; }
+
+    .btn {
+      background: linear-gradient(135deg, #FCD34D, #FF6B35);
+      color: #1a0a0b;
+      border: none;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 0.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .btn:hover { transform: scale(1.02); }
+    .btn:active { transform: scale(0.97); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #FCD34D;
+      color: #FCD34D;
+    }
+
+    /* ── Hoja imprimible ── */
+    #sheet {
+      display: none;
+      background: #fff;
+      color: #1a0a0b;
+      border-radius: 24px;
+      padding: 40px 32px 32px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    #sheet.visible { display: block; }
+
+    .sheet-flag { font-size: 2.5rem; margin-bottom: 4px; }
+    .sheet-brand { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3em; color: #888; margin-bottom: 24px; }
+    .sheet-store { font-size: 1.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; color: #1a0a0b; margin-bottom: 4px; }
+    .sheet-headline {
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #FF6B35;
+      margin-bottom: 6px;
+    }
+    .sheet-sub {
+      font-size: 0.7rem;
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    #qr-canvas-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    #qr-canvas-wrap canvas {
+      border-radius: 16px;
+      border: 6px solid #FCD34D;
+      padding: 8px;
+    }
+    .sheet-url {
+      font-size: 0.55rem;
+      color: #aaa;
+      word-break: break-all;
+      margin-bottom: 20px;
+      font-family: monospace;
+    }
+    .sheet-instructions {
+      background: #FCD34D;
+      border-radius: 16px;
+      padding: 14px 20px;
+      font-size: 0.7rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #1a0a0b;
+      margin-bottom: 16px;
+    }
+    .sheet-legal { font-size: 0.55rem; color: #bbb; line-height: 1.5; }
+    .sheet-divider { border: none; border-top: 1px dashed #e0e0e0; margin: 16px 0; }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .actions .btn { flex: 1; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .controls, .actions, h1, .subtitle { display: none !important; }
+      #sheet { display: block !important; box-shadow: none; border-radius: 0; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🇻🇪 Generador de QR</h1>
+  <p class="subtitle">EnCasa Venezuela · Links con incentivo primer pedido</p>
+
+  <div class="controls">
+    <div>
+      <label>Local (slug exacto)</label>
+      <select id="slug-select" onchange="onSlugChange()">
+        <option value="">— Elegí un local —</option>
+        <option value="minimarket-vibe">Mini Market Vibe</option>
+        <option value="crispric">Cris Pric - Fiambres y Quesos</option>
+        <option value="real-1">Tequetok</option>
+        <option value="real-2">Pancheria Veneco Argentina</option>
+        <option value="real-3">Mordiscos House</option>
+        <option value="real-4">Bahareque Comida Venezolana</option>
+        <option value="real-5">Bajon Market</option>
+        <option value="real-6">El Puestico</option>
+        <option value="real-7">Venefood – Palermo</option>
+        <option value="real-8">Venefood – San Cristóbal</option>
+        <option value="real-9">Venefood – Recoleta</option>
+        <option value="real-10">El Araguaney</option>
+        <option value="real-11">VeneMarket</option>
+        <option value="real-12">El Rincón del Morocho</option>
+        <option value="_custom">Otro (ingresar manualmente)</option>
+      </select>
+    </div>
+
+    <div id="custom-fields" style="display:none; gap:16px; flex-direction:column;">
+      <div>
+        <label>Slug del local (sin espacios)</label>
+        <input id="custom-slug" type="text" placeholder="ej: mi-local-nuevo" />
+      </div>
+      <div>
+        <label>Nombre del local (para el cartel)</label>
+        <input id="custom-name" type="text" placeholder="ej: Mi Local Nuevo" />
+      </div>
+    </div>
+
+    <div>
+      <label>URL base del sitio</label>
+      <input id="base-url" type="text" value="https://encasavenezuela-final-ok.vercel.app" />
+    </div>
+
+    <div>
+      <label>Referencia (parámetro ?ref=)</label>
+      <input id="ref-param" type="text" value="qr" />
+    </div>
+
+    <button class="btn" onclick="generate()">Generar QR</button>
+  </div>
+
+  <!-- Hoja imprimible -->
+  <div id="sheet">
+    <div class="sheet-flag">🇻🇪</div>
+    <div class="sheet-brand">EnCasa Venezuela · El Sabor que nos Une</div>
+    <div class="sheet-store" id="out-name">Mini Market Vibe</div>
+    <hr class="sheet-divider" />
+    <div class="sheet-headline">¡Escaneá y llevate tu regalo!</div>
+    <div class="sheet-sub">
+      <strong>🎁 10% OFF + Delivery gratis</strong><br/>
+      en tu primer pedido. Solo para nuevos clientes.<br/>
+      Válido escaneando este código QR.
+    </div>
+    <div id="qr-canvas-wrap"></div>
+    <div class="sheet-url" id="out-url"></div>
+    <div class="sheet-instructions">📱 Apuntá la cámara de tu celular al código</div>
+    <div class="sheet-legal">
+      Descuento aplicable solo en primer pedido. No acumulable.<br/>
+      Pedidos via WhatsApp · encasavenezuela.com
+    </div>
+  </div>
+
+  <div class="actions" id="action-btns" style="display:none;">
+    <button class="btn btn-outline" onclick="window.print()">🖨️ Imprimir</button>
+    <button class="btn" onclick="downloadPNG()">⬇️ Descargar PNG</button>
+  </div>
+
+  <script>
+    const NAMES = {
+      'minimarket-vibe': 'Mini Market Vibe',
+      'crispric': 'Cris Pric - Fiambres y Quesos',
+      'real-1': 'Tequetok',
+      'real-2': 'Pancheria Veneco Argentina',
+      'real-3': 'Mordiscos House',
+      'real-4': 'Bahareque Comida Venezolana',
+      'real-5': 'Bajon Market',
+      'real-6': 'El Puestico',
+      'real-7': 'Venefood – Palermo',
+      'real-8': 'Venefood – San Cristóbal',
+      'real-9': 'Venefood – Recoleta',
+      'real-10': 'El Araguaney',
+      'real-11': 'VeneMarket',
+      'real-12': 'El Rincón del Morocho',
+    };
+
+    function onSlugChange() {
+      const val = document.getElementById('slug-select').value;
+      const customFields = document.getElementById('custom-fields');
+      customFields.style.display = val === '_custom' ? 'flex' : 'none';
+    }
+
+    function generate() {
+      const baseUrl = document.getElementById('base-url').value.trim().replace(/\/$/, '');
+      const ref = document.getElementById('ref-param').value.trim() || 'qr';
+      const selectVal = document.getElementById('slug-select').value;
+
+      let slug, name;
+      if (selectVal === '_custom') {
+        slug = document.getElementById('custom-slug').value.trim();
+        name = document.getElementById('custom-name').value.trim();
+      } else {
+        slug = selectVal;
+        name = NAMES[slug] || slug;
+      }
+
+      if (!slug) { alert('Elegí o ingresá un local.'); return; }
+
+      const url = `${baseUrl}/#/local/${slug}?ref=${ref}`;
+
+      document.getElementById('out-name').textContent = name;
+      document.getElementById('out-url').textContent = url;
+
+      const wrap = document.getElementById('qr-canvas-wrap');
+      wrap.innerHTML = '';
+
+      QRCode.toCanvas(document.createElement('canvas'), url, {
+        width: 240,
+        margin: 1,
+        color: { dark: '#1a0a0b', light: '#ffffff' },
+      }, (err, canvas) => {
+        if (err) { alert('Error generando QR: ' + err); return; }
+        wrap.appendChild(canvas);
+        document.getElementById('sheet').classList.add('visible');
+        document.getElementById('action-btns').style.display = 'flex';
+      });
+    }
+
+    function downloadPNG() {
+      const canvas = document.querySelector('#qr-canvas-wrap canvas');
+      if (!canvas) return;
+      const link = document.createElement('a');
+      const slug = document.getElementById('slug-select').value;
+      link.download = `qr-encasa-${slug || 'local'}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+{
+  "_comment": "Links únicos por local para QR. ref=qr activa promo primer pedido.",
+  "minimarket-vibe": {
+    "url": "/#/local/minimarket-vibe?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "crispric": {
+    "url": "/#/local/crispric?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-1": {
+    "url": "/#/local/real-1?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-2": {
+    "url": "/#/local/real-2?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-3": {
+    "url": "/#/local/real-3?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-4": {
+    "url": "/#/local/real-4?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-5": {
+    "url": "/#/local/real-5?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-6": {
+    "url": "/#/local/real-6?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-7": {
+    "url": "/#/local/real-7?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-8": {
+    "url": "/#/local/real-8?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-9": {
+    "url": "/#/local/real-9?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-10": {
+    "url": "/#/local/real-10?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-11": {
+    "url": "/#/local/real-11?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  },
+  "real-12": {
+    "url": "/#/local/real-12?ref=qr",
+    "promo": "10% OFF + Delivery gratis",
+    "active": true
+  }
+}

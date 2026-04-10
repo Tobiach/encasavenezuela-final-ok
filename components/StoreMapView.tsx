@@ -40,6 +40,14 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
   const activePromo = getActivePromo(store.id);
   const storeCombosEntry = combosData[store.id] ?? null;
 
+  // Promo primer pedido (viene de escaneo QR ?ref=qr)
+  const firstOrderPromo = (() => {
+    try {
+      const raw = localStorage.getItem(`encasa_first_order_promo_${store.id}`);
+      return raw ? JSON.parse(raw) as { discount: number; freeDelivery: boolean; storeName: string } : null;
+    } catch { return null; }
+  })();
+
   const handleOrderRedirect = () => {
     const message = `¡Hola EnCasa Venezuela! 🇻🇪 Vi el local *${store.name}* en el mapa y quiero hacer un pedido para retirar ahí o que me envíen de esa zona.`;
     window.open(`https://wa.me/5491136026302?text=${encodeURIComponent(message)}`, '_blank');
@@ -47,6 +55,14 @@ const StoreMapView: React.FC<StoreMapViewProps> = ({ store }) => {
 
   return (
     <>
+    {firstOrderPromo && (
+      <div className="sticky top-28 z-[45] bg-gradient-to-r from-ven-yellow to-venezuela-orange px-4 py-3 flex items-center justify-center gap-3 shadow-lg shadow-yellow-500/20 animate-in slide-in-from-top duration-500">
+        <span className="text-xl">🎁</span>
+        <p className="text-venezuela-dark font-black text-[11px] uppercase tracking-widest text-center">
+          Oferta especial · <span className="text-white">10% OFF + Delivery gratis</span> en tu primer pedido en {store.name}
+        </p>
+      </div>
+    )}
     <div className="max-w-5xl mx-auto px-6 py-12 animate-in fade-in zoom-in-95 duration-700">
       <div className="bg-white rounded-[48px] overflow-hidden shadow-2xl border border-gray-100 mb-10">
         <div className="bg-white p-8 md:p-12 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 border-b border-gray-50">
