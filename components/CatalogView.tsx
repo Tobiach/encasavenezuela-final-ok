@@ -69,6 +69,16 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
     win.encasaTrack?.('element_clicked', { element_type: type, element_id: id, element_name: name, timestamp: Date.now() });
   };
 
+  // Wrapper: actualiza estado global + URL al seleccionar/deseleccionar local
+  const selectStore = (store: PartnerStore | null) => {
+    onSelectStore(store);
+    if (store) {
+      navigate(`/catalog?store=${store.id}`, { replace: true });
+    } else {
+      navigate('/catalog', { replace: true });
+    }
+  };
+
   // Leer ?store=X&ref=qr al montar — auto-seleccionar local y guardar promo
   useEffect(() => {
     const storeParam = searchParams.get('store');
@@ -189,7 +199,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
           onClose={() => setViewingProduct(null)}
           onAddToCart={onAddToCart}
           onSelectStore={(s) => {
-            onSelectStore(s);
+            selectStore(s);
             setViewingProduct(null);
           }}
           storeId={selectedStore?.id}
@@ -210,7 +220,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
 
             {/* Botón volver */}
             <button
-              onClick={() => onSelectStore(null)}
+              onClick={() => selectStore(null)}
               className="absolute top-4 left-4 p-2.5 bg-black/40 backdrop-blur-md rounded-xl text-white border border-white/20 hover:bg-black/60 transition-all active:scale-90 shadow-lg"
             >
               <ArrowLeft size={20} />
@@ -372,7 +382,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                 {premiumStores.map(store => (
                   <div
                     key={`premium-${store.id}`}
-                    onClick={() => { track('store', store.id, store.name); onSelectStore(store); }}
+                    onClick={() => { track('store', store.id, store.name); selectStore(store); }}
                     className="group min-w-[280px] md:min-w-[320px] lg:min-w-0 bg-white rounded-[32px] border-2 border-ven-yellow/30 overflow-hidden transition-all duration-300 hover:border-ven-yellow hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(212,175,55,0.25)] cursor-pointer flex flex-col shadow-2xl"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden">
@@ -472,7 +482,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                 {displayedStores.map(store => (
                   <div
                     key={store.id}
-                    onClick={() => { track('store', store.id, store.name); onSelectStore(store); }}
+                    onClick={() => { track('store', store.id, store.name); selectStore(store); }}
                     className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]'}`}
                   >
                     <div className="aspect-[4/3] overflow-hidden relative">
@@ -660,7 +670,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
         store={promoModal.store}
         promo={promoModal.promo}
         onClose={() => setPromoModal(null)}
-        onGoToStore={() => { setPromoModal(null); onSelectStore(promoModal.store); }}
+        onGoToStore={() => { setPromoModal(null); selectStore(promoModal.store); }}
       />
     )}
 
@@ -669,7 +679,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
       <DeliveryZonesModal
         store={deliveryModal}
         onClose={() => setDeliveryModal(null)}
-        onGoToStore={() => { setDeliveryModal(null); onSelectStore(deliveryModal); }}
+        onGoToStore={() => { setDeliveryModal(null); selectStore(deliveryModal); }}
       />
     )}
 
