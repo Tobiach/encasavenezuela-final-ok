@@ -270,7 +270,7 @@
 
       if (!slug) { alert('Elegí o ingresá un local.'); return; }
 
-      const url = `${baseUrl}/#/local/${slug}?ref=${ref}`;
+      const url = `${baseUrl}/#/catalog?store=${slug}&ref=${ref}`;
 
       document.getElementById('out-name').textContent = name;
       document.getElementById('out-url').textContent = url;

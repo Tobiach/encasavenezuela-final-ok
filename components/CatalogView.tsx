@@ -6,7 +6,7 @@ import PromoDetailModal, { PromoEntry } from './PromoDetailModal';
 import DeliveryZonesModal from './DeliveryZonesModal';
 import { useProducts } from '../lib/hooks/useProducts';
 import { useOrderCounts } from '../lib/hooks/useOrderCounts';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import storesPromotions from '../data/stores-promotions.json' assert { type: 'json' };
 import storesDelivery from '../data/stores-delivery.json' assert { type: 'json' };
 import storesAllowedCategories from '../data/stores-allowed-categories.json' assert { type: 'json' };
@@ -54,6 +54,7 @@ interface CatalogViewProps {
 const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selectedStore, onSelectStore }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { allProducts } = useProducts();
   const orderCounts = useOrderCounts();
   const [category, setCategory] = useState(location.state?.category || 'Todos');
@@ -67,6 +68,28 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
     const win = window as unknown as { encasaTrack?: (e: string, d: Record<string, unknown>) => void };
     win.encasaTrack?.('element_clicked', { element_type: type, element_id: id, element_name: name, timestamp: Date.now() });
   };
+
+  // Leer ?store=X&ref=qr al montar — auto-seleccionar local y guardar promo
+  useEffect(() => {
+    const storeParam = searchParams.get('store');
+    const refParam = searchParams.get('ref');
+    if (!storeParam || stores.length === 0) return;
+
+    const target = stores.find(s => s.id === storeParam);
+    if (!target) return;
+
+    if (refParam === 'qr') {
+      localStorage.setItem(`encasa_first_order_promo_${target.id}`, JSON.stringify({
+        discount: 0.10,
+        freeDelivery: true,
+        storeName: target.name,
+      }));
+    }
+
+    onSelectStore(target);
+  // Solo al montar y cuando stores carga — no re-ejecutar en cada cambio de selectedStore
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stores]);
 
   // Scroll al inicio cuando se selecciona un local
   useEffect(() => {
