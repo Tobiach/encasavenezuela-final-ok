@@ -30,7 +30,7 @@ function getActivePromo(storeId: string): PromoEntry | null {
 // MODO DEMO: Si es true, todos los locales muestran todos los productos
 // Locales en STRICT_STORES siempre filtran por available_in_store_ids, ignorando DEMO_MODE
 const DEMO_MODE = true;
-const STRICT_STORES = new Set(['minimarket-vibe', 'crispric', 'real-3']);
+const STRICT_STORES = new Set(['minimarket-vibe', 'crispric', 'real-3', 'real-13']);
 
 const categoryIcons: Record<string, React.ElementType> = {
   'Todos': LayoutGrid,
