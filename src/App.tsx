@@ -15,6 +15,7 @@ import LoyaltyView from '../components/LoyaltyView';
 import HowItWorks from '../components/HowItWorks';
 import Faq from '../components/Faq';
 import StoreMapView from '../components/StoreMapView';
+import LocalesMapView from '../components/LocalesMapView';
 import PurchaseNotification from '../components/PurchaseNotification';
 import ContextRecommendations from '../components/ContextRecommendations';
 import RepeatOrderPanel from '../components/RepeatOrderPanel';
@@ -568,6 +569,7 @@ const handlePurchase = (total: number) => {
         <Route path="/promotion/:id" element={<PromotionDetailView userPoints={userPoints} onAddToCart={handleAddToCart} onSelectStore={handleSelectStore} showLoyalty={FEATURE_LOYALTY} />} />
         <Route path="/partners" element={<PartnerStores stores={stores} onOpenMap={(s) => {handleSelectStore(s); navigate('/catalog');}} isFullView={true} />} />
         <Route path="/map" element={selectedStore ? <StoreMapView store={selectedStore} /> : null} />
+        <Route path="/locales-map" element={<LocalesMapView stores={stores} />} />
         <Route path="/local/:slug" element={<StoreDirectEntry stores={stores} onSelectStore={handleSelectStore} />} />
       </Routes>
       

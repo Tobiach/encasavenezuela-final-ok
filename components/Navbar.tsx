@@ -144,6 +144,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden lg:flex items-center gap-10">
             <button onClick={onNavHome} className="text-[11px] font-black uppercase tracking-[0.2em] text-venezuela-brown hover:text-ven-yellow transition-colors border-b-2 border-transparent hover:border-ven-yellow pb-1">Inicio</button>
             <button onClick={() => navigate('/partners')} className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-600 hover:text-venezuela-brown transition-colors border-b-2 border-transparent hover:border-venezuela-brown pb-1">Locales</button>
+            <button onClick={() => navigate('/locales-map')} className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-600 hover:text-venezuela-brown transition-colors border-b-2 border-transparent hover:border-venezuela-brown pb-1 flex items-center gap-1.5">🗺️ Mapa</button>
             <button
               onClick={() => {
                 if (window.location.hash === '#/') {
@@ -236,6 +237,10 @@ const Navbar: React.FC<NavbarProps> = ({
             <button onClick={() => navTo('/partners')} className="w-full text-left py-5 border-b border-black/10 flex items-center justify-between group active:scale-[0.98] transition-all">
               <span className="text-3xl font-black uppercase tracking-tighter text-venezuela-brown">Locales</span>
               <span className="text-2xl">🏪</span>
+            </button>
+            <button onClick={() => navTo('/locales-map')} className="w-full text-left py-5 border-b border-black/10 flex items-center justify-between group active:scale-[0.98] transition-all">
+              <span className="text-3xl font-black uppercase tracking-tighter text-venezuela-brown">Mapa</span>
+              <span className="text-2xl">🗺️</span>
             </button>
             <button
               onClick={() => {

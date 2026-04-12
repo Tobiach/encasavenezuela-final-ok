@@ -58,6 +58,8 @@ function mapRowToStore(row: Record<string, unknown>): PartnerStore {
     deliveryTime: '30-45 min',
     coverageArea: 'CABA completa',
     deliveryRadius: 'Todo CABA',
+    lat: row.lat as number | undefined,
+    lng: row.lng as number | undefined,
   };
 }
 

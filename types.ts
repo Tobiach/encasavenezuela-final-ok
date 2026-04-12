@@ -16,6 +16,8 @@ export interface PartnerStore {
   deliveryTime?: string;
   coverageArea?: string;
   deliveryRadius?: string;
+  lat?: number;
+  lng?: number;
 }
 
 export interface Product {
