@@ -80,6 +80,23 @@
     "heroEmojis": ["🧀", "☀️", "🔥"],
     "gradient": "from-yellow-500 to-amber-400"
   },
+  "real-13": {
+    "label": "3x8.000 en Empanadas 🫓",
+    "sublabel": "Todos los días en horario completo",
+    "validUntil": "2026-12-31T23:59:00",
+    "type": "combo",
+    "title": "Combo Empanadas – Margarita Food",
+    "description": "Las empanadas venezolanas de Margarita Food tienen fama en Almagro. Pedí 3 y pagás solo $8.000. Elegís el relleno que quieras: queso, pollo, molida, jamón y queso, plátano y queso o domino.",
+    "howItWorks": [
+      "Elegí 3 empanadas de cualquier relleno clásico (queso, pollo, molida, jamón y queso, plátano y queso, domino)",
+      "El precio fijo es $8.000 por las 3 unidades — sin importar la combinación",
+      "Podés pedir múltiples combos en el mismo pedido",
+      "Disponible todos los días en horario completo: lunes a domingo de 09:00 a 23:00hs"
+    ],
+    "conditions": "Solo empanadas clásicas (no especiales). No acumulable con otras promos. Sujeto a stock. Pedido mínimo: 1 combo de 3 unidades.",
+    "heroEmojis": ["🫓", "🔥", "🇻🇪"],
+    "gradient": "from-yellow-500 to-amber-400"
+  },
   "real-12": {
     "label": "15% OFF en pedidos +$15.000",
     "sublabel": "Válido todo el mes de abril",
