@@ -232,7 +232,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
 
                     {/* CTA */}
                     <a
-                      href="/#/partners"
+                      href={`/#/catalog?store=${store.id}`}
                       style={{
                         display: 'block',
                         background: 'linear-gradient(135deg, #FCD34D, #F59E0B)',

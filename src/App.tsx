@@ -15,7 +15,7 @@ import LoyaltyView from '../components/LoyaltyView';
 import HowItWorks from '../components/HowItWorks';
 import Faq from '../components/Faq';
 import StoreMapView from '../components/StoreMapView';
-import LocalesMapView from '../components/LocalesMapView';
+const LocalesMapView = React.lazy(() => import('../components/LocalesMapView'));
 import PurchaseNotification from '../components/PurchaseNotification';
 import ContextRecommendations from '../components/ContextRecommendations';
 import RepeatOrderPanel from '../components/RepeatOrderPanel';
@@ -569,7 +569,11 @@ const handlePurchase = (total: number) => {
         <Route path="/promotion/:id" element={<PromotionDetailView userPoints={userPoints} onAddToCart={handleAddToCart} onSelectStore={handleSelectStore} showLoyalty={FEATURE_LOYALTY} />} />
         <Route path="/partners" element={<PartnerStores stores={stores} onOpenMap={(s) => {handleSelectStore(s); navigate('/catalog');}} isFullView={true} />} />
         <Route path="/map" element={selectedStore ? <StoreMapView store={selectedStore} /> : null} />
-        <Route path="/locales-map" element={<LocalesMapView stores={stores} />} />
+        <Route path="/locales-map" element={
+          <React.Suspense fallback={<div className="min-h-screen bg-venezuela-dark flex items-center justify-center"><div className="w-10 h-10 border-4 border-ven-yellow border-t-transparent rounded-full animate-spin" /></div>}>
+            <LocalesMapView stores={stores} />
+          </React.Suspense>
+        } />
         <Route path="/local/:slug" element={<StoreDirectEntry stores={stores} onSelectStore={handleSelectStore} />} />
       </Routes>
       
