@@ -23,7 +23,7 @@ INSERT INTO stores (
   4.9,
   0,
   'https://maps.app.goo.gl/2uXKL1va8uM33UXx9',
-  'portada_margarita_food.png',  -- ⚠️ verificar nombre exacto del archivo subido
+  'logo_margaritafood.png',
   true
 )
 ON CONFLICT (slug) DO UPDATE SET
