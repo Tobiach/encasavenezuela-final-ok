@@ -359,7 +359,7 @@ Paleta de colores (brand)
 Variables de entorno
 .env.local (NUNCA commitear - está en .gitignore):
 
-VITE_SUPABASE_URL=https://bnsmucydbjujlsjptksr.supabase.co
+VITE_SUPABASE_URL=https://weerwaqwrdngbikqaxng.supabase.co
 VITE_SUPABASE_ANON_KEY=[redacted]
 VITE_GEMINI_API_KEY=[redacted - cuota agotada]
 
@@ -869,7 +869,7 @@ URLs importantes
 	∙	Producción: https://encasavenezuela-final-ok.vercel.app
 	∙	Repo GitHub: [Agregar URL del repo]
 	∙	Notion workspace: [Agregar URL]
-	∙	Supabase project: https://supabase.com/dashboard/project/bnsmucydbjujlsjptksr
+	∙	Supabase project: https://supabase.com/dashboard/project/weerwaqwrdngbikqaxng
 Cuentas y accesos
 	∙	Vercel: [Email de acceso]
 	∙	Supabase: [Email de acceso]
