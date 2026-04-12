@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Search, MapPin, Star, Navigation } from 'lucide-react';
+import { Search, MapPin, Star, Navigation, ChevronRight } from 'lucide-react';
 import { PartnerStore } from '../types';
 
 // Fix Leaflet default icon broken en Vite/Webpack
@@ -102,69 +102,77 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
   };
 
   return (
-    <div className="min-h-screen bg-venezuela-dark">
+    <div className="min-h-screen bg-gray-50">
+
       {/* Header */}
-      <div className="px-4 pt-6 pb-4 max-w-5xl mx-auto">
-        <div className="mb-4">
-          <h1 className="text-2xl font-black text-white tracking-tight leading-tight">
-            🗺️ Locales Venezolanos
-            <span className="block text-ven-yellow text-lg font-bold mt-0.5">en CABA</span>
-          </h1>
-          <p className="text-gray-500 text-xs font-medium mt-1">
-            {storesWithCoords.length} locales activos · EnCasa Venezuela
-          </p>
-        </div>
-
-        {/* Buscador */}
-        <div className="flex gap-2">
-          <div className="flex-1 relative">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-            <input
-              ref={inputRef}
-              type="text"
-              value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setSearchError(''); }}
-              onKeyDown={handleKeyDown}
-              placeholder="Buscar barrio o dirección…"
-              className="w-full pl-9 pr-4 py-3 bg-white/8 border border-white/10 rounded-2xl text-white text-sm placeholder-gray-600 focus:outline-none focus:border-ven-yellow/50 focus:bg-white/10 transition-all"
-            />
+      <div className="bg-white shadow-sm px-4 pt-6 pb-5">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-start gap-3 mb-5">
+            <div className="bg-ven-yellow/10 p-2.5 rounded-xl shrink-0 mt-0.5">
+              <MapPin size={22} className="text-ven-yellow" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-black text-gray-900 tracking-tight leading-tight">
+                Locales Venezolanos en CABA
+              </h1>
+              <p className="text-sm text-gray-500 mt-0.5">
+                {storesWithCoords.length} locales activos · EnCasa Venezuela
+              </p>
+            </div>
           </div>
-          <button
-            onClick={handleSearch}
-            disabled={searching}
-            className="px-4 py-3 bg-ven-yellow text-venezuela-dark rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-yellow-400 active:scale-95 transition-all disabled:opacity-50 shrink-0"
-          >
-            {searching ? '…' : 'Ir'}
-          </button>
-          <button
-            onClick={handleLocateMe}
-            title="Usar mi ubicación"
-            className="px-3 py-3 bg-white/8 border border-white/10 rounded-2xl text-gray-400 hover:text-ven-yellow hover:border-ven-yellow/40 active:scale-95 transition-all shrink-0"
-          >
-            <Navigation size={16} />
-          </button>
-        </div>
 
-        {searchError && (
-          <p className="text-red-400 text-xs font-medium mt-2 px-1">{searchError}</p>
-        )}
-
-        {/* Leyenda */}
-        <div className="flex items-center gap-4 mt-3">
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-ven-yellow inline-block shadow-sm shadow-yellow-500/40" />
-            <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Premium</span>
+          {/* Buscador */}
+          <div className="flex gap-2">
+            <div className="flex-1 relative">
+              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => { setSearchQuery(e.target.value); setSearchError(''); }}
+                onKeyDown={handleKeyDown}
+                placeholder="Buscá tu barrio o dirección..."
+                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-ven-yellow focus:ring-2 focus:ring-ven-yellow/20 transition-all"
+              />
+            </div>
+            <button
+              onClick={handleSearch}
+              disabled={searching}
+              className="px-5 py-3 bg-ven-yellow text-black font-bold text-sm rounded-xl hover:bg-yellow-400 active:scale-95 transition-all disabled:opacity-50 shrink-0"
+            >
+              {searching ? '…' : 'Ir'}
+            </button>
+            <button
+              onClick={handleLocateMe}
+              title="Usar mi ubicación"
+              className="px-3 py-3 bg-white border border-gray-200 rounded-xl text-gray-400 hover:text-ven-yellow hover:border-ven-yellow/50 active:scale-95 transition-all shrink-0"
+            >
+              <Navigation size={16} />
+            </button>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-gray-500 inline-block" />
-            <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Básico</span>
+
+          {searchError && (
+            <p className="text-red-500 text-xs font-medium mt-2 px-1">{searchError}</p>
+          )}
+
+          {/* Leyenda */}
+          <div className="flex items-center gap-0 mt-4 bg-white border border-gray-100 rounded-xl shadow-sm w-fit px-3 py-2">
+            <div className="flex items-center gap-1.5 pr-3">
+              <span className="w-3 h-3 rounded-full bg-ven-yellow inline-block shadow-sm shadow-yellow-400/40 shrink-0" />
+              <span className="text-xs font-semibold text-gray-700">Premium</span>
+            </div>
+            <div className="w-px h-4 bg-gray-200 mx-0" />
+            <div className="flex items-center gap-1.5 pl-3">
+              <span className="w-3 h-3 rounded-full bg-gray-400 inline-block shrink-0" />
+              <span className="text-xs font-semibold text-gray-700">Básico</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Mapa */}
-      <div className="px-4 pb-8 max-w-5xl mx-auto">
-        <div className="rounded-[28px] overflow-hidden border border-white/8 shadow-2xl" style={{ height: '62vh', minHeight: 380 }}>
+      <div className="px-4 pt-4 pb-2 max-w-5xl mx-auto">
+        <div className="rounded-2xl overflow-hidden shadow-md border border-gray-200" style={{ height: '55vh', minHeight: 320 }}>
           <MapContainer
             center={CABA_CENTER}
             zoom={13}
@@ -255,39 +263,42 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
             ))}
           </MapContainer>
         </div>
+      </div>
 
-        {/* Lista de locales debajo del mapa — mobile friendly */}
-        <div className="mt-6">
-          <h2 className="text-white font-black text-sm uppercase tracking-widest mb-3 px-1">
-            Todos los locales
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {/* Lista de locales debajo del mapa */}
+      <div className="px-4 pt-4 pb-10 max-w-5xl mx-auto">
+        <h2 className="text-base font-bold text-gray-700 mb-3 px-1">
+          Todos los locales
+        </h2>
+        <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+          <div className="divide-y divide-gray-100">
             {storesWithCoords.map(store => (
               <a
                 key={store.id}
-                href="/#/partners"
-                className="flex items-center gap-3 bg-white/5 border border-white/8 rounded-2xl px-4 py-3 hover:border-ven-yellow/30 hover:bg-white/8 transition-all active:scale-[0.98]"
+                href={`/#/catalog?store=${store.id}`}
+                className="flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors"
               >
                 <div
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  className="w-3 h-3 rounded-full shrink-0"
                   style={{ background: store.plan === 'premium' ? '#FCD34D' : '#9CA3AF' }}
                 />
-                <div className="min-w-0">
-                  <p className="text-white font-black text-sm truncate">{store.name}</p>
-                  <p className="text-gray-500 text-[10px] font-medium flex items-center gap-1">
-                    <MapPin size={9} /> {store.neighborhood || store.location}
-                    <span className="mx-1 text-white/20">·</span>
-                    <Star size={9} className="text-ven-yellow" /> {store.rating?.toFixed(1) ?? '—'}
+                <div className="min-w-0 flex-1">
+                  <p className="text-gray-900 font-bold text-base truncate">{store.name}</p>
+                  <p className="text-gray-500 text-sm flex items-center gap-1.5 mt-0.5">
+                    <MapPin size={11} className="shrink-0" />
+                    {store.neighborhood || store.location}
+                    <span className="text-gray-300">·</span>
+                    <Star size={11} className="text-ven-yellow shrink-0" fill="currentColor" />
+                    {store.rating?.toFixed(1) ?? '—'}
                   </p>
                 </div>
-                <span className="ml-auto text-gray-600 text-[10px] font-black uppercase tracking-wider shrink-0">
-                  {store.plan === 'premium' ? '⭐' : ''}
-                </span>
+                <ChevronRight size={16} className="text-gray-300 shrink-0" />
               </a>
             ))}
           </div>
         </div>
       </div>
+
     </div>
   );
 };
