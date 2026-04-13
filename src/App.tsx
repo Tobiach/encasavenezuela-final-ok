@@ -24,6 +24,7 @@ import GiftsView from '../components/GiftsView';
 import RadarDashboardView from '../components/RadarDashboardView';
 import Offers from '../components/Offers';
 import AuthView from '../components/AuthView';
+import QRWelcomeModal from '../components/QRWelcomeModal';
 import AIAssistantButton from '../components/AIAssistantButton';
 import ProductAIChat from '../components/ProductAIChat'; // El componente de chat
 import OrderConfirmationView from '../components/OrderConfirmationView';
@@ -245,6 +246,25 @@ const AppContent: React.FC = () => {
   };
 }, []);
 
+  // Detectar QR scan: mostrar modal de bienvenida si viene con ?store=X
+  // y el usuario no está logueado ni registrado previamente
+  useEffect(() => {
+    const hash = window.location.hash; // e.g. "#/catalog?store=minimarket-vibe&ref=qr"
+    const queryString = hash.includes('?') ? hash.slice(hash.indexOf('?')) : '';
+    const params = new URLSearchParams(queryString);
+    const storeParam = params.get('store');
+    if (!storeParam) return;
+    const alreadyRegistered = localStorage.getItem('encasa_qr_registered');
+    const alreadySkipped = localStorage.getItem('encasa_qr_skipped');
+    if (alreadyRegistered || alreadySkipped) return;
+    // Solo para usuarios no logueados — esperar a que auth resuelva
+    const timer = setTimeout(() => {
+      if (!user) setQrWelcomeStoreId(storeParam);
+    }, 1200);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]); // se dispara cuando auth termina de cargar
+
   const handleLogout = async () => {
     console.log('🚪 Logout iniciado');
     
@@ -297,6 +317,7 @@ const AppContent: React.FC = () => {
   const [showRealNotification, setShowRealNotification] = useState(false);
   const [selectedStore, setSelectedStore] = useState<PartnerStore | null>(null);
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
+  const [qrWelcomeStoreId, setQrWelcomeStoreId] = useState<string | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [storeChangeConfirm, setStoreChangeConfirm] = useState<{ 
     newStore: PartnerStore, 
@@ -631,6 +652,19 @@ const handlePurchase = (total: number) => {
       <div className="fixed bottom-10 right-10 z-[100] flex flex-col gap-4 items-end">
         <AIAssistantButton onClick={() => setIsAIChatOpen(true)} />
       </div>
+
+      {/* Modal de bienvenida QR */}
+      {qrWelcomeStoreId && (
+        <QRWelcomeModal
+          storeId={qrWelcomeStoreId}
+          onDone={() => {
+            setQrWelcomeStoreId(null);
+            const target = stores.find(s => s.id === qrWelcomeStoreId);
+            if (target) handleSelectStore(target);
+            navigate('/catalog');
+          }}
+        />
+      )}
     </div>
   );
 };
