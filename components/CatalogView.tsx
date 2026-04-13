@@ -10,6 +10,7 @@ import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import storesPromotions from '../data/stores-promotions.json' assert { type: 'json' };
 import storesDelivery from '../data/stores-delivery.json' assert { type: 'json' };
 import storesAllowedCategories from '../data/stores-allowed-categories.json' assert { type: 'json' };
+import LeadCaptureModal from './LeadCaptureModal';
 
 const allowedCatsData = storesAllowedCategories as Record<string, string[]>;
 
@@ -63,6 +64,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
   const [deliveryModal, setDeliveryModal] = useState<PartnerStore | null>(null);
   const [mayorModal, setMayorModal] = useState(false);
+  const [leadModal, setLeadModal] = useState<{ storeId: string; storeName: string } | null>(null);
 
   const track = (type: string, id: string, name: string) => {
     const win = window as unknown as { encasaTrack?: (e: string, d: Record<string, unknown>) => void };
@@ -94,6 +96,11 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
         freeDelivery: true,
         storeName: target.name,
       }));
+      // Mostrar modal de captura solo si el usuario no está registrado
+      const alreadyRegistered = localStorage.getItem('encasa_lead_email');
+      if (!alreadyRegistered) {
+        setTimeout(() => setLeadModal({ storeId: target.id, storeName: target.name }), 800);
+      }
     }
 
     onSelectStore(target);
@@ -751,6 +758,15 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
           </div>
         </div>
       </div>
+    )}
+
+    {/* Modal de captura de leads — se dispara con ?ref=qr */}
+    {leadModal && (
+      <LeadCaptureModal
+        storeName={leadModal.storeName}
+        storeId={leadModal.storeId}
+        onClose={() => setLeadModal(null)}
+      />
     )}
     </>
   );
