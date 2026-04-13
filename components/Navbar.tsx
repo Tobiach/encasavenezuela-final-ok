@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, ChevronRight, ArrowLeft, Share2, Check, AlertCircle } from 'lucide-react';
+import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, ChevronRight, ArrowLeft, Share2, Check, AlertCircle, MapPin } from 'lucide-react';
 import { Product, User } from '../types';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LOGO_ENCASA_IMAGE } from '../src/assets/imagenes';
@@ -128,23 +128,35 @@ const Navbar: React.FC<NavbarProps> = ({
             />
           </div>
 
-          {/* CARRITO — Mobile only, izquierda */}
-          <button
-            onClick={() => setIsCartOpen(true)}
-            className={`lg:hidden relative p-3 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-gradient-to-br from-[#FFCC00] via-[#F58220] to-[#E86D00] text-white border-yellow-200 shadow-[0_0_35px_rgba(255,204,0,0.7)]' : 'bg-black/5 border-black/10 text-venezuela-brown'}`}
-          >
-            <ShoppingCart size={20} className={bump ? 'animate-bounce' : ''} />
-            {cartCount > 0 && (
-              <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-red text-white' : 'bg-ven-yellow text-venezuela-dark'}`}>
-                {cartCount}
-              </span>
-            )}
-          </button>
+          {/* CARRITO + MAPA — Mobile only, izquierda */}
+          <div className="lg:hidden flex items-center gap-2">
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className={`relative p-3 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-gradient-to-br from-[#FFCC00] via-[#F58220] to-[#E86D00] text-white border-yellow-200 shadow-[0_0_35px_rgba(255,204,0,0.7)]' : 'bg-black/5 border-black/10 text-venezuela-brown'}`}
+            >
+              <ShoppingCart size={20} className={bump ? 'animate-bounce' : ''} />
+              {cartCount > 0 && (
+                <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-red text-white' : 'bg-ven-yellow text-venezuela-dark'}`}>
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => navTo('/locales-map')}
+              className="flex flex-col items-center justify-center gap-0.5 px-2.5 py-2 bg-black/5 border border-black/10 rounded-xl text-venezuela-brown active:scale-95 transition-all hover:border-ven-yellow/40"
+            >
+              <MapPin size={17} className="text-ven-yellow" />
+              <span className="text-[7px] font-black uppercase tracking-wider leading-none text-venezuela-brown">Locales</span>
+            </button>
+          </div>
 
           <div className="hidden lg:flex items-center gap-10">
             <button onClick={onNavHome} className="text-[11px] font-black uppercase tracking-[0.2em] text-venezuela-brown hover:text-ven-yellow transition-colors border-b-2 border-transparent hover:border-ven-yellow pb-1">Inicio</button>
             <button onClick={() => navigate('/partners')} className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-600 hover:text-venezuela-brown transition-colors border-b-2 border-transparent hover:border-venezuela-brown pb-1">Locales</button>
-            <button onClick={() => navigate('/locales-map')} className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-600 hover:text-venezuela-brown transition-colors border-b-2 border-transparent hover:border-venezuela-brown pb-1 flex items-center gap-1.5">🗺️ Mapa</button>
+            <button onClick={() => navigate('/locales-map')} className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-600 hover:text-venezuela-brown transition-colors border-b-2 border-transparent hover:border-venezuela-brown pb-1 flex items-center gap-1.5">
+              <MapPin size={13} className="text-ven-yellow" /> Locales cercanos
+            </button>
             <button
               onClick={() => {
                 if (window.location.hash === '#/') {
