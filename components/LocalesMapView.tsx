@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Search, MapPin, Star, Navigation, ChevronRight, Phone } from 'lucide-react';
+import { Search, MapPin, Star, Navigation, ChevronRight, Phone, SlidersHorizontal, X } from 'lucide-react';
 import { PartnerStore } from '../types';
 import { LOCALES_INVESTIGADOS } from '../data/localesInvestigados';
 
@@ -14,40 +14,60 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
-// ── Iconos personalizados por plan ──────────────────────────────────────────
-function createPinIcon(plan: 'premium' | 'basic') {
-  const color = plan === 'premium' ? '#FCD34D' : '#9CA3AF';
+// ── CAMBIO 1: descuentos deterministas por índice ─────────────────────────────
+const PREMIUM_DISCOUNTS = [20, 25, 30, 15, 20];
+const BASIC_DISCOUNTS   = [10, 15, 12, 18, 10];
+
+function getDiscount(plan: 'premium' | 'basic', index: number): number {
+  return plan === 'premium'
+    ? PREMIUM_DISCOUNTS[index % PREMIUM_DISCOUNTS.length]
+    : BASIC_DISCOUNTS[index % BASIC_DISCOUNTS.length];
+}
+
+// ── CAMBIO 2: pin con badge de descuento ──────────────────────────────────────
+function createPinIcon(plan: 'premium' | 'basic', discount: number): L.DivIcon {
+  const color  = plan === 'premium' ? '#FCD34D' : '#9CA3AF';
   const border = plan === 'premium' ? '#F59E0B' : '#6B7280';
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 40">
-      <path d="M16 0C7.163 0 0 7.163 0 16c0 10 16 24 16 24S32 26 32 16C32 7.163 24.837 0 16 0z"
-        fill="${color}" stroke="${border}" stroke-width="2"/>
-      <circle cx="16" cy="16" r="6" fill="white" opacity="0.9"/>
-    </svg>`;
   return L.divIcon({
-    html: svg,
+    html: `<div style="position:relative;width:32px;height:32px">
+      <div style="
+        background:${color};
+        width:32px;height:32px;
+        border-radius:50% 50% 50% 0;
+        transform:rotate(-45deg);
+        border:2px solid ${border};
+        box-shadow:0 2px 8px rgba(0,0,0,0.25)
+      "></div>
+      <span style="
+        position:absolute;top:-10px;left:-6px;
+        background:#ef4444;color:white;
+        font-size:9px;font-weight:900;
+        padding:1px 4px;border-radius:4px;
+        white-space:nowrap;
+        box-shadow:0 1px 3px rgba(0,0,0,0.2)
+      ">-${discount}%</span>
+    </div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -36],
     className: '',
-    iconSize: [32, 40],
-    iconAnchor: [16, 40],
-    popupAnchor: [0, -42],
   });
 }
 
-// Pin azul para locales investigados (aún no en EnCasa)
+// Pin azul para locales del ecosistema (no registrados en EnCasa)
 const PIN_INVESTIGADO = L.divIcon({
-  html: `
-    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 32 40">
-      <path d="M16 0C7.163 0 0 7.163 0 16c0 10 16 24 16 24S32 26 32 16C32 7.163 24.837 0 16 0z"
-        fill="#DBEAFE" stroke="#3B82F6" stroke-width="2.5"/>
-      <circle cx="16" cy="16" r="5" fill="#3B82F6" opacity="0.85"/>
-    </svg>`,
+  html: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 32 40">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 10 16 24 16 24S32 26 32 16C32 7.163 24.837 0 16 0z"
+      fill="#DBEAFE" stroke="#3B82F6" stroke-width="2.5"/>
+    <circle cx="16" cy="16" r="5" fill="#3B82F6" opacity="0.85"/>
+  </svg>`,
   className: '',
   iconSize: [28, 36],
   iconAnchor: [14, 36],
   popupAnchor: [0, -38],
 });
 
-// ── Componente para re-centrar mapa desde búsqueda ───────────────────────────
+// ── Componente para re-centrar mapa ──────────────────────────────────────────
 const FlyToLocation: React.FC<{ coords: [number, number] | null }> = ({ coords }) => {
   const map = useMap();
   useEffect(() => {
@@ -55,6 +75,22 @@ const FlyToLocation: React.FC<{ coords: [number, number] | null }> = ({ coords }
   }, [coords, map]);
   return null;
 };
+
+// ── Categorías para filtros ──────────────────────────────────────────────────
+const CATEGORIAS = [
+  { label: 'Arepas & Empanadas', emoji: '🫓', keywords: ['arepa', 'empanada'] },
+  { label: 'Tequeños',            emoji: '🧀', keywords: ['tequeño', 'queso'] },
+  { label: 'Almacén & Víveres',   emoji: '🛒', keywords: ['almacén', 'víveres', 'productos'] },
+  { label: 'Bebidas Venezolanas', emoji: '🥤', keywords: ['bebida', 'malta', 'jugo'] },
+  { label: 'Dulces & Golosinas',  emoji: '🍫', keywords: ['dulce', 'chocolate', 'postre'] },
+  { label: 'Comida Casera',       emoji: '🍽️', keywords: ['casero', 'pabellón', 'criolla'] },
+  { label: 'Combos & Ofertas',    emoji: '🔥', keywords: ['combo', 'oferta', 'promo'] },
+];
+
+const BARRIOS = [
+  'Balvanera', 'Once', 'Palermo', 'San Cristóbal', 'Recoleta',
+  'Abasto', 'Caballito', 'Boedo', 'Almagro', 'Villa Crespo', 'Belgrano',
+];
 
 // ── Props ────────────────────────────────────────────────────────────────────
 interface LocalesMapViewProps {
@@ -64,16 +100,72 @@ interface LocalesMapViewProps {
 const CABA_CENTER: [number, number] = [-34.6037, -58.3816];
 
 const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [flyTo, setFlyTo] = useState<[number, number] | null>(null);
-  const [searching, setSearching] = useState(false);
-  const [searchError, setSearchError] = useState('');
-  const [showInvestigados, setShowInvestigados] = useState(true);
+  // Búsqueda
+  const [searchQuery,    setSearchQuery]    = useState('');
+  const [flyTo,          setFlyTo]          = useState<[number, number] | null>(null);
+  const [searching,      setSearching]      = useState(false);
+  const [searchError,    setSearchError]    = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Ecosistema toggle
+  const [showInvestigados, setShowInvestigados] = useState(true);
+
+  // CAMBIO 3: drawer de detalle al tocar pin
+  const [selectedStore, setSelectedStore] = useState<(PartnerStore & { discount: number }) | null>(null);
+  const [drawerOpen,    setDrawerOpen]    = useState(false);
+
+  // CAMBIO 4: panel de filtros
+  const [filtersOpen,        setFiltersOpen]        = useState(false);
+  const [sortBy,             setSortBy]             = useState<'rating' | 'discount' | 'distance'>('rating');
+  const [selectedCategoria,  setSelectedCategoria]  = useState<string | null>(null);
+  const [selectedBarrio,     setSelectedBarrio]     = useState<string | null>(null);
+  const [selectedTipo,       setSelectedTipo]       = useState<'comida' | 'productos' | null>(null);
+  // Estado pendiente mientras el sheet está abierto
+  const [pendingSort,        setPendingSort]        = useState<'rating' | 'discount' | 'distance'>('rating');
+  const [pendingCategoria,   setPendingCategoria]   = useState<string | null>(null);
+  const [pendingBarrio,      setPendingBarrio]      = useState<string | null>(null);
+  const [pendingTipo,        setPendingTipo]        = useState<'comida' | 'productos' | null>(null);
 
   const storesWithCoords = stores.filter(s => s.lat != null && s.lng != null);
 
-  // ── Geocodificar con Nominatim (OpenStreetMap, gratis) ───────────────────
+  // CAMBIO 1: asignar discounts
+  const storesWithDiscount = useMemo(() =>
+    storesWithCoords.map((s, i) => ({ ...s, discount: getDiscount(s.plan, i) })),
+    [storesWithCoords]
+  );
+
+  // CAMBIO 5: aplicar filtros
+  const filteredStores = useMemo(() => {
+    let result = [...storesWithDiscount];
+
+    if (selectedCategoria) {
+      const cat = CATEGORIAS.find(c => c.label === selectedCategoria);
+      if (cat) {
+        result = result.filter(s => {
+          const haystack = [...(s.tags ?? []), s.type].join(' ').toLowerCase();
+          return cat.keywords.some(k => haystack.includes(k));
+        });
+      }
+    }
+    if (selectedBarrio) {
+      result = result.filter(s =>
+        (s.neighborhood ?? s.location ?? '').toLowerCase().includes(selectedBarrio.toLowerCase())
+      );
+    }
+    if (selectedTipo) {
+      result = result.filter(s => s.type === selectedTipo);
+    }
+    if (sortBy === 'rating') {
+      result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    } else if (sortBy === 'discount') {
+      result.sort((a, b) => b.discount - a.discount);
+    }
+    return result;
+  }, [storesWithDiscount, selectedCategoria, selectedBarrio, selectedTipo, sortBy]);
+
+  const activeFiltersCount = [selectedCategoria, selectedBarrio, selectedTipo].filter(Boolean).length;
+
+  // ── Geocodificar con Nominatim ───────────────────────────────────────────
   const handleSearch = async () => {
     const q = searchQuery.trim();
     if (!q) return;
@@ -81,7 +173,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
     setSearchError('');
     try {
       const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q + ', Buenos Aires, Argentina')}&format=json&limit=1&countrycodes=ar`;
-      const res = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+      const res  = await fetch(url, { headers: { 'Accept-Language': 'es' } });
       const data = await res.json();
       if (data.length > 0) {
         setFlyTo([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
@@ -100,21 +192,39 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
   };
 
   const handleLocateMe = () => {
-    if (!navigator.geolocation) {
-      setSearchError('Tu navegador no soporta geolocalización.');
-      return;
-    }
+    if (!navigator.geolocation) { setSearchError('Tu navegador no soporta geolocalización.'); return; }
     setSearching(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setFlyTo([pos.coords.latitude, pos.coords.longitude]);
-        setSearching(false);
-      },
-      () => {
-        setSearchError('No pudimos obtener tu ubicación.');
-        setSearching(false);
-      }
+      (pos) => { setFlyTo([pos.coords.latitude, pos.coords.longitude]); setSearching(false); },
+      ()    => { setSearchError('No pudimos obtener tu ubicación.'); setSearching(false); }
     );
+  };
+
+  const openDrawer = (store: typeof storesWithDiscount[0]) => {
+    setSelectedStore(store);
+    setDrawerOpen(true);
+  };
+  const closeDrawer = () => setDrawerOpen(false);
+
+  const openFilters = () => {
+    setPendingSort(sortBy);
+    setPendingCategoria(selectedCategoria);
+    setPendingBarrio(selectedBarrio);
+    setPendingTipo(selectedTipo);
+    setFiltersOpen(true);
+  };
+  const applyFilters = () => {
+    setSortBy(pendingSort);
+    setSelectedCategoria(pendingCategoria);
+    setSelectedBarrio(pendingBarrio);
+    setSelectedTipo(pendingTipo);
+    setFiltersOpen(false);
+  };
+  const clearFilters = () => {
+    setPendingSort('rating');
+    setPendingCategoria(null);
+    setPendingBarrio(null);
+    setPendingTipo(null);
   };
 
   return (
@@ -127,17 +237,17 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
             <div className="bg-ven-yellow/10 p-2.5 rounded-xl shrink-0 mt-0.5">
               <MapPin size={22} className="text-ven-yellow" />
             </div>
-            <div>
+            <div className="flex-1">
               <h1 className="text-2xl font-black text-gray-900 tracking-tight leading-tight">
                 Locales Venezolanos en CABA
               </h1>
               <p className="text-sm text-gray-500 mt-0.5">
-                {storesWithCoords.length} locales activos · EnCasa Venezuela
+                {filteredStores.length} locales activos · EnCasa Venezuela
               </p>
             </div>
           </div>
 
-          {/* Buscador */}
+          {/* Buscador + botón filtros */}
           <div className="flex gap-2">
             <div className="flex-1 relative">
               <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
@@ -165,25 +275,37 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
             >
               <Navigation size={16} />
             </button>
+            {/* CAMBIO 4: botón filtros */}
+            <button
+              onClick={openFilters}
+              className={`relative px-3 py-3 rounded-xl border active:scale-95 transition-all shrink-0 ${activeFiltersCount > 0 ? 'bg-ven-yellow border-yellow-400 text-black' : 'bg-white border-gray-200 text-gray-500 hover:border-ven-yellow/50 hover:text-ven-yellow'}`}
+            >
+              <SlidersHorizontal size={16} />
+              {activeFiltersCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </button>
           </div>
 
           {searchError && (
             <p className="text-red-500 text-xs font-medium mt-2 px-1">{searchError}</p>
           )}
 
-          {/* Leyenda + toggle investigados */}
+          {/* Leyenda + toggle ecosistema */}
           <div className="flex items-center gap-3 mt-4 flex-wrap">
             <div className="flex items-center gap-0 bg-white border border-gray-100 rounded-xl shadow-sm w-fit px-3 py-2">
               <div className="flex items-center gap-1.5 pr-3">
                 <span className="w-3 h-3 rounded-full bg-ven-yellow inline-block shadow-sm shadow-yellow-400/40 shrink-0" />
                 <span className="text-xs font-semibold text-gray-700">Premium</span>
               </div>
-              <div className="w-px h-4 bg-gray-200 mx-0" />
+              <div className="w-px h-4 bg-gray-200" />
               <div className="flex items-center gap-1.5 px-3">
                 <span className="w-3 h-3 rounded-full bg-gray-400 inline-block shrink-0" />
                 <span className="text-xs font-semibold text-gray-700">Básico</span>
               </div>
-              <div className="w-px h-4 bg-gray-200 mx-0" />
+              <div className="w-px h-4 bg-gray-200" />
               <div className="flex items-center gap-1.5 pl-3">
                 <span className="w-3 h-3 rounded-full bg-blue-200 border-2 border-blue-500 inline-block shrink-0" />
                 <span className="text-xs font-semibold text-gray-700">Ecosistema</span>
@@ -199,7 +321,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
         </div>
       </div>
 
-      {/* Mapa */}
+      {/* CAMBIO 6: Mapa con CartoDB Positron */}
       <div className="px-4 pt-4 pb-2 max-w-5xl mx-auto">
         <div className="rounded-2xl overflow-hidden shadow-md border border-gray-200" style={{ height: '55vh', minHeight: 320 }}>
           <MapContainer
@@ -209,12 +331,13 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
             zoomControl={true}
           >
             <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+              url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             />
 
             <FlyToLocation coords={flyTo} />
 
+            {/* Pins ecosistema (azul) */}
             {showInvestigados && LOCALES_INVESTIGADOS.map((local) => (
               <Marker
                 key={local.id}
@@ -223,20 +346,12 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
               >
                 <Popup minWidth={210} className="encasa-popup">
                   <div style={{ fontFamily: 'system-ui, sans-serif', padding: '4px 2px' }}>
-                    <div style={{ marginBottom: 6 }}>
-                      <span style={{
-                        background: '#DBEAFE',
-                        color: '#1D4ED8',
-                        fontSize: 9,
-                        fontWeight: 900,
-                        letterSpacing: '0.15em',
-                        padding: '2px 8px',
-                        borderRadius: 20,
-                        textTransform: 'uppercase',
-                      }}>
-                        🔵 Ecosistema venezolano
-                      </span>
-                    </div>
+                    <span style={{
+                      display: 'inline-block', marginBottom: 6,
+                      background: '#DBEAFE', color: '#1D4ED8',
+                      fontSize: 9, fontWeight: 900, letterSpacing: '0.15em',
+                      padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase',
+                    }}>🔵 Ecosistema venezolano</span>
                     <h3 style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 900, color: '#111827', lineHeight: 1.2 }}>
                       {local.nombre}
                     </h3>
@@ -244,131 +359,52 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
                       📍 {local.direccion} · {local.barrio}
                     </p>
                     {local.telefono && (
-                      <p style={{ margin: '0 0 8px', fontSize: 11, color: '#374151' }}>
-                        📞 {local.telefono}
-                      </p>
+                      <p style={{ margin: '0 0 8px', fontSize: 11, color: '#374151' }}>📞 {local.telefono}</p>
                     )}
                     {local.notas && (
-                      <p style={{ margin: '0 0 8px', fontSize: 10, color: '#9CA3AF', fontStyle: 'italic' }}>
-                        {local.notas}
-                      </p>
+                      <p style={{ margin: '0 0 8px', fontSize: 10, color: '#9CA3AF', fontStyle: 'italic' }}>{local.notas}</p>
                     )}
                     <div style={{
-                      background: '#EFF6FF',
-                      color: '#1D4ED8',
-                      textAlign: 'center',
-                      padding: '6px 0',
-                      borderRadius: 10,
-                      fontWeight: 800,
-                      fontSize: 10,
-                      letterSpacing: '0.06em',
-                    }}>
-                      AÚN NO EN ENCASA · POTENCIAL LEAD
-                    </div>
+                      background: '#EFF6FF', color: '#1D4ED8', textAlign: 'center',
+                      padding: '6px 0', borderRadius: 10, fontWeight: 800,
+                      fontSize: 10, letterSpacing: '0.06em',
+                    }}>AÚN NO EN ENCASA · POTENCIAL LEAD</div>
                   </div>
                 </Popup>
               </Marker>
             ))}
 
-            {storesWithCoords.map((store) => (
+            {/* CAMBIO 2: pins con badge de descuento → CAMBIO 3: abren drawer */}
+            {filteredStores.map((store) => (
               <Marker
                 key={store.id}
                 position={[store.lat!, store.lng!]}
-                icon={createPinIcon(store.plan)}
-              >
-                <Popup
-                  minWidth={220}
-                  className="encasa-popup"
-                >
-                  <div style={{ fontFamily: 'system-ui, sans-serif', padding: '4px 2px' }}>
-                    {/* Badge plan */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                      <span style={{
-                        background: store.plan === 'premium' ? '#FCD34D' : '#E5E7EB',
-                        color: store.plan === 'premium' ? '#78350F' : '#6B7280',
-                        fontSize: 9,
-                        fontWeight: 900,
-                        letterSpacing: '0.15em',
-                        padding: '2px 8px',
-                        borderRadius: 20,
-                        textTransform: 'uppercase',
-                      }}>
-                        {store.plan === 'premium' ? '⭐ Premium' : 'Básico'}
-                      </span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                        <span style={{ color: '#F59E0B', fontSize: 12 }}>★</span>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: '#374151' }}>{store.rating?.toFixed(1) ?? '—'}</span>
-                      </div>
-                    </div>
-
-                    {/* Nombre */}
-                    <h3 style={{ margin: '0 0 4px', fontSize: 15, fontWeight: 900, color: '#111827', lineHeight: 1.2 }}>
-                      {store.name}
-                    </h3>
-
-                    {/* Barrio */}
-                    <p style={{ margin: '0 0 8px', fontSize: 11, color: '#6B7280', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <span>📍</span> {store.neighborhood || store.location}
-                    </p>
-
-                    {/* Tags */}
-                    {store.tags && store.tags.length > 0 && (
-                      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 10 }}>
-                        {store.tags.slice(0, 3).map(tag => (
-                          <span key={tag} style={{ background: '#F3F4F6', color: '#374151', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 12 }}>
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* CTA */}
-                    <a
-                      href={`/#/catalog?store=${store.id}`}
-                      style={{
-                        display: 'block',
-                        background: 'linear-gradient(135deg, #FCD34D, #F59E0B)',
-                        color: '#78350F',
-                        textAlign: 'center',
-                        padding: '8px 0',
-                        borderRadius: 12,
-                        fontWeight: 900,
-                        fontSize: 11,
-                        letterSpacing: '0.08em',
-                        textDecoration: 'none',
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      Ver local →
-                    </a>
-                  </div>
-                </Popup>
-              </Marker>
+                icon={createPinIcon(store.plan, store.discount)}
+                eventHandlers={{ click: () => openDrawer(store) }}
+              />
             ))}
           </MapContainer>
         </div>
       </div>
 
-      {/* Lista de locales debajo del mapa */}
+      {/* Lista de locales */}
       <div className="px-4 pt-4 pb-6 max-w-5xl mx-auto">
         <h2 className="text-base font-bold text-gray-700 mb-3 px-1">
-          Locales en EnCasa ({storesWithCoords.length})
+          Locales en EnCasa ({filteredStores.length})
         </h2>
-        {storesWithCoords.length === 0 ? (
-          <p className="text-sm text-gray-400 px-1">No hay locales registrados todavía.</p>
+        {filteredStores.length === 0 ? (
+          <p className="text-sm text-gray-400 px-1">No hay locales con esos filtros.</p>
         ) : (
           <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
             <div className="divide-y divide-gray-100">
-              {storesWithCoords.map(store => (
+              {filteredStores.map(store => (
                 <a
                   key={store.id}
                   href={`/#/catalog?store=${store.id}`}
                   className="flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors"
                 >
-                  <div
-                    className="w-3 h-3 rounded-full shrink-0"
-                    style={{ background: store.plan === 'premium' ? '#FCD34D' : '#9CA3AF' }}
-                  />
+                  <div className="w-3 h-3 rounded-full shrink-0"
+                    style={{ background: store.plan === 'premium' ? '#FCD34D' : '#9CA3AF' }} />
                   <div className="min-w-0 flex-1">
                     <p className="text-gray-900 font-bold text-base truncate">{store.name}</p>
                     <p className="text-gray-500 text-sm flex items-center gap-1.5 mt-0.5">
@@ -379,6 +415,9 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
                       {store.rating?.toFixed(1) ?? '—'}
                     </p>
                   </div>
+                  <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-lg shrink-0">
+                    -{store.discount}%
+                  </span>
                   <ChevronRight size={16} className="text-gray-300 shrink-0" />
                 </a>
               ))}
@@ -387,7 +426,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
         )}
       </div>
 
-      {/* Lista ecosistema venezolano investigado */}
+      {/* Lista ecosistema investigado */}
       <div className="px-4 pt-2 pb-10 max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-3 px-1">
           <h2 className="text-base font-bold text-gray-700">
@@ -398,10 +437,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
         <div className="bg-white border border-blue-100 rounded-2xl shadow-sm overflow-hidden">
           <div className="divide-y divide-gray-100">
             {LOCALES_INVESTIGADOS.map(local => (
-              <div
-                key={local.id}
-                className="flex items-center gap-3 px-4 py-4"
-              >
+              <div key={local.id} className="flex items-center gap-3 px-4 py-4">
                 <div className="w-3 h-3 rounded-full shrink-0 bg-blue-200 border-2 border-blue-500" />
                 <div className="min-w-0 flex-1">
                   <p className="text-gray-900 font-bold text-sm truncate">{local.nombre}</p>
@@ -420,6 +456,189 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
                 <span className="text-xs text-gray-400 shrink-0 capitalize">{local.tipo}</span>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── CAMBIO 3: Drawer de detalle ──────────────────────────────────────── */}
+      {/* Overlay */}
+      {drawerOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-[1000]"
+          onClick={closeDrawer}
+        />
+      )}
+      {/* Panel */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-[1001] bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ${drawerOpen ? 'translate-y-0' : 'translate-y-full'}`}
+        style={{ maxHeight: '80vh', overflowY: 'auto' }}
+      >
+        {selectedStore && (
+          <>
+            {/* Imagen o fallback */}
+            <div className="relative h-40 bg-ven-yellow overflow-hidden rounded-t-3xl">
+              {selectedStore.img ? (
+                <img
+                  src={selectedStore.img}
+                  alt={selectedStore.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-ven-yellow to-yellow-500">
+                  <span className="text-2xl font-black text-yellow-900 text-center px-4">{selectedStore.name}</span>
+                </div>
+              )}
+              {/* Botón cerrar */}
+              <button
+                onClick={closeDrawer}
+                className="absolute top-3 right-3 w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-colors"
+              >
+                <X size={16} className="text-white" />
+              </button>
+              {/* Badge descuento sobre imagen */}
+              <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-black px-2 py-1 rounded-lg shadow">
+                -{selectedStore.discount}% esta semana
+              </span>
+            </div>
+
+            {/* Info */}
+            <div className="px-5 pt-4 pb-6">
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <h2 className="text-xl font-black text-gray-900 leading-tight">{selectedStore.name}</h2>
+                <span className={`shrink-0 text-xs font-black px-2.5 py-1 rounded-full ${selectedStore.plan === 'premium' ? 'bg-ven-yellow text-yellow-900' : 'bg-gray-100 text-gray-600'}`}>
+                  {selectedStore.plan === 'premium' ? '⭐ Premium' : 'Básico'}
+                </span>
+              </div>
+
+              <p className="text-gray-500 text-sm flex items-center gap-1.5 mb-4">
+                <MapPin size={13} className="shrink-0 text-gray-400" />
+                {selectedStore.neighborhood || selectedStore.location}
+                <span className="text-gray-300">·</span>
+                <Star size={13} className="text-ven-yellow shrink-0" fill="currentColor" />
+                <span className="font-semibold text-gray-700">{selectedStore.rating?.toFixed(1) ?? '—'}</span>
+              </p>
+
+              {selectedStore.tags && selectedStore.tags.length > 0 && (
+                <div className="flex gap-2 flex-wrap mb-4">
+                  {selectedStore.tags.slice(0, 4).map(tag => (
+                    <span key={tag} className="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <a
+                href={`/#/catalog?store=${selectedStore.id}`}
+                onClick={closeDrawer}
+                className="block w-full bg-ven-yellow text-black font-black text-center py-4 rounded-2xl hover:bg-yellow-400 active:scale-98 transition-all text-sm tracking-wide"
+              >
+                Ver local y pedir →
+              </a>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* ── CAMBIO 4: Filtros bottom sheet ───────────────────────────────────── */}
+      {filtersOpen && (
+        <div className="fixed inset-0 bg-black/30 z-[1000]" onClick={() => setFiltersOpen(false)} />
+      )}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-[1001] bg-white rounded-t-3xl shadow-2xl transition-transform duration-300 ${filtersOpen ? 'translate-y-0' : 'translate-y-full'}`}
+        style={{ maxHeight: '85vh', overflowY: 'auto' }}
+      >
+        <div className="px-5 pt-5 pb-8">
+          {/* Handle + header */}
+          <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-lg font-black text-gray-900">Filtros</h3>
+            <button onClick={() => setFiltersOpen(false)}>
+              <X size={20} className="text-gray-400" />
+            </button>
+          </div>
+
+          {/* ORDENAR */}
+          <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Ordenar</p>
+          <div className="flex gap-2 mb-5">
+            {(['rating', 'discount', 'distance'] as const).map(opt => (
+              <button
+                key={opt}
+                onClick={() => setPendingSort(opt)}
+                className={`flex-1 py-2.5 rounded-xl text-xs font-bold border transition-all ${pendingSort === opt ? 'bg-ven-yellow border-yellow-400 text-black' : 'bg-white border-gray-200 text-gray-600'}`}
+              >
+                {opt === 'rating' ? 'Mejor rating' : opt === 'discount' ? 'Mayor descuento' : 'Distancia'}
+              </button>
+            ))}
+          </div>
+
+          {/* CATEGORÍAS */}
+          <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Categorías</p>
+          <div className="grid grid-cols-3 gap-2 mb-5">
+            {CATEGORIAS.map(cat => {
+              const active = pendingCategoria === cat.label;
+              return (
+                <button
+                  key={cat.label}
+                  onClick={() => setPendingCategoria(active ? null : cat.label)}
+                  className={`flex flex-col items-center gap-1 py-3 px-2 rounded-xl border text-center transition-all ${active ? 'border-ven-yellow bg-ven-yellow/10' : 'border-gray-200 bg-gray-50'}`}
+                >
+                  <span className="text-2xl">{cat.emoji}</span>
+                  <span className="text-[10px] font-bold text-gray-700 leading-tight">{cat.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* BARRIOS */}
+          <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Barrio</p>
+          <div className="flex gap-2 overflow-x-auto pb-1 mb-5 scrollbar-hide">
+            {BARRIOS.map(b => {
+              const active = pendingBarrio === b;
+              return (
+                <button
+                  key={b}
+                  onClick={() => setPendingBarrio(active ? null : b)}
+                  className={`shrink-0 px-3 py-2 rounded-xl text-xs font-bold border whitespace-nowrap transition-all ${active ? 'border-ven-yellow bg-ven-yellow/10 text-black' : 'border-gray-200 bg-gray-50 text-gray-600'}`}
+                >
+                  {b}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* TIPO */}
+          <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Tipo</p>
+          <div className="flex gap-2 mb-6">
+            {(['comida', 'productos'] as const).map(t => {
+              const active = pendingTipo === t;
+              return (
+                <button
+                  key={t}
+                  onClick={() => setPendingTipo(active ? null : t)}
+                  className={`flex-1 py-2.5 rounded-xl text-xs font-bold border capitalize transition-all ${active ? 'bg-ven-yellow border-yellow-400 text-black' : 'bg-white border-gray-200 text-gray-600'}`}
+                >
+                  {t === 'comida' ? 'Comida preparada' : 'Productos'}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Footer acciones */}
+          <div className="flex gap-3">
+            <button
+              onClick={clearFilters}
+              className="flex-1 py-3.5 rounded-2xl border border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50 transition-all"
+            >
+              Limpiar filtros
+            </button>
+            <button
+              onClick={applyFilters}
+              className="flex-1 py-3.5 rounded-2xl bg-ven-yellow text-black font-black text-sm hover:bg-yellow-400 active:scale-95 transition-all"
+            >
+              Aplicar filtros
+            </button>
           </div>
         </div>
       </div>
