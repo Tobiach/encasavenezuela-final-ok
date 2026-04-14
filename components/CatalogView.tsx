@@ -33,6 +33,26 @@ function getActivePromo(storeId: string): PromoEntry | null {
 const DEMO_MODE = true;
 const STRICT_STORES = new Set(['minimarket-vibe', 'crispric', 'real-3', 'real-13']);
 
+// ── Variantes de productos (frontend only, sin DB) ───────────────────────────
+interface ProductVariant { label: string; multiplier: number; }
+const PRODUCT_VARIANTS: Record<string, ProductVariant[]> = {
+  'caraotas':        [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+  'chuleta':         [{ label: '1 kilo', multiplier: 1 }],
+  'huevo':           [{ label: 'Media docena', multiplier: 0.5 }, { label: 'Docena', multiplier: 1 }, { label: 'Maple x30', multiplier: 3 }],
+  'plátano':         [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+  'platano':         [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+  'hueso':           [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+  'queso semi duro': [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+};
+
+function getVariants(productName: string): ProductVariant[] | null {
+  const lower = productName.toLowerCase();
+  for (const [key, variants] of Object.entries(PRODUCT_VARIANTS)) {
+    if (lower.includes(key)) return variants;
+  }
+  return null;
+}
+
 const categoryIcons: Record<string, React.ElementType> = {
   'Todos': LayoutGrid,
   'Harinas': Utensils,
@@ -61,6 +81,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
   const [category, setCategory] = useState(location.state?.category || 'Todos');
   const [searchTerm, setSearchTerm] = useState('');
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
+  const [variantPicker, setVariantPicker] = useState<{ product: Product; variants: ProductVariant[] } | null>(null);
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
   const [deliveryModal, setDeliveryModal] = useState<PartnerStore | null>(null);
   const [mayorModal, setMayorModal] = useState(false);
@@ -614,20 +635,20 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
+                        const variants = getVariants(product.name);
+                        if (variants) {
+                          setVariantPicker({ product, variants });
+                          return;
+                        }
                         try {
                           const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
                           win.encasaTrack?.("add_to_cart", {
-                            productId: product.id,
-                            productName: product.name,
-                            price: product.price,
-                            category: product.category,
+                            productId: product.id, productName: product.name,
+                            price: product.price, category: product.category,
                             storeId: selectedStore?.id || (product as { storeId?: string }).storeId || null,
-                            source: "catalog",
-                            ts: Date.now(),
+                            source: "catalog", ts: Date.now(),
                           });
-                        } catch (err) {
-                          // silencio
-                        }
+                        } catch { /* silencio */ }
                         onAddToCart(product, selectedStore?.id);
                       }}
                       className="absolute bottom-2 right-2 w-9 h-9 bg-ven-yellow rounded-full flex items-center justify-center shadow-lg shadow-ven-yellow/40 hover:bg-yellow-400 active:scale-90 transition-all border-2 border-white shrink-0"
@@ -653,6 +674,78 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
           )}
         </div>
       )}
+      {/* ── Variant Picker (bottom sheet) ─────────────────────────────── */}
+      {variantPicker && (
+        <div
+          className="fixed inset-0 z-[150] flex items-end justify-center"
+          onClick={() => setVariantPicker(null)}
+        >
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-md bg-white rounded-t-3xl px-5 pt-5 pb-8 shadow-2xl animate-in slide-in-from-bottom duration-250"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Handle */}
+            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
+
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src={variantPicker.product.img}
+                alt={variantPicker.product.name}
+                className="w-12 h-12 rounded-xl object-cover border border-gray-100"
+              />
+              <div>
+                <p className="font-black text-[13px] text-gray-900 leading-tight">{variantPicker.product.name}</p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Elegí una opción</p>
+              </div>
+            </div>
+
+            {/* Opciones */}
+            <div className="flex flex-col gap-2">
+              {variantPicker.variants.map((v) => {
+                const finalPrice = Math.round(variantPicker.product.price * v.multiplier);
+                return (
+                  <button
+                    key={v.label}
+                    onClick={() => {
+                      const base = variantPicker.product;
+                      const variantProduct: Product = {
+                        ...base,
+                        id: base.id * 1000 + variantPicker.variants.indexOf(v),
+                        name: `${base.name} — ${v.label}`,
+                        price: finalPrice,
+                      };
+                      try {
+                        const win = window as unknown as { encasaTrack?: (event: string, data: Record<string, unknown>) => void };
+                        win.encasaTrack?.("add_to_cart", {
+                          productId: variantProduct.id, productName: variantProduct.name,
+                          price: variantProduct.price, variant: v.label,
+                          storeId: selectedStore?.id || null, source: "variant_picker", ts: Date.now(),
+                        });
+                      } catch { /* silencio */ }
+                      onAddToCart(variantProduct, selectedStore?.id);
+                      setVariantPicker(null);
+                    }}
+                    className="flex items-center justify-between w-full bg-gray-50 hover:bg-ven-yellow/10 border border-gray-100 hover:border-ven-yellow/40 rounded-2xl px-4 py-3.5 transition-all active:scale-[0.98] group"
+                  >
+                    <span className="font-black text-[13px] text-gray-800 group-hover:text-gray-900">{v.label}</span>
+                    <span className="font-black text-[15px] text-ven-yellow">${finalPrice.toLocaleString('es-AR')}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => setVariantPicker(null)}
+              className="mt-4 w-full text-center text-[11px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-600 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
