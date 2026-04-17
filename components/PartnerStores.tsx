@@ -226,8 +226,8 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
 
   return (
     <>
-    <section className={`bg-venezuela-dark transition-all duration-500 ${isFullView ? 'min-h-screen pt-4 pb-24' : 'py-16'}`}>
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+    <section className={`transition-all duration-500 ${isFullView ? 'bg-venezuela-dark min-h-screen pt-4 pb-24' : 'bg-white py-6 px-4'}`}>
+      <div className={`${isFullView ? 'max-w-7xl mx-auto px-4 md:px-6' : 'max-w-5xl mx-auto'}`}>
         
         {isFullView ? (
           <div className="animate-in fade-in duration-700">
@@ -334,7 +334,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           </>
         )}
 
-        <div className="mt-12 pt-8 border-t border-white/5 flex flex-col items-center gap-3 opacity-40">
+        <div className="mt-12 pt-8 border-t border-black/5 flex flex-col items-center gap-3 opacity-40">
            <div className="flex items-center gap-2">
              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
              <p className="text-[8px] font-black text-gray-500 uppercase tracking-[0.3em]">Sistema de Delivery Verificado</p>

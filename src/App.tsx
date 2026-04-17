@@ -549,7 +549,7 @@ const handlePurchase = (total: number) => {
         <Route path="/auth" element={<AuthView onLoginSuccess={handleLoginSuccess} user={user} />} />
         
         <Route path="/" element={
-          <main className="animate-in fade-in duration-700">
+          <main className="animate-in fade-in duration-700 bg-white">
             <Hero onCatalogClick={() => navigate('/catalog')} onLearnMoreClick={() => document.getElementById('how-it-works')?.scrollIntoView({behavior: 'smooth'})} />
             <BannerLoyalty />
             <div id="partner-stores">
