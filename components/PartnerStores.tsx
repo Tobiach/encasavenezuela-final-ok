@@ -169,7 +169,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
     const discount    = getStoreDiscount(store.plan, idx);
     return (
       <div
-        onClick={() => onOpenMap(store)}
+        onClick={() => { onOpenMap(store); navigate('/catalog'); }}
         className="group bg-white rounded-2xl overflow-hidden flex flex-col cursor-pointer shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
       >
         {/* Imagen */}
@@ -291,10 +291,10 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           </div>
         ) : (
           <>
-            {/* Header "Los más elegidos" */}
+            {/* Header */}
             <div className="mb-5 flex items-center justify-between">
               <div>
-                <h2 className="font-bold text-xl text-gray-900">Los más elegidos 💛</h2>
+                <h2 className="font-bold text-xl text-gray-900">Los favoritos del barrio 💛</h2>
                 <p className="text-xs text-gray-400 mt-0.5">Locales venezolanos verificados en CABA</p>
               </div>
               {onViewAll && (
@@ -319,9 +319,17 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
               if (nuevos.length === 0) return null;
               return (
                 <div className="mt-8">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Sparkles size={16} className="text-ven-yellow" />
-                    <h2 className="font-bold text-lg text-gray-900">Nuevos en EnCasa ✨</h2>
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <div className="flex items-center gap-2">
+                      <Sparkles size={16} className="text-ven-yellow" />
+                      <h2 className="font-bold text-lg text-gray-900">Nuevos en EnCasa ✨</h2>
+                    </div>
+                    <button
+                      onClick={onViewAll}
+                      className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-[#8B1A1A] transition-colors"
+                    >
+                      Ver todos <ChevronRight size={14} />
+                    </button>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
                     {nuevos.map((store, idx) => (

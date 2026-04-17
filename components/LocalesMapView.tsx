@@ -24,48 +24,75 @@ function getDiscount(plan: 'premium' | 'basic', index: number): number {
     : BASIC_DISCOUNTS[index % BASIC_DISCOUNTS.length];
 }
 
-// ── CAMBIO 2: pin con badge de descuento ──────────────────────────────────────
+// ── Pins profesionales paleta bandera ────────────────────────────────────────
 function createPinIcon(plan: 'premium' | 'basic', discount: number): L.DivIcon {
-  const color  = plan === 'premium' ? '#FCD34D' : '#9CA3AF';
-  const border = plan === 'premium' ? '#F59E0B' : '#6B7280';
+  const isP = plan === 'premium';
   return L.divIcon({
-    html: `<div style="position:relative;width:32px;height:32px">
+    html: `<div style="position:relative;width:40px;height:44px">
       <div style="
-        background:${color};
-        width:32px;height:32px;
+        background:${isP ? 'linear-gradient(135deg,#D4AF37,#C9A227)' : 'linear-gradient(135deg,#8B1A1A,#6F1414)'};
+        width:36px;height:36px;
         border-radius:50% 50% 50% 0;
         transform:rotate(-45deg);
-        border:2px solid ${border};
-        box-shadow:0 2px 8px rgba(0,0,0,0.25)
+        border:3px solid white;
+        box-shadow:0 4px 12px rgba(${isP ? '212,175,55' : '139,26,26'},0.5)
       "></div>
       <span style="
-        position:absolute;top:-10px;left:-6px;
-        background:#ef4444;color:white;
-        font-size:9px;font-weight:900;
-        padding:1px 4px;border-radius:4px;
+        position:absolute;top:-8px;right:-4px;
+        background:#8B1A1A;color:white;
+        font-size:8px;font-weight:900;
+        padding:2px 4px;border-radius:6px;
+        box-shadow:0 1px 4px rgba(0,0,0,0.25);
         white-space:nowrap;
-        box-shadow:0 1px 3px rgba(0,0,0,0.2)
       ">-${discount}%</span>
     </div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -36],
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -40],
     className: '',
   });
 }
 
-// Pin azul para locales del ecosistema (no registrados en EnCasa)
+// Pin gris "Próximamente"
+const PIN_PROXIMO = L.divIcon({
+  html: `<div style="
+    background:#E5E7EB;
+    width:28px;height:28px;
+    border-radius:50% 50% 50% 0;
+    transform:rotate(-45deg);
+    border:2px solid white;
+    box-shadow:0 2px 6px rgba(0,0,0,0.15)
+  "></div>`,
+  iconSize: [28, 28],
+  iconAnchor: [14, 28],
+  popupAnchor: [0, -32],
+  className: '',
+});
+
+// Pin azul para locales del ecosistema
 const PIN_INVESTIGADO = L.divIcon({
   html: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 32 40">
     <path d="M16 0C7.163 0 0 7.163 0 16c0 10 16 24 16 24S32 26 32 16C32 7.163 24.837 0 16 0z"
-      fill="#DBEAFE" stroke="#3B82F6" stroke-width="2.5"/>
-    <circle cx="16" cy="16" r="5" fill="#3B82F6" opacity="0.85"/>
+      fill="#DBEAFE" stroke="#002FA7" stroke-width="2.5"/>
+    <circle cx="16" cy="16" r="5" fill="#002FA7" opacity="0.85"/>
   </svg>`,
   className: '',
   iconSize: [28, 36],
   iconAnchor: [14, 36],
   popupAnchor: [0, -38],
 });
+
+// Pins ficticios "Próximamente" en Boedo y Caballito
+const PROXIMOS_COORDS: [number, number][] = [
+  [-34.6289, -58.4234],
+  [-34.6312, -58.4198],
+  [-34.6267, -58.4312],
+  [-34.6334, -58.4267],
+  [-34.6401, -58.4189],
+  [-34.6378, -58.4223],
+  [-34.6423, -58.4156],
+  [-34.6445, -58.4201],
+];
 
 // ── Componente para re-centrar mapa ──────────────────────────────────────────
 const FlyToLocation: React.FC<{ coords: [number, number] | null }> = ({ coords }) => {
@@ -295,7 +322,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
 
           {/* Leyenda + toggle ecosistema */}
           <div className="flex items-center gap-3 mt-4 flex-wrap">
-            <div className="flex items-center gap-0 bg-white border border-gray-100 rounded-xl shadow-sm w-fit px-3 py-2">
+            <div className="flex items-center gap-0 bg-white border border-gray-100 rounded-xl shadow-sm w-fit px-3 py-2 flex-wrap">
               <div className="flex items-center gap-1.5 pr-3">
                 <span className="w-3 h-3 rounded-full bg-ven-yellow inline-block shadow-sm shadow-yellow-400/40 shrink-0" />
                 <span className="text-xs font-semibold text-gray-700">Premium</span>
@@ -309,6 +336,11 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
               <div className="flex items-center gap-1.5 pl-3">
                 <span className="w-3 h-3 rounded-full bg-blue-200 border-2 border-blue-500 inline-block shrink-0" />
                 <span className="text-xs font-semibold text-gray-700">Ecosistema</span>
+              </div>
+              <div className="w-px h-4 bg-gray-200 mx-3" />
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-gray-200 border-2 border-white inline-block shrink-0" />
+                <span className="text-xs font-semibold text-gray-400">Próximamente</span>
               </div>
             </div>
             <button
@@ -374,7 +406,20 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
               </Marker>
             ))}
 
-            {/* CAMBIO 2: pins con badge de descuento → CAMBIO 3: abren drawer */}
+            {/* Pins "Próximamente" */}
+            {PROXIMOS_COORDS.map((coords, i) => (
+              <Marker key={`proximo-${i}`} position={coords} icon={PIN_PROXIMO}>
+                <Popup minWidth={200}>
+                  <div style={{ fontFamily: 'system-ui, sans-serif', padding: '4px 2px' }}>
+                    <b style={{ fontSize: 13, color: '#111827' }}>Próximamente en EnCasa 🇻🇪</b>
+                    <br />
+                    <small style={{ color: '#6B7280' }}>Este local aún no está en la plataforma</small>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+
+            {/* Pins activos con badge de descuento */}
             {filteredStores.map((store) => (
               <Marker
                 key={store.id}

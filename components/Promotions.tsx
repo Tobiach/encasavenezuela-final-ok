@@ -73,7 +73,7 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                        <Store size={12} className="text-ven-yellow" />
                        <span className="text-[9px] font-black uppercase tracking-[0.2em]">{store?.name || 'Local Aliado'}</span>
                     </div>
-                    <h3 className="text-lg md:text-2xl font-black mb-2 group-hover:text-venezuela-orange transition-colors leading-tight uppercase tracking-tight text-venezuela-brown">
+                    <h3 className="text-lg md:text-2xl font-black mb-2 group-hover:text-[#8B1A1A] transition-colors leading-tight uppercase tracking-tight text-gray-900">
                       {combo.name}
                     </h3>
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -90,11 +90,11 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                         {combo.oldPrice && (
                           <span className="text-[11px] text-gray-400 line-through font-bold mb-0.5">${combo.oldPrice}</span>
                         )}
-                        <span className="text-2xl md:text-3xl font-black text-venezuela-brown tracking-tighter">${combo.price}</span>
+                        <span className="text-2xl md:text-3xl font-black text-gray-900 tracking-tighter">${combo.price}</span>
                       </div>
                       <button 
                         onClick={(e) => { e.stopPropagation(); onAddToCart(combo, combo.storeId); }}
-                        className="bg-gradient-to-br from-ven-yellow to-venezuela-orange text-white p-3.5 md:p-4 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-2xl shadow-venezuela-orange/30 border border-white/20"
+                        className="bg-[#8B1A1A] text-white p-3.5 md:p-4 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-2xl shadow-[#8B1A1A]/30"
                       >
                         <Plus size={24} strokeWidth={4} />
                       </button>
@@ -154,11 +154,11 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                       {combo.oldPrice && (
                         <span className="text-[11px] text-gray-400 line-through font-bold mb-0.5">${combo.oldPrice}</span>
                       )}
-                      <span className="text-2xl md:text-3xl font-black text-venezuela-brown tracking-tighter">${combo.price}</span>
+                      <span className="text-2xl md:text-3xl font-black text-gray-900 tracking-tighter">${combo.price}</span>
                     </div>
                     <button 
                       onClick={(e) => { e.stopPropagation(); onAddToCart(combo, combo.storeId); }}
-                      className="bg-gradient-to-br from-ven-yellow to-venezuela-orange text-white p-3.5 md:p-4 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-2xl shadow-venezuela-orange/30 border border-white/20"
+                      className="bg-[#8B1A1A] text-white p-3.5 md:p-4 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-2xl shadow-[#8B1A1A]/30"
                     >
                       <Plus size={24} strokeWidth={4} />
                     </button>
