@@ -99,7 +99,7 @@ const Offers: React.FC = () => {
           </div>
           <button
             onClick={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate('/catalog'); }}
-            className="w-9 h-9 bg-[#FF6B35]/10 border border-[#FF6B35]/20 rounded-full flex items-center justify-center shadow-sm text-[#FF6B35] hover:bg-[#FF6B35]/20 transition-colors"
+            className="w-9 h-9 bg-ven-yellow/15 border border-ven-yellow/30 rounded-full flex items-center justify-center shadow-sm text-ven-yellow hover:bg-ven-yellow/25 transition-colors"
           >
             <ArrowRight size={16} />
           </button>
@@ -114,7 +114,7 @@ const Offers: React.FC = () => {
                 onClick={() => setActiveSection(activeSection === card.key ? null : card.key)}
                 className={`relative rounded-[24px] overflow-hidden h-40 cursor-pointer active:scale-95 transition-all border-2 shadow-xl ${
                   activeSection === card.key
-                    ? 'border-[#FF6B35] shadow-[0_0_24px_rgba(255,107,53,0.3)]'
+                    ? 'border-ven-yellow shadow-[0_0_24px_rgba(212,175,55,0.35)]'
                     : 'border-transparent'
                 }`}
               >
@@ -132,8 +132,8 @@ const Offers: React.FC = () => {
                   <p className="text-[9px] text-white/80 font-semibold mt-0.5 leading-tight line-clamp-2 drop-shadow-sm">{card.subtitle}</p>
                 </div>
                 {activeSection === card.key && (
-                  <div className="absolute top-2.5 right-2.5 w-5 h-5 bg-[#FF6B35] rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-[8px] font-black text-white">✓</span>
+                  <div className="absolute top-2.5 right-2.5 w-5 h-5 bg-ven-yellow rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-[8px] font-black text-black">✓</span>
                   </div>
                 )}
               </div>
@@ -162,7 +162,7 @@ const Offers: React.FC = () => {
                   <div
                     key={`${product.id}-${idx}`}
                     onClick={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate('/catalog', { state: { category: product.category } }); }}
-                    className="snap-start shrink-0 w-[152px] bg-white border-2 border-black/5 rounded-[24px] p-3 cursor-pointer hover:border-[#FF6B35] active:scale-95 transition-all"
+                    className="snap-start shrink-0 w-[152px] bg-white border-2 border-black/5 rounded-[24px] p-3 cursor-pointer hover:border-ven-yellow active:scale-95 transition-all"
                   >
                     <div className="aspect-square rounded-[18px] overflow-hidden mb-2 border border-black/5 bg-gray-50">
                       <img
@@ -172,7 +172,7 @@ const Offers: React.FC = () => {
                         referrerPolicy="no-referrer"
                       />
                     </div>
-                    <span className="block text-[8px] font-black text-[#FF6B35] uppercase tracking-widest truncate mb-1">
+                    <span className="block text-[8px] font-black text-ven-yellow uppercase tracking-widest truncate mb-1">
                       {product.category}
                     </span>
                     <p className="text-[11px] font-black text-gray-900 uppercase tracking-tight line-clamp-2 leading-tight mb-2">
@@ -194,12 +194,12 @@ const Offers: React.FC = () => {
         <div className="relative pt-10 border-t border-black/5">
           {/* Header */}
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-md shrink-0" style={{ background: 'linear-gradient(135deg,#FF6B35,#E55A25)' }}>
-              <Flame size={18} fill="currentColor" className="text-white" />
+            <div className="w-9 h-9 bg-ven-yellow rounded-xl flex items-center justify-center shadow-md shrink-0">
+              <Flame size={18} fill="currentColor" className="text-black" />
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-[#2D1618] leading-none">
-                Combos <span className="text-[#FF6B35]">Relámpago</span>
+                Combos <span className="text-ven-yellow">Relámpago</span>
               </h3>
               <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Ofertas por tiempo limitado</p>
             </div>
@@ -257,7 +257,7 @@ const Offers: React.FC = () => {
                           {promo.oldPrice && (
                             <span className="block text-[10px] text-gray-400 line-through font-semibold leading-none mb-0.5">${promo.oldPrice}</span>
                           )}
-                          <span className="font-black text-[22px] tracking-tighter leading-none" style={{ color: '#FF6B35' }}>${promo.price}</span>
+                          <span className="text-ven-yellow font-black text-[22px] tracking-tighter leading-none">${promo.price}</span>
                         </div>
                         <div className="w-9 h-9 bg-ven-yellow/15 rounded-xl flex items-center justify-center shrink-0">
                           <ArrowRight size={15} className="text-gray-700" />
