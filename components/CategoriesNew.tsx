@@ -19,31 +19,38 @@ const CategoriesNew: React.FC = () => {
 
         <div
           className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', touchAction: 'pan-x' }}
+          style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
         >
           {categories.map((cat) => (
             <div
               key={cat.name}
               onClick={() => handleCategoryClick(cat.name)}
-              className="snap-start shrink-0 min-w-[120px] h-[100px] rounded-2xl overflow-hidden relative cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-200 shadow-sm"
+              className="snap-start shrink-0 active:scale-95 transition-transform duration-200"
+              style={{ width: 120, height: 100, flexShrink: 0 }}
             >
-              <img
-                src={cat.image}
-                alt={cat.name}
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              <p className="absolute bottom-2 left-2 right-2 text-white font-bold text-[11px] leading-tight">
-                {cat.name}
-              </p>
+              <div
+                className="relative rounded-2xl overflow-hidden shadow-sm w-full h-full"
+                style={{ width: 120, height: 100 }}
+              >
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                  draggable={false}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+                <p className="absolute bottom-0 left-0 right-0 px-2 pb-2 text-white font-bold text-[11px] leading-tight">
+                  {cat.name}
+                </p>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
       <style>{`
-        section div::-webkit-scrollbar { display: none; }
+        .cat-scroll::-webkit-scrollbar { display: none; }
       `}</style>
     </section>
   );
