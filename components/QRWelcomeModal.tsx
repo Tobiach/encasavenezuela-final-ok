@@ -103,7 +103,7 @@ const QRWelcomeModal: React.FC<QRWelcomeModalProps> = ({ storeId, onDone }) => {
           {/* Nombre + Apellido */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block">
+              <label className="text-[9px] font-semibold text-gray-700 uppercase tracking-widest mb-1.5 block">
                 Nombre <span className="text-venezuela-orange">*</span>
               </label>
               <input
@@ -112,11 +112,11 @@ const QRWelcomeModal: React.FC<QRWelcomeModalProps> = ({ storeId, onDone }) => {
                 placeholder="María"
                 value={form.nombre}
                 onChange={e => set('nombre', e.target.value)}
-                className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3.5 px-4 text-sm text-venezuela-dark placeholder:text-gray-300 focus:outline-none focus:border-ven-yellow transition-all"
+                className="w-full bg-white border border-gray-300 rounded-2xl py-3.5 px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-ven-yellow transition-all"
               />
             </div>
             <div>
-              <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block">
+              <label className="text-[9px] font-semibold text-gray-700 uppercase tracking-widest mb-1.5 block">
                 Apellido <span className="text-venezuela-orange">*</span>
               </label>
               <input
@@ -125,14 +125,14 @@ const QRWelcomeModal: React.FC<QRWelcomeModalProps> = ({ storeId, onDone }) => {
                 placeholder="González"
                 value={form.apellido}
                 onChange={e => set('apellido', e.target.value)}
-                className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3.5 px-4 text-sm text-venezuela-dark placeholder:text-gray-300 focus:outline-none focus:border-ven-yellow transition-all"
+                className="w-full bg-white border border-gray-300 rounded-2xl py-3.5 px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-ven-yellow transition-all"
               />
             </div>
           </div>
 
           {/* Email */}
           <div>
-            <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block">
+            <label className="text-[9px] font-semibold text-gray-700 uppercase tracking-widest mb-1.5 block">
               Email <span className="text-venezuela-orange">*</span>
             </label>
             <input
@@ -141,13 +141,13 @@ const QRWelcomeModal: React.FC<QRWelcomeModalProps> = ({ storeId, onDone }) => {
               placeholder="maria@ejemplo.com"
               value={form.email}
               onChange={e => set('email', e.target.value)}
-              className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3.5 px-4 text-sm text-venezuela-dark placeholder:text-gray-300 focus:outline-none focus:border-ven-yellow transition-all"
+              className="w-full bg-white border border-gray-300 rounded-2xl py-3.5 px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-ven-yellow transition-all"
             />
           </div>
 
           {/* Cumpleaños */}
           <div>
-            <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block">
+            <label className="text-[9px] font-semibold text-gray-700 uppercase tracking-widest mb-1.5 block">
               🎂 Fecha de cumpleaños <span className="text-venezuela-orange">*</span>
             </label>
             <input
@@ -156,7 +156,7 @@ const QRWelcomeModal: React.FC<QRWelcomeModalProps> = ({ storeId, onDone }) => {
               placeholder="Tu fecha de cumpleaños"
               value={form.fecha_cumpleanos}
               onChange={e => set('fecha_cumpleanos', e.target.value)}
-              className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3.5 px-4 text-sm text-venezuela-dark focus:outline-none focus:border-ven-yellow transition-all"
+              className="w-full bg-white border border-gray-300 rounded-2xl py-3.5 px-4 text-sm text-gray-900 focus:outline-none focus:border-ven-yellow transition-all"
             />
             <p className="text-[9px] text-gray-400 font-medium mt-1.5 ml-1">
               Te enviamos un regalo especial el día de tu cumpleaños 🎁

@@ -292,7 +292,7 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
         {/* ── INFO PRINCIPAL ────────────────────────── */}
         <div className="space-y-5">
           <div>
-            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-tight mb-2 text-venezuela-brown">
+            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-tight mb-2 text-gray-900">
               {combo.name}
             </h1>
             {combo.usageInfo && (
@@ -372,7 +372,7 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
       {/* ── QUÉ INCLUYE ───────────────────────────── */}
       {comboItems.length > 0 && (
         <div className="mt-10">
-          <h3 className="text-lg font-black uppercase tracking-tight mb-5 flex items-center gap-2.5 text-venezuela-brown">
+          <h3 className="text-lg font-black uppercase tracking-tight mb-5 flex items-center gap-2.5 text-gray-900">
             <PackageCheck className="text-venezuela-orange" size={20} />
             ¿Qué incluye este combo?
           </h3>
@@ -381,13 +381,13 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
             {comboItems.map((item, index) => (
               <div
                 key={index}
-                className="bg-white hover:bg-gray-50 px-4 py-3.5 rounded-2xl border border-black/5 shadow-sm flex items-center gap-3 transition-colors"
+                className="bg-white hover:bg-gray-50 px-4 py-3.5 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-3 transition-colors"
               >
                 <span className="text-xl shrink-0 w-8 text-center leading-none">{item.emoji || '✓'}</span>
                 <div className="min-w-0">
-                  <p className="text-sm font-black text-venezuela-brown leading-snug mb-0.5 truncate">{item.name}</p>
+                  <p className="text-sm font-black text-gray-800 leading-snug mb-0.5 truncate">{item.name}</p>
                   {(item.qty || item.yield) && (
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                    <p className="text-[10px] text-gray-600 font-bold uppercase tracking-widest">
                       {item.qty}{item.yield ? ` · rinde ${item.yield}` : ''}
                     </p>
                   )}

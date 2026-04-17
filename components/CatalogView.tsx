@@ -117,10 +117,20 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
         freeDelivery: true,
         storeName: target.name,
       }));
-      // Mostrar modal de captura solo si el usuario no está registrado
+    
+      const hash = window.location.hash;
+      const hashQuery = hash.includes('?') ? hash.split('?')[1] : '';
+      const hashParams = new URLSearchParams(hashQuery);
+
+
+      const hasQrStoreParam = Boolean(hashParams.get('store'));
       const alreadyRegistered = localStorage.getItem('encasa_lead_email');
-      if (!alreadyRegistered) {
-        setTimeout(() => setLeadModal({ storeId: target.id, storeName: target.name }), 800);
+
+
+      if (hasQrStoreParam && !alreadyRegistered) {
+        setTimeout(() => {
+          setLeadModal({ storeId: target.id, storeName: target.name });
+        }, 800);
       }
     }
 

@@ -268,7 +268,7 @@ const Offers: React.FC = () => {
                       <div className="flex items-end justify-between pt-1.5">
                         <div>
                           {promo.oldPrice && (
-                            <span className="block text-[10px] text-gray-300 line-through font-semibold leading-none mb-0.5">${promo.oldPrice}</span>
+                            <span className="block text-[10px] text-gray-400 line-through font-semibold leading-none mb-0.5">${promo.oldPrice}</span>
                           )}
                           <span className="text-venezuela-orange font-black text-[22px] tracking-tighter leading-none">${promo.price}</span>
                         </div>
