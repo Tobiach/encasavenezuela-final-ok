@@ -15,6 +15,8 @@ import LoyaltyView from '../components/LoyaltyView';
 import HowItWorks from '../components/HowItWorks';
 import Faq from '../components/Faq';
 import StoreMapView from '../components/StoreMapView';
+import BannerLoyalty from '../components/BannerLoyalty';
+import BottomNav from '../components/BottomNav';
 const LocalesMapView = React.lazy(() => import('../components/LocalesMapView'));
 import PurchaseNotification from '../components/PurchaseNotification';
 import ContextRecommendations from '../components/ContextRecommendations';
@@ -520,7 +522,7 @@ const handlePurchase = (total: number) => {
   }
 
   return (
-    <div className="min-h-screen bg-venezuela-dark selection:bg-ven-yellow/30 pt-28">
+    <div className="min-h-screen bg-venezuela-dark selection:bg-ven-yellow/30 pt-40 lg:pt-28 pb-20 lg:pb-0">
       <ScrollManager />
       <Navbar 
         onNavHome={() => navigate('/')} 
@@ -549,20 +551,19 @@ const handlePurchase = (total: number) => {
         <Route path="/" element={
           <main className="animate-in fade-in duration-700">
             <Hero onCatalogClick={() => navigate('/catalog')} onLearnMoreClick={() => document.getElementById('how-it-works')?.scrollIntoView({behavior: 'smooth'})} />
-            <div id="categories"><CategoriesNew /></div>
-            <Offers />
+            <BannerLoyalty />
             <div id="partner-stores">
               <PartnerStores
                 stores={stores}
                 onViewAll={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate('/partners'); }}
                 onOpenMap={handleSelectStore}
-                limit={2}
+                limit={4}
               />
             </div>
+            <Offers />
             <ContextRecommendations onAddToCart={handleAddToCart} />
-            <LastOrders onAddToCart={handleAddToCart} />
+            <div id="categories"><CategoriesNew /></div>
             <div id="how-it-works"><HowItWorks /></div>
-            <Promotions onAddToCart={handleAddToCart} />
             <Features />
             <Testimonials />
             <Faq />
@@ -649,9 +650,11 @@ const handlePurchase = (total: number) => {
         />
       )}
 
-      <div className="fixed bottom-10 right-10 z-[100] flex flex-col gap-4 items-end">
+      <div className="fixed bottom-20 right-5 lg:bottom-10 lg:right-10 z-[100] flex flex-col gap-4 items-end">
         <AIAssistantButton onClick={() => setIsAIChatOpen(true)} />
       </div>
+
+      <BottomNav />
 
       {/* Modal de bienvenida QR */}
       {qrWelcomeStoreId && (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, ChevronRight, ArrowLeft, Share2, Check, AlertCircle, MapPin } from 'lucide-react';
+import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, ChevronRight, ArrowLeft, Share2, Check, AlertCircle, MapPin, Search } from 'lucide-react';
 import { Product, User } from '../types';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LOGO_ENCASA_IMAGE } from '../src/assets/imagenes';
@@ -95,7 +95,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/5 py-5 px-6 transition-shadow duration-300 ${isScrolled ? 'shadow-xl shadow-black/10' : 'shadow-sm'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 lg:bg-white/95 lg:backdrop-blur-xl bg-ven-yellow border-b border-black/5 lg:py-5 py-3 px-4 lg:px-6 transition-shadow duration-300 ${isScrolled ? 'shadow-xl shadow-black/10' : 'shadow-sm'}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
 
           {/* LOGO + BRAND — Desktop only */}
@@ -128,28 +128,18 @@ const Navbar: React.FC<NavbarProps> = ({
             />
           </div>
 
-          {/* CARRITO + MAPA — Mobile only, izquierda */}
-          <div className="lg:hidden flex items-center gap-2">
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className={`relative p-3 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-gradient-to-br from-[#FFCC00] via-[#F58220] to-[#E86D00] text-white border-yellow-200 shadow-[0_0_35px_rgba(255,204,0,0.7)]' : 'bg-black/5 border-black/10 text-venezuela-brown'}`}
-            >
-              <ShoppingCart size={20} className={bump ? 'animate-bounce' : ''} />
-              {cartCount > 0 && (
-                <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-red text-white' : 'bg-ven-yellow text-venezuela-dark'}`}>
-                  {cartCount}
-                </span>
-              )}
-            </button>
-
-            <button
-              onClick={() => navTo('/locales-map')}
-              className="flex flex-col items-center justify-center gap-0.5 px-2.5 py-2 bg-black/5 border border-black/10 rounded-xl text-venezuela-brown active:scale-95 transition-all hover:border-ven-yellow/40"
-            >
-              <MapPin size={17} className="text-ven-yellow" />
-              <span className="text-[7px] font-black uppercase tracking-wider leading-none text-venezuela-brown">Locales</span>
-            </button>
-          </div>
+          {/* CARRITO — Mobile only, izquierda */}
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className={`lg:hidden relative p-2.5 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-venezuela-dark text-ven-yellow border-venezuela-dark shadow-lg' : 'bg-black/10 border-black/15 text-venezuela-dark'}`}
+          >
+            <ShoppingCart size={20} className={bump ? 'animate-bounce' : ''} />
+            {cartCount > 0 && (
+              <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-yellow text-venezuela-dark' : 'bg-venezuela-dark text-white'}`}>
+                {cartCount}
+              </span>
+            )}
+          </button>
 
           <div className="hidden lg:flex items-center gap-10">
             <button onClick={onNavHome} className="text-[11px] font-black uppercase tracking-[0.2em] text-venezuela-brown hover:text-ven-yellow transition-colors border-b-2 border-transparent hover:border-ven-yellow pb-1">Inicio</button>
@@ -230,10 +220,28 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* HAMBURGUESA — Mobile only, derecha */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-3 bg-black/5 border border-black/10 rounded-xl text-venezuela-brown transition-all active:scale-95"
+            className="lg:hidden p-2.5 bg-black/10 border border-black/10 rounded-xl text-venezuela-dark transition-all active:scale-95"
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
+        </div>
+
+        {/* BARRA DE BÚSQUEDA — Mobile only */}
+        <div className="lg:hidden mt-2">
+          <div className="relative">
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Buscá locales y productos"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  navigate('/partners');
+                  (e.target as HTMLInputElement).blur();
+                }
+              }}
+              className="w-full bg-white border border-gray-200 rounded-2xl pl-9 pr-4 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-ven-yellow/60 transition-all"
+            />
+          </div>
         </div>
       </nav>
 

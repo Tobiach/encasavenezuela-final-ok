@@ -1,6 +1,15 @@
 
 import React, { useState, useMemo } from 'react';
-import { MapPin, Star, ChevronRight, ArrowLeft, Clock, Search, Zap, CheckCircle } from 'lucide-react';
+import { MapPin, Star, ChevronRight, ArrowLeft, Clock, Search, Zap, CheckCircle, Sparkles } from 'lucide-react';
+
+// Descuentos deterministas por posición — solo visual en home preview
+const DISCOUNTS_PREMIUM = [20, 25, 30, 15];
+const DISCOUNTS_BASIC   = [10, 12, 15, 18];
+function getStoreDiscount(plan: string, idx: number): number {
+  return plan === 'premium'
+    ? DISCOUNTS_PREMIUM[idx % DISCOUNTS_PREMIUM.length]
+    : DISCOUNTS_BASIC[idx % DISCOUNTS_BASIC.length];
+}
 import { PartnerStore } from '../types';
 import { useNavigate } from 'react-router-dom';
 import { useOrderCounts } from '../lib/hooks/useOrderCounts';
@@ -155,79 +164,61 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
     );
   };
 
-  const PreviewCard: React.FC<{ store: PartnerStore }> = ({ store }) => {
+  const PreviewCard: React.FC<{ store: PartnerStore; idx: number }> = ({ store, idx }) => {
     const activePromo = getActivePromo(store.id);
+    const discount    = getStoreDiscount(store.plan, idx);
     return (
       <div
         onClick={() => onOpenMap(store)}
-        className={`group bg-white rounded-[32px] border-2 overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]'}`}
+        className="group bg-white rounded-2xl overflow-hidden flex flex-col cursor-pointer shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
       >
+        {/* Imagen */}
         <div className="aspect-[4/3] overflow-hidden relative">
-          <img src={store.img} alt={store.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40" />
-          <div className="absolute top-2 left-2 flex flex-col gap-1">
-            <div className="bg-black/30 backdrop-blur-sm text-white/55 px-1.5 py-0.5 rounded-md text-[7px] font-bold uppercase tracking-wide flex items-center gap-0.5 border border-white/10">
-              <CheckCircle size={6} /> VERIFICADO
+          <img src={store.img} alt={store.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          {/* Badge descuento */}
+          <div className="absolute top-2 left-2 bg-white text-gray-900 font-bold text-xs rounded-full px-2 py-0.5 shadow-sm flex items-center gap-1">
+            {discount}% OFF 🎁
+          </div>
+          {/* Badge premium */}
+          {store.plan === 'premium' && (
+            <div className="absolute top-2 right-2 bg-gradient-to-r from-[#D4AF37] to-[#E5C76B] text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-sm">
+              <Zap size={8} fill="currentColor" /> TOP
             </div>
-            {store.plan === 'premium' && (
-              <div className="bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
-                <Zap size={8} fill="currentColor" /> RECOMENDADO
-              </div>
-            )}
-            {activePromo && (
-              <div
-                className="bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-orange-500/40 border border-white/20 cursor-pointer"
-                onClick={e => { e.stopPropagation(); setPromoModal({ store, promo: activePromo }); }}
-              >
-                🔥 OFERTA
-              </div>
-            )}
-          </div>
-          <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20">
-            <Star size={10} className="fill-ven-yellow text-ven-yellow" />
-            <span className="text-[11px] font-black text-white">{store.rating.toFixed(1)}</span>
-          </div>
-        </div>
-        <div className="p-5 flex-grow flex flex-col">
-          <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-1 text-sm md:text-base group-hover:text-ven-yellow transition-colors">{store.name}</h3>
+          )}
+          {/* Rating */}
+          {!store.plan || store.plan !== 'premium' ? (
+            <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded-full flex items-center gap-1">
+              <Star size={9} className="fill-ven-yellow text-ven-yellow" />
+              <span className="text-[10px] font-black text-white">{store.rating.toFixed(1)}</span>
+            </div>
+          ) : (
+            <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded-full flex items-center gap-1">
+              <Star size={9} className="fill-ven-yellow text-ven-yellow" />
+              <span className="text-[10px] font-black text-white">{store.rating.toFixed(1)}</span>
+            </div>
+          )}
           {activePromo && (
             <div
-              className="bg-orange-50 border border-orange-200 rounded-xl px-2.5 py-1.5 mb-2 flex items-center gap-1.5 cursor-pointer hover:bg-orange-100 transition-colors animate-promo-glow active:scale-95"
+              className="absolute bottom-2 left-2 bg-orange-500 text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase cursor-pointer"
               onClick={e => { e.stopPropagation(); setPromoModal({ store, promo: activePromo }); }}
             >
-              <span className="text-[10px] shrink-0">🔥</span>
-              <p className="text-[8px] font-black text-orange-600 uppercase tracking-wide truncate flex-1">{activePromo.label}</p>
-              <ChevronRight size={9} className="text-orange-400 shrink-0" />
-            </div>
-          )}
-          {orderCounts[store.id] > 0 && (
-            <p className="text-[9px] font-bold text-gray-400 flex items-center gap-1 mb-1">📦 {orderCounts[store.id]} pedidos este mes</p>
-          )}
-          <div className="space-y-1.5 mb-3">
-            <div className="flex items-center gap-1.5 text-[9px] font-black text-gray-500 uppercase tracking-widest">
-              <MapPin size={10} className="text-ven-red shrink-0" /> {store.neighborhood}
-            </div>
-            <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-500">
-              <Clock size={10} className="text-ven-yellow shrink-0" /> {store.deliveryTime || '30-45 min'}
-            </div>
-          </div>
-          <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-lg px-2 py-1.5 mb-auto">
-            <p className="text-[8px] font-black text-ven-yellow uppercase tracking-widest text-center">🛵 {store.coverageArea || 'CABA'}</p>
-          </div>
-          {hasFreeDelivery(store.id) && (
-            <div
-              className="bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1.5 mt-1.5 cursor-pointer hover:bg-emerald-100 transition-colors animate-delivery-glow flex items-center justify-center gap-1.5 active:scale-95"
-              onClick={e => { e.stopPropagation(); setDeliveryModal(store); }}
-            >
-              <p className="text-[8px] font-black text-emerald-600 uppercase tracking-widest">🚚 Delivery gratis</p>
-              <ChevronRight size={8} className="text-emerald-400" />
+              🔥 OFERTA
             </div>
           )}
         </div>
-        <div className="px-5 pb-5">
-          <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-ven-yellow group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-[#C9A227] group-hover:text-white transition-all shadow-sm">
-            Ver local
+
+        {/* Info */}
+        <div className="p-3 flex-grow flex flex-col">
+          <h3 className="font-bold text-gray-900 text-sm truncate">{store.name}</h3>
+          <div className="flex items-center gap-1 mt-0.5">
+            <Star size={10} className="fill-amber-400 text-amber-400 shrink-0" />
+            <span className="text-xs text-gray-500">{store.rating.toFixed(1)} ({store.review_count})</span>
+            <span className="text-gray-300 mx-1">·</span>
+            <span className="text-xs text-gray-400 truncate">🚶 {store.neighborhood}</span>
           </div>
+          {hasFreeDelivery(store.id) && (
+            <span className="text-[9px] text-emerald-600 font-semibold mt-1">🚚 Delivery gratis</span>
+          )}
         </div>
       </div>
     );
@@ -300,30 +291,46 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           </div>
         ) : (
           <>
-            <div className="mb-10 flex items-end justify-between">
-              <div className="space-y-1">
-                <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-venezuela-brown">
-                  Locales <span className="text-ven-yellow">Recomendados</span>
-                </h2>
-                <p className="text-[10px] md:text-sm font-black text-gray-600 uppercase tracking-[0.2em]">
-                  Comida preparada al toque 🇻🇪
-                </p>
+            {/* Header "Los más elegidos" */}
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <h2 className="font-bold text-xl text-gray-900">Los más elegidos 💛</h2>
+                <p className="text-xs text-gray-400 mt-0.5">Locales venezolanos verificados en CABA</p>
               </div>
               {onViewAll && (
-                <button 
+                <button
                   onClick={onViewAll}
-                  className="text-[10px] font-black text-ven-yellow uppercase tracking-widest hover:underline flex items-center gap-1"
+                  className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-ven-yellow transition-colors"
                 >
                   Ver todos <ChevronRight size={14} />
                 </button>
               )}
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-              {displayedLocales.map(store => (
-                <PreviewCard key={store.id} store={store} />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+              {displayedLocales.map((store, idx) => (
+                <PreviewCard key={store.id} store={store} idx={idx} />
               ))}
             </div>
+
+            {/* Nuevos en EnCasa */}
+            {(() => {
+              const nuevos = stores.filter(s => s.plan === 'basic' && (s.review_count ?? 999) < 50);
+              if (nuevos.length === 0) return null;
+              return (
+                <div className="mt-8">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles size={16} className="text-ven-yellow" />
+                    <h2 className="font-bold text-lg text-gray-900">Nuevos en EnCasa ✨</h2>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+                    {nuevos.map((store, idx) => (
+                      <PreviewCard key={store.id} store={store} idx={idx + 10} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </>
         )}
 

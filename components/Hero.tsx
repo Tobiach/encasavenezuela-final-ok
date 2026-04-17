@@ -1,147 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
-import { HERO_SLIDE_1, HERO_SLIDE_2, HERO_SLIDE_3 } from '../src/assets/imagenes';
+import React from 'react';
+import { ArrowRight, ShoppingBag, MapPin } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface HeroProps {
   onCatalogClick: () => void;
   onLearnMoreClick: () => void;
 }
 
-const HERO_SLIDES = [
-  {
-    image: HERO_SLIDE_1,
-    title: "Tradición venezolana en cada bocado",
-    badge: "Cachapas tradicionales"
-  },
-  {
-    image: HERO_SLIDE_2,
-    title: "Productos venezolanos a domicilio",
-    badge: "Delivery rápido"
-  },
-  {
-    image: HERO_SLIDE_3,
-    title: "Tequeños crujientes y dorados",
-    badge: "Almacén venezolano"
-  }
-];
-
-const Hero: React.FC<HeroProps> = ({ onCatalogClick, onLearnMoreClick }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+const Hero: React.FC<HeroProps> = ({ onCatalogClick }) => {
+  const navigate = useNavigate();
 
   return (
-    <section className="relative pt-6 pb-12 md:pt-10 md:pb-20 overflow-hidden">
-      {/* Fondo decorativo */}
-      <div className="absolute top-0 right-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-ven-yellow/5 blur-[80px] md:blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
-      <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-ven-blue/5 blur-[80px] rounded-full translate-y-1/2 -translate-x-1/2"></div>
-
-      <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center md:grid md:grid-cols-[0.7fr_1.3fr] md:items-center md:text-left gap-10 relative z-10">
-        <div className="space-y-6 md:space-y-8 w-full">
-          <div className="flex flex-col items-center md:items-start">
-            <span className="bg-ven-yellow/20 text-ven-yellow px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ven-yellow/30 inline-block">
-              Envíos rápidos en Buenos Aires
-            </span>
-            <h1 className="text-5xl md:text-8xl font-black mt-4 leading-[0.9] tracking-tighter uppercase text-venezuela-brown">
-              El sabor de tu tierra <span className="text-ven-yellow drop-shadow-[0_0_20px_rgba(255,204,0,0.4)]">EnCasa</span>
-            </h1>
-            <p className="text-gray-700 text-base md:text-2xl mt-6 max-w-lg leading-tight font-bold">
-              Hogar, tradición y sabor venezolano al alcance de un click.
-              <span className="block mt-4 font-black text-lg md:text-xl">
-                <span className="text-ven-yellow">Sabores</span> <span className="text-ven-blue">100%</span> <span className="text-ven-red">nuestros</span>
-              </span>
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3 w-full sm:flex-row sm:justify-center md:justify-start">
-            <button
-              onClick={onCatalogClick}
-              className="relative overflow-hidden text-white w-full sm:w-auto px-8 py-4 md:py-5 rounded-[24px] flex items-center justify-center gap-3 text-base md:text-lg font-black transition-all active:scale-95 uppercase tracking-widest border border-white/10"
-              style={{
-                background: 'linear-gradient(135deg, #D4AF37 0%, #5C1A1A 50%, #3D0C11 100%)',
-                boxShadow: 'inset 18px 0 28px rgba(0,0,0,0.55), inset -18px 0 28px rgba(0,0,0,0.55), 0 10px 30px rgba(61,12,17,0.4)',
-              }}
-            >
-              <ShoppingBag size={20} />
-              VER CATÁLOGO
-            </button>
-            <button
-              onClick={onLearnMoreClick}
-              className="border border-black/10 bg-black/5 hover:bg-black/10 text-venezuela-brown w-full sm:w-auto px-8 py-4 md:py-5 rounded-[24px] flex items-center justify-center gap-3 text-base md:text-lg font-bold transition-all uppercase tracking-wider"
-            >
-              CONOCER MÁS
-              <ArrowRight size={20} className="text-ven-yellow" />
-            </button>
-          </div>
-        </div>
-
-        <div className="relative w-full max-w-[500px] md:max-w-none px-4">
-          {/* Contenedor de Carrusel */}
-          <div className="relative rounded-[40px] overflow-hidden border-4 border-ven-yellow/30 shadow-2xl group z-0 aspect-[16/9]">
-            {HERO_SLIDES.map((slide, index) => (
-              <div
-                key={index}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-              >
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="w-full h-full object-cover transition-transform duration-[5s] ease-linear scale-100 group-hover:scale-110"
-                />
-              </div>
-            ))}
-
-            {/* Controles del carrusel (visibles en hover) */}
-            <button
-              onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button
-              onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-            >
-              <ChevronRight size={24} />
-            </button>
-
-            {/* Indicadores (dots) */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-              {HERO_SLIDES.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`p-2 w-3 h-3 rounded-full transition-all ${index === currentSlide ? 'bg-ven-yellow w-6' : 'bg-white/50'}`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+    <section className="bg-gradient-to-b from-amber-50 to-white px-4 pt-8 pb-10">
+      {/* Badge pill */}
+      <div className="flex justify-center mb-5">
+        <span className="bg-ven-yellow/20 text-ven-yellow font-semibold text-xs rounded-full px-3 py-1 border border-ven-yellow/30">
+          🇻🇪 +40 productos venezolanos en CABA
+        </span>
       </div>
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0) rotate(-1deg); }
-          50% { transform: translateY(-10px) rotate(1deg); }
-        }
-        @keyframes float-delayed {
-          0%, 100% { transform: translateY(0) rotate(1deg); }
-          50% { transform: translateY(-12px) rotate(-1deg); }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-        .animate-float-delayed {
-          animation: float-delayed 5s ease-in-out infinite 0.5s;
-        }
-      `}</style>
+
+      {/* Headline */}
+      <div className="text-center mb-4">
+        <h1 className="text-3xl font-black leading-tight text-gray-900">
+          El sabor de tu tierra,{' '}
+          <span className="text-ven-yellow">en tu puerta.</span>
+        </h1>
+        <p className="text-gray-500 text-sm mt-3 max-w-xs mx-auto leading-relaxed">
+          Los mejores locales venezolanos de Buenos Aires, con delivery directo a tu casa.
+        </p>
+      </div>
+
+      {/* Stats row */}
+      <div className="flex justify-center items-center gap-2 text-xs text-gray-400 mb-6 flex-wrap">
+        <span className="bg-gray-100 rounded-full px-3 py-1">12 locales</span>
+        <span className="text-gray-300">·</span>
+        <span className="bg-gray-100 rounded-full px-3 py-1">40+ productos</span>
+        <span className="text-gray-300">·</span>
+        <span className="bg-gray-100 rounded-full px-3 py-1">Pago por WhatsApp</span>
+      </div>
+
+      {/* CTAs */}
+      <div className="max-w-sm mx-auto space-y-3">
+        <button
+          onClick={onCatalogClick}
+          className="w-full bg-ven-yellow text-black font-bold rounded-2xl py-3 flex items-center justify-center gap-2 hover:brightness-95 active:scale-[0.98] transition-all shadow-md shadow-yellow-400/20"
+        >
+          <ShoppingBag size={18} />
+          Explorar locales →
+        </button>
+        <button
+          onClick={() => navigate('/locales-map')}
+          className="w-full border border-gray-200 text-gray-700 rounded-2xl py-3 flex items-center justify-center gap-2 hover:bg-gray-50 active:scale-[0.98] transition-all"
+        >
+          <MapPin size={16} className="text-ven-yellow" />
+          Ver el mapa →
+          <ArrowRight size={14} className="text-gray-400" />
+        </button>
+      </div>
     </section>
   );
 };
