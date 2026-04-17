@@ -135,7 +135,7 @@ const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess, user }) => {
     <div className="min-h-screen flex items-center justify-center bg-venezuela-dark px-6 py-12">
       <div className="max-w-xl w-full">
         <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-gradient-to-br from-[#F58220] to-[#E86D00] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-orange-500/20">
+          <div className="w-20 h-20 bg-[#8B1A1A] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-[#8B1A1A]/20">
             <span className="text-3xl">🇻🇪</span>
           </div>
           <h1 className="text-4xl font-black tracking-tighter mb-2 uppercase text-venezuela-brown">
@@ -232,7 +232,7 @@ const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess, user }) => {
             <button 
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-[#F58220] to-[#E86D00] text-white py-6 rounded-[32px] font-black text-sm tracking-widest transition-all shadow-xl shadow-orange-500/30 active:scale-[0.98] flex items-center justify-center gap-3 uppercase group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#8B1A1A] text-white py-6 rounded-[32px] font-black text-sm tracking-widest transition-all shadow-xl shadow-[#8B1A1A]/30 active:scale-[0.98] flex items-center justify-center gap-3 uppercase group disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110"
             >
               {loading ? (
                 <Loader2 className="animate-spin" size={20} />

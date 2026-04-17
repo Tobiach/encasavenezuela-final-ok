@@ -46,7 +46,7 @@ const Footer: React.FC = () => {
         <div className="grid md:grid-cols-4 gap-16 mb-24">
           <div className="space-y-10">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-ven-yellow to-venezuela-orange rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/20">
+              <div className="w-12 h-12 bg-ven-yellow rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/20">
                 <span className="text-white text-2xl font-bold">🏠</span>
               </div>
               <span className="text-2xl font-black tracking-tighter uppercase text-venezuela-brown">
@@ -57,10 +57,10 @@ const Footer: React.FC = () => {
               Conectamos a la comunidad venezolana con los sabores que definen nuestra identidad. Calidad Premium, atención de panas.
             </p>
             <div className="flex gap-5">
-              <a href="https://www.instagram.com/encasavenezuela.ar?igsh=cnVxb2NiM3A2NjRq" target="_blank" rel="noopener noreferrer" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-gradient-to-br hover:from-ven-yellow hover:to-venezuela-orange hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
+              <a href="https://www.instagram.com/encasavenezuela.ar?igsh=cnVxb2NiM3A2NjRq" target="_blank" rel="noopener noreferrer" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-[#8B1A1A] hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
                 <Instagram size={24} />
               </a>
-              <a href="#" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-gradient-to-br hover:from-ven-yellow hover:to-venezuela-orange hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
+              <a href="#" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-[#8B1A1A] hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
                 <Facebook size={24} />
               </a>
               <a
@@ -76,13 +76,13 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[11px] text-venezuela-orange border-b-2 border-venezuela-orange/20 pb-2 inline-block">Explorar</h4>
+            <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[11px] text-ven-yellow border-b-2 border-ven-yellow/30 pb-2 inline-block">Explorar</h4>
             <ul className="space-y-6 text-sm font-black text-gray-600">
               {footerLinks.map(link => (
                 <li key={link.name}>
                   <button 
                     onClick={() => link.path ? navigate(link.path) : link.action?.()}
-                    className="hover:text-venezuela-orange transition-colors uppercase tracking-widest flex items-center gap-2 group"
+                    className="hover:text-[#8B1A1A] transition-colors uppercase tracking-widest flex items-center gap-2 group"
                   >
                     <div className="w-1.5 h-1.5 bg-ven-yellow rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     {link.name}
@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[11px] text-venezuela-orange border-b-2 border-venezuela-orange/20 pb-2 inline-block">Contacto Directo</h4>
+            <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[11px] text-ven-yellow border-b-2 border-ven-yellow/30 pb-2 inline-block">Contacto Directo</h4>
             <ul className="space-y-8 text-sm font-black text-gray-600">
               <li className="flex items-center gap-5 group">
                 <a
@@ -123,7 +123,7 @@ const Footer: React.FC = () => {
           </div>
 
           <div className="relative">
-            <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[11px] text-venezuela-orange border-b-2 border-venezuela-orange/20 pb-2 inline-block">Únete al Boletín</h4>
+            <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[11px] text-ven-yellow border-b-2 border-ven-yellow/30 pb-2 inline-block">Únete al Boletín</h4>
             <p className="text-sm text-gray-700 mb-8 leading-relaxed font-bold">Recibe ofertas exclusivas y lanzamientos de combos relámpago.</p>
             
             {isSubscribed ? (
@@ -151,7 +151,7 @@ const Footer: React.FC = () => {
                 <button 
                   disabled={loading}
                   type="submit"
-                  className="w-full bg-gradient-to-br from-ven-yellow to-venezuela-orange hover:brightness-110 py-6 rounded-2xl font-black text-sm tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-4 disabled:opacity-50 text-white shadow-2xl shadow-venezuela-orange/30 border-2 border-white/20"
+                  className="w-full bg-[#8B1A1A] hover:brightness-110 py-6 rounded-2xl font-black text-sm tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-4 disabled:opacity-50 text-white shadow-2xl shadow-[#8B1A1A]/30 border-2 border-white/20"
                 >
                   {loading ? 'PROCESANDO...' : 'SUSCRIBIRME'}
                   {!loading && <Send size={18} />}

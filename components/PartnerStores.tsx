@@ -102,7 +102,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
             )}
             {activePromo && (
               <div
-                className="bg-gradient-to-r from-ven-yellow via-[#E5C76B] to-ven-yellow bg-[length:200%_auto] animate-shimmer text-black px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-yellow-400/40 border border-white/20 cursor-pointer"
+                className="bg-[#8B1A1A] text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-[#8B1A1A]/30 border border-white/20 cursor-pointer"
                 onClick={e => { e.stopPropagation(); setPromoModal({ store, promo: activePromo }); }}
               >
                 🔥 OFERTA

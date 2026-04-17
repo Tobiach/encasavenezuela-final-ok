@@ -329,7 +329,7 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
             <div className="space-y-3">
               <button
                 onClick={() => { onAddToCart(combo, combo.storeId); alert("¡Combo agregado al pedido!"); }}
-                className="w-full bg-gradient-to-r from-[#F58220] to-[#E86D00] text-white py-5 rounded-2xl font-black text-sm tracking-widest transition-all shadow-xl shadow-orange-500/20 active:scale-95 flex items-center justify-center gap-3 uppercase border border-white/10"
+                className="w-full bg-[#8B1A1A] text-white py-5 rounded-2xl font-black text-sm tracking-widest transition-all shadow-xl shadow-[#8B1A1A]/20 active:scale-95 flex items-center justify-center gap-3 uppercase hover:brightness-110"
               >
                 <Plus size={20} strokeWidth={3} />
                 Agregar al pedido

@@ -131,11 +131,11 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* CARRITO — Mobile only, izquierda */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className={`lg:hidden relative p-2.5 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-venezuela-dark text-ven-yellow border-venezuela-dark shadow-lg' : 'bg-black/10 border-black/15 text-venezuela-dark'}`}
+            className={`lg:hidden relative p-2.5 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-[#8B1A1A] text-white border-[#8B1A1A] shadow-lg' : 'bg-[#8B1A1A] border-[#8B1A1A] text-white'}`}
           >
             <ShoppingCart size={20} className={bump ? 'animate-bounce' : ''} />
             {cartCount > 0 && (
-              <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-yellow text-venezuela-dark' : 'bg-venezuela-dark text-white'}`}>
+              <span className={`absolute -top-1.5 -right-1.5 text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-black transition-colors ${bump ? 'bg-ven-yellow text-[#1A1A1A]' : 'bg-[#1A1A1A] text-white'}`}>
                 {cartCount}
               </span>
             )}
@@ -188,7 +188,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => setIsCartOpen(true)}
-              className={`relative p-4 rounded-2xl transition-all duration-700 border-2 ${bump ? 'scale-110 bg-gradient-to-br from-ven-yellow via-venezuela-orange to-ven-red text-white border-white/40 shadow-2xl' : 'bg-venezuela-dark border-black/5 text-venezuela-brown hover:bg-black/5'}`}
+              className={`relative p-4 rounded-2xl transition-all duration-700 border-2 ${bump ? 'scale-110 bg-[#8B1A1A] text-white border-white/40 shadow-2xl' : 'bg-venezuela-dark border-black/5 text-venezuela-brown hover:bg-black/5'}`}
             >
               <ShoppingCart size={22} className={bump ? 'animate-bounce' : ''} />
               {cartCount > 0 && (
@@ -220,7 +220,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* HAMBURGUESA — Mobile only, derecha */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2.5 bg-black/10 border border-black/10 rounded-xl text-venezuela-dark transition-all active:scale-95"
+            className="lg:hidden p-2.5 bg-[#8B1A1A] border border-[#8B1A1A] rounded-xl text-white transition-all active:scale-95"
           >
             {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
