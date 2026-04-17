@@ -88,33 +88,20 @@ const Offers: React.FC = () => {
   return (
     // ⚠️ SIN overflow-hidden en la section — ese era el bug que bloqueaba el
     // scroll táctil en iOS Safari. Los círculos de blur tienen su propio wrapper.
-    <section className="py-16 bg-venezuela-dark relative">
-      {/* Círculos decorativos — overflow-hidden solo sobre ellos, no sobre la section */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-ven-yellow/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-ven-blue/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ven-red/10 border border-ven-red/20 text-ven-red text-[10px] font-black uppercase tracking-widest">
-              <Percent size={12} />
-              Ahorro Real
-            </div>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-venezuela-brown">
-              Explorá según <span className="text-ven-yellow">lo que buscás</span>
+    <section className="py-10 bg-gray-50 relative">
+      <div className="max-w-5xl mx-auto px-4 relative z-10">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="font-bold text-xl text-gray-900">
+              Creemos que te va a gustar 😋
             </h2>
-            <p className="text-gray-600 max-w-md font-medium text-sm md:text-base">
-              Encontrá rápido lo más pedido, novedades, promos del día y opciones para ahorrar.
-            </p>
+            <p className="text-xs text-gray-400 mt-0.5">Seleccionado para vos</p>
           </div>
           <button
             onClick={() => { sessionStorage.setItem('encasa_scroll_/', String(window.scrollY)); navigate('/catalog'); }}
-            className="group flex items-center gap-3 bg-black/5 hover:bg-black/10 border border-black/10 px-6 py-3 rounded-2xl transition-all active:scale-95 text-venezuela-brown"
+            className="w-9 h-9 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-sm text-gray-500 hover:text-ven-yellow transition-colors"
           >
-            <span className="text-xs font-black uppercase tracking-widest">Explorar todas las secciones</span>
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight size={16} />
           </button>
         </div>
 
@@ -139,10 +126,10 @@ const Offers: React.FC = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <p className="text-[11px] font-black text-white uppercase tracking-tight leading-tight">
+                  <p className="text-[11px] font-black text-white uppercase tracking-tight leading-tight drop-shadow-sm">
                     {card.emoji} {card.label}
                   </p>
-                  <p className="text-[9px] text-white/70 font-medium mt-0.5 leading-tight line-clamp-2">{card.subtitle}</p>
+                  <p className="text-[9px] text-white/80 font-semibold mt-0.5 leading-tight line-clamp-2 drop-shadow-sm">{card.subtitle}</p>
                 </div>
                 {activeSection === card.key && (
                   <div className="absolute top-2.5 right-2.5 w-5 h-5 bg-ven-yellow rounded-full flex items-center justify-center shadow-lg">
@@ -188,14 +175,14 @@ const Offers: React.FC = () => {
                     <span className="block text-[8px] font-black text-ven-yellow uppercase tracking-widest truncate mb-1">
                       {product.category}
                     </span>
-                    <p className="text-[11px] font-black text-venezuela-brown uppercase tracking-tight line-clamp-2 leading-tight mb-2">
+                    <p className="text-[11px] font-black text-gray-900 uppercase tracking-tight line-clamp-2 leading-tight mb-2">
                       {product.name}
                     </p>
                     <div className="flex flex-col">
                       {product.oldPrice && (
                         <span className="text-[9px] text-gray-400 line-through">${product.oldPrice}</span>
                       )}
-                      <span className="text-sm font-black text-venezuela-brown">${product.price}</span>
+                      <span className="text-sm font-black text-gray-900">${product.price}</span>
                     </div>
                   </div>
                 ))}
@@ -211,7 +198,7 @@ const Offers: React.FC = () => {
               <Flame size={18} fill="currentColor" className="text-black" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-venezuela-brown leading-none">
+              <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-gray-900 leading-none">
                 Combos <span className="text-ven-yellow">Relámpago</span>
               </h3>
               <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Ofertas por tiempo limitado</p>
@@ -264,16 +251,16 @@ const Offers: React.FC = () => {
                         <Store size={11} className="text-ven-yellow shrink-0" />
                         <span className="text-[10px] font-bold uppercase tracking-wide truncate text-gray-400">{store?.name || 'Local Vene'}</span>
                       </div>
-                      <h4 className="text-[13px] font-black text-venezuela-brown uppercase tracking-tight line-clamp-2 leading-tight">{promo.name}</h4>
+                      <h4 className="text-[13px] font-black text-gray-900 uppercase tracking-tight line-clamp-2 leading-tight">{promo.name}</h4>
                       <div className="flex items-end justify-between pt-1.5">
                         <div>
                           {promo.oldPrice && (
                             <span className="block text-[10px] text-gray-400 line-through font-semibold leading-none mb-0.5">${promo.oldPrice}</span>
                           )}
-                          <span className="text-venezuela-orange font-black text-[22px] tracking-tighter leading-none">${promo.price}</span>
+                          <span className="text-ven-yellow font-black text-[22px] tracking-tighter leading-none" style={{ color: '#D97706' }}>${promo.price}</span>
                         </div>
-                        <div className="w-9 h-9 bg-ven-yellow/10 rounded-xl flex items-center justify-center shrink-0">
-                          <ArrowRight size={15} className="text-venezuela-brown" />
+                        <div className="w-9 h-9 bg-ven-yellow/15 rounded-xl flex items-center justify-center shrink-0">
+                          <ArrowRight size={15} className="text-gray-700" />
                         </div>
                       </div>
                     </div>

@@ -14,10 +14,33 @@ const BottomNav: React.FC = () => {
   const navigate  = useNavigate();
   const location  = useLocation();
 
+  const CENTER_IDX = 2;
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white border-t border-gray-100 shadow-lg h-16 flex justify-around items-center">
-      {TABS.map(({ label, icon: Icon, path }) => {
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white border-t border-gray-100 shadow-lg h-16 flex justify-around items-end pb-2">
+      {TABS.map(({ label, icon: Icon, path }, idx) => {
         const isActive = path !== null && location.pathname === path;
+        const isCenter = idx === CENTER_IDX;
+
+        if (isCenter) {
+          return (
+            <button
+              key={label}
+              onClick={() => path && navigate(path)}
+              className="flex flex-col items-center justify-center gap-0.5 -mt-6 transition-all active:scale-90"
+            >
+              <div className={`w-14 h-14 rounded-full flex items-center justify-center shadow-xl border-4 border-white transition-all ${
+                isActive ? 'bg-ven-yellow' : 'bg-ven-yellow'
+              }`}>
+                <Icon size={22} className="text-black stroke-[2.5]" />
+              </div>
+              <span className="text-[9px] font-black uppercase tracking-wider leading-none text-ven-yellow mt-0.5">
+                {label}
+              </span>
+            </button>
+          );
+        }
+
         return (
           <button
             key={label}
