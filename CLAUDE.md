@@ -903,6 +903,13 @@ Historial de versiones
 	∙	v2.0 (28 marzo 2026): Reestructuración completa estilo solopreneur
 	∙	v1.0 (22 marzo 2026): Primera versión (básica, solo reglas de desarrollo)
 
+## Estado comercial actualizado (Abril 2026)
+- 2 locales venezolanos cerrados con modelo de comisión 12% por venta, cobro semanal
+- Venta de servicio de IA cerrada: $600 USD profit total, $50 cobrado inicial, resto a 30 días
+- Prioridad: validación comercial y primeros pedidos reales
+
+---
+
 🎯 FIN DE CLAUDE.MD
 Este archivo es el “cerebro” de Claude Code. Leerlo completo antes de cada sesión garantiza contexto óptimo para todas las decisiones de código, producto y negocio.
 
