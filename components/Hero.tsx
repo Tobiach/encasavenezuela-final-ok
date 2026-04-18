@@ -38,31 +38,18 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick }) => {
         </button>
       </div>
 
-      {/* Sabores 100% nuestros — recuadros bandera Venezuela */}
+      {/* Sabores 100% nuestros — recuadro tricolor Venezuela */}
       <div className="max-w-sm mx-auto">
-        <p className="text-center text-[10px] font-black uppercase tracking-[0.25em] text-[#6B7280] mb-3">
-          Sabores 100% nuestros
-        </p>
-        <div className="grid grid-cols-3 gap-2">
-          {/* Rojo */}
-          <div className="bg-[#8B1A1A] rounded-2xl px-3 py-4 flex flex-col items-center gap-2">
-            <span className="text-2xl">🫓</span>
-            <p className="text-white text-[10px] font-black text-center leading-tight uppercase tracking-wide">
-              Arepas &<br />Empanadas
-            </p>
-          </div>
-          {/* Amarillo */}
-          <div className="bg-[#FFD700] rounded-2xl px-3 py-4 flex flex-col items-center gap-2">
-            <span className="text-2xl">🧀</span>
-            <p className="text-[#1F2937] text-[10px] font-black text-center leading-tight uppercase tracking-wide">
-              Tequeños &<br />Productos
-            </p>
-          </div>
-          {/* Azul */}
-          <div className="bg-[#002FA7] rounded-2xl px-3 py-4 flex flex-col items-center gap-2">
-            <span className="text-2xl">🛒</span>
-            <p className="text-white text-[10px] font-black text-center leading-tight uppercase tracking-wide">
-              Almacén &<br />Víveres
+        <div className="relative rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm">
+          {/* Franja tricolor superior */}
+          <div
+            className="h-1.5 w-full"
+            style={{ background: 'linear-gradient(to right, #8B1A1A 33.3%, #FFD700 33.3%, #FFD700 66.6%, #002FA7 66.6%)' }}
+          />
+          <div className="px-5 py-3 flex items-center justify-center gap-2.5">
+            <span className="text-lg">🇻🇪</span>
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1F2937]">
+              Sabores 100% nuestros
             </p>
           </div>
         </div>

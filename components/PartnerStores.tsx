@@ -43,7 +43,7 @@ interface PartnerStoresProps {
 const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpenMap, limit = 6, isFullView = false }) => {
   const navigate = useNavigate();
   const orderCounts = useOrderCounts();
-  const { favorites, isFavorite, toggleFavorite } = useFavorites();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [selectedTag, setSelectedTag] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
@@ -71,18 +71,26 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
     });
   }, [stores, selectedTag, searchQuery]);
 
-  // IDs a excluir/priorizar en la vista home — orden es significativo
-  const HOME_EXCLUDED = ['bahareque'];
-  const HOME_PRIORITY = ['minimarket-vibe', 'margarita-food'];
+  // Keywords para excluir/priorizar en vista home (coincide contra id Y name, case-insensitive)
+  const HOME_EXCLUDE_KEYWORDS = ['bahareque'];
+  // Orden en este array determina posición: minimarket = 1°, margarita = 2°
+  const HOME_PRIORITY_KEYWORDS = ['minimarket', 'margarita'];
+
+  const matchesKeyword = (store: PartnerStore, kw: string) =>
+    store.id.toLowerCase().includes(kw) || store.name.toLowerCase().includes(kw);
 
   const displayedLocales = useMemo(() => {
     if (isFullView) return filteredLocales;
-    const visible = stores.filter(s => !HOME_EXCLUDED.includes(s.id));
-    const priorityIds = new Set(HOME_PRIORITY);
-    // Respetar el orden de HOME_PRIORITY estrictamente
-    const priority = HOME_PRIORITY
-      .map(id => visible.find(s => s.id === id))
-      .filter((s): s is PartnerStore => s != null);
+    const visible = stores.filter(s => !HOME_EXCLUDE_KEYWORDS.some(kw => matchesKeyword(s, kw)));
+
+    // Construir lista prioritaria respetando el orden de HOME_PRIORITY_KEYWORDS
+    const priority: PartnerStore[] = [];
+    const priorityIds = new Set<string>();
+    for (const kw of HOME_PRIORITY_KEYWORDS) {
+      const match = visible.find(s => matchesKeyword(s, kw) && !priorityIds.has(s.id));
+      if (match) { priority.push(match); priorityIds.add(match.id); }
+    }
+
     const premium  = visible.filter(s => s.plan === 'premium' && !priorityIds.has(s.id));
     const prepared = visible.filter(s => s.isPreparedFood && s.plan !== 'premium' && !priorityIds.has(s.id));
     return [...priority, ...premium, ...prepared].slice(0, limit);
@@ -313,53 +321,6 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           </div>
         ) : (
           <>
-            {/* Mis Favoritos — visible solo cuando hay guardados */}
-            {favorites.length > 0 && (() => {
-              const favStores = stores.filter(s => favorites.includes(s.id));
-              if (favStores.length === 0) return null;
-              return (
-                <div className="mb-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <Heart size={15} className="fill-[#8B1A1A] text-[#8B1A1A]" />
-                      <h2 className="font-bold text-base text-gray-900">Mis Favoritos</h2>
-                    </div>
-                    <button
-                      onClick={() => navigate('/favoritos')}
-                      className="flex items-center gap-1 text-xs font-semibold text-[#8B1A1A] hover:underline transition-colors"
-                    >
-                      Ver todos <ChevronRight size={13} />
-                    </button>
-                  </div>
-                  <div
-                    className="flex gap-3 overflow-x-auto no-scrollbar pb-1"
-                    style={{ scrollbarWidth: 'none' }}
-                  >
-                    {favStores.map(store => (
-                      <div
-                        key={store.id}
-                        onClick={() => { onOpenMap(store); navigate('/catalog'); }}
-                        className="shrink-0 w-28 cursor-pointer group"
-                      >
-                        <div className="relative w-28 h-20 rounded-2xl overflow-hidden mb-1.5 shadow-sm">
-                          <img src={store.img} alt={store.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                          <button
-                            onClick={e => { e.stopPropagation(); toggleFavorite(store.id); }}
-                            className="absolute top-1.5 right-1.5 w-6 h-6 bg-white/90 rounded-full flex items-center justify-center"
-                          >
-                            <Heart size={11} className="fill-[#8B1A1A] text-[#8B1A1A]" />
-                          </button>
-                        </div>
-                        <p className="text-xs font-bold text-gray-900 truncate leading-tight">{store.name}</p>
-                        <p className="text-[10px] text-gray-400 truncate">{store.neighborhood}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })()}
-
             {/* Header */}
             <div className="mb-5 flex items-center justify-between">
               <div>
