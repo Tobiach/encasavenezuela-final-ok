@@ -13,7 +13,7 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick }) => {
       <div className="text-center mb-6">
         <h1 className="text-3xl font-black leading-tight text-[#1F2937] uppercase tracking-tight">
           EL SABOR DE TU TIERRA,<br />
-          <span className="text-[#FFD700]" style={{ WebkitTextStroke: '0.5px #D4AF37' }}>EN CASA</span>
+          <span className="text-[#FFD700]" style={{ WebkitTextStroke: '1.5px #1F2937', paintOrder: 'stroke fill' } as React.CSSProperties}>EN CASA</span>
         </h1>
         <p className="text-[#6B7280] text-sm mt-3 max-w-xs mx-auto leading-relaxed font-medium">
           Hogar, tradición y sabor venezolano al alcance de un click

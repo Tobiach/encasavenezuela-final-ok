@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft, Star, MapPin, Clock, Plus, Package,
-  ShoppingBag, X, ChevronRight, CheckCircle,
+  ArrowLeft, Star, MapPin, Clock, Plus, Package, ShoppingBag,
+  X, Zap, Flame, Store, CheckCircle,
 } from 'lucide-react';
 import { useStores } from '../lib/hooks/useStores';
 import { useProducts } from '../lib/hooks/useProducts';
 import { Product, PartnerStore } from '../types';
 import { STORE_COMBOS, StoreCombo } from '../data/storeCombos';
+import { getImageUrl } from '../lib/supabase';
 
-// ── Variantes (misma lógica que CatalogView) ─────────────────────────────────
+// ── Variantes ──────────────────────────────────────────────────────────────
 interface ProductVariant { label: string; multiplier: number; }
 const PRODUCT_VARIANTS: Record<string, ProductVariant[]> = {
-  'caraotas':        [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
-  'chuleta':         [{ label: '500g', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
-  'huevo':           [{ label: '6 unidades', multiplier: 0.5 }, { label: '12 unidades', multiplier: 1 }, { label: 'Maple x30', multiplier: 3 }],
-  'plátano':         [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
-  'platano':         [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
-  'queso':           [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+  'caraotas':  [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+  'chuleta':   [{ label: '500g', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+  'huevo':     [{ label: '6 unidades', multiplier: 0.5 }, { label: '12 unidades', multiplier: 1 }, { label: 'Maple x30', multiplier: 3 }],
+  'plátano':   [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+  'platano':   [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
+  'queso':     [{ label: 'Medio kilo', multiplier: 0.5 }, { label: '1 kilo', multiplier: 1 }],
 };
 function getVariants(name: string): ProductVariant[] | null {
   const lower = name.toLowerCase();
@@ -27,14 +28,14 @@ function getVariants(name: string): ProductVariant[] | null {
   return null;
 }
 
-// ── Spinner ──────────────────────────────────────────────────────────────────
+// ── Spinner ────────────────────────────────────────────────────────────────
 const Spinner: React.FC = () => (
   <div className="min-h-screen bg-white flex items-center justify-center">
     <div className="w-10 h-10 border-4 border-[#FFD700] border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
-// ── ProductCard ───────────────────────────────────────────────────────────────
+// ── ProductCard ─────────────────────────────────────────────────────────────
 const ProductCard: React.FC<{
   product: Product;
   storeId: string;
@@ -52,12 +53,7 @@ const ProductCard: React.FC<{
 
   const confirmVariant = () => {
     if (!selectedVariant) return;
-    const finalProduct: Product = {
-      ...product,
-      name: `${product.name} — ${selectedVariant.label}`,
-      price: Math.round(product.price * selectedVariant.multiplier),
-    };
-    onAddToCart(finalProduct, storeId);
+    onAddToCart({ ...product, name: `${product.name} — ${selectedVariant.label}`, price: Math.round(product.price * selectedVariant.multiplier) }, storeId);
     setShowVariant(false);
   };
 
@@ -68,53 +64,39 @@ const ProductCard: React.FC<{
           <img src={product.img} alt={product.name} className="w-full h-full object-contain p-2" loading="lazy" />
         </div>
         <div className="p-3 flex flex-col flex-1">
-          <p className="text-xs font-black text-gray-900 leading-tight line-clamp-2 flex-1">{product.name}</p>
+          <p className="text-xs font-black text-[#1F2937] leading-tight line-clamp-2 flex-1">{product.name}</p>
           {product.oldPrice && (
             <p className="text-[10px] text-gray-400 line-through mt-1">${product.oldPrice.toLocaleString('es-AR')}</p>
           )}
           <div className="flex items-center justify-between mt-2">
-            <span className="font-black text-sm text-gray-900">${product.price.toLocaleString('es-AR')}</span>
-            <button
-              onClick={handleAdd}
-              className="w-8 h-8 bg-[#8B1A1A] rounded-xl flex items-center justify-center active:scale-90 transition-all shadow-sm"
-            >
+            <span className="font-black text-sm text-[#1F2937]">${product.price.toLocaleString('es-AR')}</span>
+            <button onClick={handleAdd} className="w-8 h-8 bg-[#8B1A1A] rounded-xl flex items-center justify-center active:scale-90 transition-all">
               <Plus size={16} strokeWidth={3} className="text-white" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Variant modal */}
       {showVariant && variants && (
         <div className="fixed inset-0 z-[300] flex items-end justify-center bg-black/40 px-4 pb-6" onClick={() => setShowVariant(false)}>
           <div className="bg-white rounded-3xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="font-black text-gray-900 text-base leading-tight">{product.name}</h3>
-                <p className="text-xs text-gray-500 mt-0.5">Seleccioná la cantidad</p>
+                <h3 className="font-black text-[#1F2937] text-base leading-tight">{product.name}</h3>
+                <p className="text-xs text-[#6B7280] mt-0.5">Seleccioná la cantidad</p>
               </div>
-              <button onClick={() => setShowVariant(false)} className="text-gray-400">
-                <X size={20} />
-              </button>
+              <button onClick={() => setShowVariant(false)} className="text-gray-400"><X size={20} /></button>
             </div>
             <div className="flex flex-col gap-2 mb-5">
               {variants.map(v => (
-                <button
-                  key={v.label}
-                  onClick={() => setSelectedVariant(v)}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all ${selectedVariant?.label === v.label ? 'border-[#8B1A1A] bg-[#8B1A1A]/5' : 'border-gray-100 bg-gray-50'}`}
-                >
-                  <span className="font-bold text-sm text-gray-900">{v.label}</span>
-                  <span className="font-black text-sm text-gray-900">
-                    ${Math.round(product.price * v.multiplier).toLocaleString('es-AR')}
-                  </span>
+                <button key={v.label} onClick={() => setSelectedVariant(v)}
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all ${selectedVariant?.label === v.label ? 'border-[#8B1A1A] bg-[#8B1A1A]/5' : 'border-gray-100 bg-gray-50'}`}>
+                  <span className="font-bold text-sm text-[#1F2937]">{v.label}</span>
+                  <span className="font-black text-sm text-[#1F2937]">${Math.round(product.price * v.multiplier).toLocaleString('es-AR')}</span>
                 </button>
               ))}
             </div>
-            <button
-              onClick={confirmVariant}
-              className="w-full bg-[#8B1A1A] text-white font-black py-4 rounded-2xl text-sm tracking-wide active:scale-[0.98] transition-all"
-            >
+            <button onClick={confirmVariant} className="w-full bg-[#8B1A1A] text-white font-black py-4 rounded-2xl text-sm active:scale-[0.98] transition-all">
               Agregar al carrito →
             </button>
           </div>
@@ -124,7 +106,7 @@ const ProductCard: React.FC<{
   );
 };
 
-// ── ComboVariantModal ────────────────────────────────────────────────────────
+// ── ComboVariantModal ─────────────────────────────────────────────────────
 const ComboVariantModal: React.FC<{
   combo: StoreCombo;
   variants: Record<string, string>;
@@ -134,28 +116,32 @@ const ComboVariantModal: React.FC<{
 }> = ({ combo, variants, onVariantChange, onConfirm, onClose }) => (
   <div className="fixed inset-0 z-[300] flex items-end justify-center bg-black/50 px-4 pb-6" onClick={onClose}>
     <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
-      {/* Header */}
-      <div className="bg-gradient-to-br from-[#8B1A1A]/8 to-[#002FA7]/8 px-6 pt-6 pb-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <span className="text-4xl">{combo.emoji}</span>
-            <h3 className="font-black text-gray-900 text-lg mt-2 leading-tight">{combo.name}</h3>
-            <p className="text-xs text-gray-500 mt-1 leading-relaxed">{combo.description}</p>
-          </div>
-          <button onClick={onClose} className="text-gray-400 mt-1"><X size={20} /></button>
-        </div>
-        <div className="mt-3">
-          <span className="text-2xl font-black text-gray-900">${combo.price.toLocaleString('es-AR')}</span>
+      <div className="relative h-36 overflow-hidden">
+        <img src={getImageUrl(combo.imgPath)} alt={combo.name} className="w-full h-full object-contain bg-gray-50 p-4" />
+        <button onClick={onClose} className="absolute top-3 right-3 w-8 h-8 bg-black/40 rounded-full flex items-center justify-center">
+          <X size={16} className="text-white" />
+        </button>
+      </div>
+      <div className="px-5 pt-4 pb-2">
+        <h3 className="font-black text-[#1F2937] text-lg leading-tight">{combo.name}</h3>
+        <p className="text-xs text-[#6B7280] mt-1 leading-relaxed">{combo.description}</p>
+        <div className="flex items-center gap-2 mt-2">
+          {combo.oldPrice && <span className="text-xs text-gray-400 line-through">${combo.oldPrice.toLocaleString('es-AR')}</span>}
+          <span className="text-2xl font-black text-[#1F2937]">${combo.price.toLocaleString('es-AR')}</span>
+          {combo.oldPrice && (
+            <span className="bg-[#8B1A1A]/10 text-[#8B1A1A] text-[10px] font-black px-2 py-0.5 rounded-full">
+              -{Math.round((1 - combo.price / combo.oldPrice) * 100)}%
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Incluye */}
       {combo.items.length > 0 && (
-        <div className="px-6 pt-4 pb-2">
+        <div className="px-5 pt-2 pb-2">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Incluye</p>
           <div className="flex flex-wrap gap-1.5">
             {combo.items.map(item => (
-              <span key={item} className="bg-gray-100 text-gray-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1">
+              <span key={item} className="bg-gray-100 text-[#6B7280] text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1">
                 <CheckCircle size={10} className="text-green-500" /> {item}
               </span>
             ))}
@@ -163,21 +149,15 @@ const ComboVariantModal: React.FC<{
         </div>
       )}
 
-      {/* Variantes */}
       {combo.variantItems && combo.variantItems.length > 0 && (
-        <div className="px-6 pt-3 pb-2 space-y-4">
+        <div className="px-5 pt-3 pb-2 space-y-3">
           {combo.variantItems.map(vi => (
             <div key={vi.name}>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
-                {vi.name}
-              </p>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">{vi.name}</p>
               <div className="flex gap-2 flex-wrap">
                 {vi.options.map(opt => (
-                  <button
-                    key={opt}
-                    onClick={() => onVariantChange(vi.name, opt)}
-                    className={`px-3 py-2 rounded-xl text-xs font-bold border-2 transition-all ${variants[vi.name] === opt ? 'border-[#8B1A1A] bg-[#8B1A1A] text-white' : 'border-gray-200 text-gray-700 bg-gray-50'}`}
-                  >
+                  <button key={opt} onClick={() => onVariantChange(vi.name, opt)}
+                    className={`px-3 py-2 rounded-xl text-xs font-bold border-2 transition-all ${variants[vi.name] === opt ? 'border-[#8B1A1A] bg-[#8B1A1A] text-white' : 'border-gray-200 text-[#6B7280] bg-gray-50'}`}>
                     {opt}
                   </button>
                 ))}
@@ -187,70 +167,137 @@ const ComboVariantModal: React.FC<{
         </div>
       )}
 
-      <div className="px-6 pt-3 pb-6">
-        <button
-          onClick={onConfirm}
-          className="w-full bg-[#8B1A1A] text-white font-black py-4 rounded-2xl text-sm active:scale-[0.98] transition-all shadow-lg shadow-[#8B1A1A]/20 flex items-center justify-center gap-2"
-        >
-          <ShoppingBag size={16} />
-          Agregar combo al carrito →
+      <div className="px-5 pt-3 pb-6">
+        <button onClick={onConfirm} className="w-full bg-[#8B1A1A] text-white font-black py-4 rounded-2xl text-sm active:scale-[0.98] transition-all shadow-lg shadow-[#8B1A1A]/20 flex items-center justify-center gap-2">
+          <ShoppingBag size={16} /> Agregar combo al carrito →
         </button>
       </div>
     </div>
   </div>
 );
 
-// ── Main Component ────────────────────────────────────────────────────────────
+// ── CombosSection — mismo estilo que Promotions.tsx ────────────────────────
+const CombosSection: React.FC<{
+  combos: StoreCombo[];
+  storeName: string;
+  onOpen: (c: StoreCombo) => void;
+  onAddDirectly: (c: StoreCombo) => void;
+}> = ({ combos, storeName, onOpen, onAddDirectly }) => (
+  <div className="py-8 bg-[#2D1618]">
+    <div className="max-w-5xl mx-auto px-4">
+      <div className="text-center mb-6">
+        <div className="inline-flex items-center gap-2 text-[#FFD700] font-bold mb-2 bg-[#FFD700]/10 px-4 py-1.5 rounded-full border border-[#FFD700]/20">
+          <Flame size={16} className="animate-pulse" />
+          <span className="uppercase tracking-[0.2em] text-[10px]">Promociones Especiales</span>
+        </div>
+        <h2 className="text-2xl font-black mt-1 uppercase tracking-tighter text-[#D4AF37]">
+          Combos <span className="text-[#FFD700]">Especiales</span>
+        </h2>
+        <p className="text-gray-400 mt-2 text-xs font-medium">
+          Los mejores paquetes para ahorrar y disfrutar como en casa.
+        </p>
+      </div>
+
+      <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+        {combos.map((combo) => {
+          const savingsPercent = combo.oldPrice ? Math.round((1 - combo.price / combo.oldPrice) * 100) : 0;
+          return (
+            <div
+              key={combo.id}
+              onClick={() => onOpen(combo)}
+              className="min-w-[300px] bg-white rounded-[32px] border-2 border-black/5 p-4 flex flex-row items-center gap-4 group hover:border-[#FFD700] transition-all duration-500 relative overflow-hidden cursor-pointer shadow-xl hover:-translate-y-1"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#8B1A1A]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              <div className="relative w-28 h-28 shrink-0 rounded-[24px] overflow-hidden shadow-xl border-2 border-black/5 bg-white">
+                <img
+                  src={getImageUrl(combo.imgPath)}
+                  alt={combo.name}
+                  className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute top-2 left-2 bg-white/40 backdrop-blur-md text-[#1F2937] px-2 py-0.5 rounded-lg text-[8px] font-black uppercase flex items-center gap-1 shadow-sm border border-white/20">
+                  <Zap size={8} fill="currentColor" className="text-[#FFD700]" /> COMBO
+                </div>
+                {savingsPercent > 0 && (
+                  <div className="absolute bottom-2 right-2 bg-[#8B1A1A]/80 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[9px] font-black shadow-xl border border-white/20">
+                    -{savingsPercent}%
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col flex-grow min-w-0">
+                <div className="flex items-center gap-1.5 text-gray-500 mb-2">
+                  <Store size={11} className="text-[#FFD700] shrink-0" />
+                  <span className="text-[8px] font-black uppercase tracking-[0.15em] truncate">{storeName}</span>
+                </div>
+                <h3 className="text-sm font-black mb-1.5 group-hover:text-[#8B1A1A] transition-colors leading-tight uppercase tracking-tight text-[#1F2937]">
+                  {combo.name}
+                </h3>
+                <div className="flex gap-1.5 mb-3 flex-wrap">
+                  <span className="bg-white/40 backdrop-blur-md text-[#8B1A1A] text-[8px] font-black px-2 py-0.5 rounded-md uppercase flex items-center gap-1 border border-white/20">
+                    <Flame size={8} fill="currentColor" /> Relámpago
+                  </span>
+                  <span className="bg-white/40 backdrop-blur-md text-[#002FA7] text-[8px] font-black px-2 py-0.5 rounded-md uppercase flex items-center gap-1 border border-white/20">
+                    <Clock size={8} /> Limitado
+                  </span>
+                </div>
+                <div className="flex items-center justify-between mt-auto">
+                  <div className="flex flex-col">
+                    {combo.oldPrice && (
+                      <span className="text-[10px] text-gray-400 line-through font-bold mb-0.5">${combo.oldPrice.toLocaleString('es-AR')}</span>
+                    )}
+                    <span className="text-xl font-black text-[#1F2937] tracking-tighter">${combo.price.toLocaleString('es-AR')}</span>
+                  </div>
+                  <button
+                    onClick={e => { e.stopPropagation(); onAddDirectly(combo); }}
+                    className="bg-[#8B1A1A] text-white p-3 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-xl shadow-[#8B1A1A]/30"
+                  >
+                    <Plus size={20} strokeWidth={4} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+    <style>{`.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}`}</style>
+  </div>
+);
+
+// ── Main ──────────────────────────────────────────────────────────────────
 interface StoreDetailViewProps {
   onAddToCart: (product: Product, storeId?: string) => void;
   onSelectStore: (store: PartnerStore | null) => void;
 }
 
-const DEMO_MODE = true;
 const STRICT_STORES = new Set(['minimarket-vibe', 'crispric', 'real-3', 'real-13']);
+const DEMO_MODE = true;
 
 const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelectStore }) => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { stores } = useStores();
   const { allProducts, loading } = useProducts();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [comboModal, setComboModal] = useState<StoreCombo | null>(null);
   const [comboVariants, setComboVariants] = useState<Record<string, string>>({});
 
   const store = stores.find(s => s.id === slug);
 
-  // Auto-select store for cart
   useEffect(() => {
     if (store) onSelectStore(store);
-    return () => { /* no cleanup needed */ };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store?.id]);
 
-  // Products filtered for this store
   const storeProducts = useMemo(() => {
     if (!slug) return [];
     const isStrict = STRICT_STORES.has(slug);
     if (!DEMO_MODE || isStrict) {
-      return allProducts.filter(p =>
-        p.storeId === slug || p.availableInStoreIds?.includes(slug)
-      );
+      return allProducts.filter(p => p.storeId === slug || p.availableInStoreIds?.includes(slug));
     }
-    // Demo mode: show all products
     return allProducts;
   }, [allProducts, slug]);
 
-  // Categories available for this store
-  const categories = useMemo(() => {
-    const cats = new Set(storeProducts.map(p => p.category));
-    return Array.from(cats).sort();
-  }, [storeProducts]);
-
-  const displayedProducts = selectedCategory
-    ? storeProducts.filter(p => p.category === selectedCategory)
-    : storeProducts;
-
-  // Combos for this store type
   const storeCombos = useMemo(() => {
     if (!store) return [];
     return STORE_COMBOS.filter(c =>
@@ -267,36 +314,36 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
 
   const addComboToCart = () => {
     if (!comboModal || !slug) return;
-    const variantDesc = Object.entries(comboVariants)
-      .map(([k, v]) => `${k} ${v}`)
-      .join(' · ');
-    const product: Product = {
+    const variantDesc = Object.entries(comboVariants).map(([k, v]) => `${k} ${v}`).join(' · ');
+    onAddToCart({
       id: comboModal.id,
       name: variantDesc ? `${comboModal.name} (${variantDesc})` : comboModal.name,
       price: comboModal.price,
       category: 'Combos',
-      img: '',
+      img: getImageUrl(comboModal.imgPath),
       isCombo: true,
       storeId: slug,
-    };
-    onAddToCart(product, slug);
+    }, slug);
     setComboModal(null);
   };
 
-  // Loading state
+  const addComboDirectly = (combo: StoreCombo) => {
+    if (!combo.variantItems || combo.variantItems.length === 0) {
+      onAddToCart({ id: combo.id, name: combo.name, price: combo.price, category: 'Combos', img: getImageUrl(combo.imgPath), isCombo: true, storeId: slug }, slug);
+    } else {
+      openComboModal(combo);
+    }
+  };
+
   if (loading && stores.length === 0) return <Spinner />;
 
-  // Not found
   if (!loading && stores.length > 0 && !store) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 text-center pb-24">
         <div className="text-6xl mb-4">🏪</div>
         <h2 className="text-xl font-black text-[#1F2937] mb-2">Local no encontrado</h2>
         <p className="text-[#6B7280] text-sm mb-6 max-w-xs">Este local no está disponible o el link no es válido.</p>
-        <button
-          onClick={() => navigate('/')}
-          className="bg-[#8B1A1A] text-white font-bold px-8 py-3 rounded-2xl active:scale-95 transition-all"
-        >
+        <button onClick={() => navigate('/')} className="bg-[#8B1A1A] text-white font-bold px-8 py-3 rounded-2xl">
           Volver al inicio
         </button>
       </div>
@@ -306,16 +353,13 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
   if (!store) return <Spinner />;
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] pb-24">
+    <div className="min-h-screen bg-[#FAFAF8] pb-28">
 
-      {/* Hero imagen del local */}
+      {/* Hero */}
       <div className="relative h-56 bg-gray-200 overflow-hidden">
         <img src={store.img} alt={store.name} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/10" />
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center active:scale-90 transition-all"
-        >
+        <button onClick={() => navigate(-1)} className="absolute top-4 left-4 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center active:scale-90 transition-all">
           <ArrowLeft size={20} className="text-white" />
         </button>
         {store.plan === 'premium' && (
@@ -358,104 +402,43 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
         </div>
       )}
 
-      {/* Combos / Promociones */}
+      {/* Combos — mismo estilo que Promotions.tsx */}
       {storeCombos.length > 0 && (
-        <div className="pt-5 pb-3">
-          <div className="px-4 mb-3 flex items-center justify-between">
-            <h2 className="font-black text-base text-[#1F2937]">🔥 Combos Especiales</h2>
-            <span className="text-[10px] text-[#8B1A1A] font-black uppercase tracking-widest bg-[#8B1A1A]/8 px-2 py-0.5 rounded-full">
-              {storeCombos.length} disponibles
-            </span>
-          </div>
-          <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-1">
-            {storeCombos.map(combo => (
-              <div
-                key={combo.id}
-                onClick={() => openComboModal(combo)}
-                className="shrink-0 w-56 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden cursor-pointer hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97]"
-              >
-                <div className="h-28 flex items-center justify-center bg-gradient-to-br from-[#8B1A1A]/6 via-[#FFD700]/6 to-[#002FA7]/6">
-                  <span className="text-5xl">{combo.emoji}</span>
-                </div>
-                <div className="p-3">
-                  <h3 className="font-black text-xs text-[#1F2937] leading-tight">{combo.name}</h3>
-                  <p className="text-[10px] text-[#6B7280] mt-0.5 leading-snug line-clamp-2">{combo.description}</p>
-                  <div className="flex items-center justify-between mt-2.5">
-                    <span className="font-black text-base text-[#1F2937]">${combo.price.toLocaleString('es-AR')}</span>
-                    <div className="bg-[#8B1A1A] rounded-xl px-2.5 py-1.5 flex items-center gap-1">
-                      <Plus size={11} strokeWidth={3} className="text-white" />
-                      <span className="text-white text-[10px] font-black">Pedir</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <CombosSection
+          combos={storeCombos}
+          storeName={store.name}
+          onOpen={openComboModal}
+          onAddDirectly={addComboDirectly}
+        />
       )}
 
-      {/* Category filter — sticky */}
-      {categories.length > 1 && (
-        <div className="bg-white border-b border-gray-100 sticky top-[104px] z-10">
-          <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 py-3">
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all ${!selectedCategory ? 'bg-[#8B1A1A] text-white' : 'bg-gray-100 text-[#6B7280]'}`}
-            >
-              Todo
-            </button>
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all ${selectedCategory === cat ? 'bg-[#8B1A1A] text-white' : 'bg-gray-100 text-[#6B7280]'}`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Products grid */}
-      <div className="px-4 pt-4">
+      {/* Productos */}
+      <div className="px-4 pt-5">
+        <h2 className="font-black text-base text-[#1F2937] mb-4">🛒 Catálogo del local</h2>
         {loading ? (
           <div className="grid grid-cols-2 gap-3">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="bg-white rounded-2xl h-48 animate-pulse border border-gray-100" />
             ))}
           </div>
-        ) : displayedProducts.length === 0 ? (
+        ) : storeProducts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <Package size={40} className="text-gray-200 mb-3" />
-            <p className="text-[#6B7280] font-medium text-sm">No hay productos en esta categoría</p>
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className="mt-4 text-xs text-[#8B1A1A] font-bold underline"
-            >
-              Ver todos los productos
-            </button>
+            <p className="text-[#6B7280] font-medium text-sm">No hay productos cargados aún</p>
           </div>
         ) : (
           <>
-            <p className="text-xs text-[#6B7280] font-medium mb-3">
-              {displayedProducts.length} productos disponibles
-            </p>
+            <p className="text-xs text-[#6B7280] font-medium mb-3">{storeProducts.length} productos disponibles</p>
             <div className="grid grid-cols-2 gap-3">
-              {displayedProducts.map(product => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  storeId={slug!}
-                  onAddToCart={onAddToCart}
-                />
+              {storeProducts.map(product => (
+                <ProductCard key={product.id} product={product} storeId={slug!} onAddToCart={onAddToCart} />
               ))}
             </div>
           </>
         )}
       </div>
 
-      {/* Ir al carrito CTA flotante */}
+      {/* CTA checkout flotante */}
       <div className="fixed bottom-20 left-4 right-4 z-40 pointer-events-none">
         <button
           onClick={() => navigate('/checkout')}
@@ -466,7 +449,6 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
         </button>
       </div>
 
-      {/* Combo variant modal */}
       {comboModal && (
         <ComboVariantModal
           combo={comboModal}
@@ -477,10 +459,7 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
         />
       )}
 
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+      <style>{`.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}`}</style>
     </div>
   );
 };

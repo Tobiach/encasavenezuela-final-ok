@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Zap, Plus, Flame, Store, Clock } from 'lucide-react';
 import { Product } from '../types';
 import { useStores } from '../lib/hooks/useStores';
-import { useProducts } from '../lib/hooks/useProducts';
+import { STORE_COMBOS } from '../data/storeCombos';
+import { getImageUrl } from '../lib/supabase';
 
 interface PromotionsProps {
   onAddToCart: (product: Product, storeId?: string) => void;
@@ -13,8 +14,20 @@ interface PromotionsProps {
 const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
   const navigate = useNavigate();
   const { stores } = useStores();
-  const { promoCombos } = useProducts();
   const [isMobileRailPaused, setIsMobileRailPaused] = useState(false);
+
+  // Convertir STORE_COMBOS a Product para onAddToCart
+  const promoCombos = STORE_COMBOS.map(c => ({
+    id: c.id,
+    name: c.name,
+    price: c.price,
+    oldPrice: c.oldPrice,
+    category: 'Combos',
+    img: getImageUrl(c.imgPath),
+    isCombo: true as const,
+    storeId: c.storeId,
+  } as Product & { storeId: string }));
+
   const mobileCombos = [...promoCombos, ...promoCombos];
 
   return (
