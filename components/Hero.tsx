@@ -11,9 +11,12 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick }) => {
     <section className="bg-white px-4 pt-8 pb-7 overflow-hidden">
       {/* Headline */}
       <div className="text-center mb-6">
-        <h1 className="text-3xl font-black leading-tight text-[#1F2937] uppercase tracking-tight">
-          EL SABOR DE TU TIERRA,<br />
-          <span className="text-[#FFD700]" style={{ WebkitTextStroke: '1.5px #1F2937', paintOrder: 'stroke fill' } as React.CSSProperties}>EN CASA</span>
+        <h1 className="leading-tight text-[#1F2937] uppercase tracking-tight">
+          <span className="block text-2xl font-black">EL SABOR DE TU TIERRA,</span>
+          <span
+            className="block text-6xl font-black text-[#FFD700]"
+            style={{ WebkitTextStroke: '2px #1F2937', paintOrder: 'stroke fill', textShadow: '0 3px 12px rgba(0,0,0,0.18)' } as React.CSSProperties}
+          >EN CASA</span>
         </h1>
         <p className="text-[#6B7280] text-sm mt-3 max-w-xs mx-auto leading-relaxed font-medium">
           Hogar, tradición y sabor venezolano al alcance de un click
@@ -31,17 +34,16 @@ const Hero: React.FC<HeroProps> = ({ onCatalogClick }) => {
         </button>
       </div>
 
-      {/* Sabores 100% nuestros — recuadro tricolor Venezuela */}
-      <div className="max-w-sm mx-auto">
-        <div className="relative rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm">
-          {/* Franja tricolor superior */}
+      {/* Sabores 100% nuestros — pill tricolor */}
+      <div className="flex justify-center">
+        <div className="inline-block rounded-full overflow-hidden border border-gray-200 shadow-md">
           <div
-            className="h-1.5 w-full"
+            className="h-1 w-full"
             style={{ background: 'linear-gradient(to right, #8B1A1A 33.3%, #FFD700 33.3%, #FFD700 66.6%, #002FA7 66.6%)' }}
           />
-          <div className="px-5 py-3 flex items-center justify-center gap-2.5">
-            <span className="text-lg">🇻🇪</span>
-            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1F2937]">
+          <div className="bg-white px-6 py-2.5 flex items-center justify-center gap-2">
+            <span className="text-base">🇻🇪</span>
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1F2937] whitespace-nowrap">
               Sabores 100% nuestros
             </p>
           </div>

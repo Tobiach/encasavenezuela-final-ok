@@ -50,7 +50,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
   const [deliveryModal, setDeliveryModal] = useState<PartnerStore | null>(null);
 
-  const HIDDEN_TAGS = ['Pasapalos', 'Snacks'];
+  const HIDDEN_TAGS = ['Pasapalos', 'Snacks', 'Comida Casera', 'Tradicional', 'Comida', 'Casera', 'Venezolana', 'Típica'];
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
@@ -247,6 +247,17 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
             <span className="text-gray-300 mx-1">·</span>
             <span className="text-xs text-gray-400 truncate">🚶 {store.neighborhood}</span>
           </div>
+          {(() => {
+            const visibleTags = (store.tags || []).filter(t => !HIDDEN_TAGS.includes(t)).slice(0, 3);
+            if (!visibleTags.length) return null;
+            return (
+              <div className="flex flex-wrap gap-1 mt-1.5">
+                {visibleTags.map(tag => (
+                  <span key={tag} className="bg-gray-100 text-gray-500 text-[8px] font-semibold px-2 py-0.5 rounded-full">{tag}</span>
+                ))}
+              </div>
+            );
+          })()}
           {hasFreeDelivery(store.id) && (
             <span className="text-[9px] text-emerald-600 font-semibold mt-1">🚚 Delivery gratis</span>
           )}

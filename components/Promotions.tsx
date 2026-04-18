@@ -7,6 +7,12 @@ import { useStores } from '../lib/hooks/useStores';
 import { STORE_COMBOS } from '../data/storeCombos';
 import { getImageUrl } from '../lib/supabase';
 
+const getComboQuantities = (id: number): string[] => {
+  const combo = STORE_COMBOS.find(c => c.id === id);
+  if (!combo?.variantItems) return [];
+  return combo.variantItems.flatMap(v => v.options);
+};
+
 interface PromotionsProps {
   onAddToCart: (product: Product, storeId?: string) => void;
 }
@@ -89,7 +95,7 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                     <h3 className="text-lg md:text-2xl font-black mb-2 group-hover:text-[#8B1A1A] transition-colors leading-tight uppercase tracking-tight text-gray-900">
                       {combo.name}
                     </h3>
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-2 mb-2">
                       <span className="bg-white/40 backdrop-blur-md text-ven-red text-[9px] font-black px-3 py-1 rounded-lg uppercase flex items-center gap-1.5 border border-white/20 shadow-sm">
                         <Flame size={10} fill="currentColor" /> Relámpago
                       </span>
@@ -97,7 +103,18 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                         <Clock size={10} /> Limitado
                       </span>
                     </div>
-                    
+                    {(() => {
+                      const qtys = getComboQuantities(combo.id);
+                      if (!qtys.length) return null;
+                      return (
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {qtys.map((q, i) => (
+                            <span key={i} className="bg-gray-100 text-gray-600 text-[8px] font-bold px-2 py-0.5 rounded-full">{q}</span>
+                          ))}
+                        </div>
+                      );
+                    })()}
+
                     <div className="flex items-center justify-between mt-auto">
                       <div className="flex flex-col">
                         {combo.oldPrice && (
@@ -153,7 +170,7 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                   <h3 className="text-lg md:text-2xl font-black mb-2 group-hover:text-venezuela-orange transition-colors leading-tight uppercase tracking-tight text-venezuela-brown">
                     {combo.name}
                   </h3>
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-2 mb-2">
                     <span className="bg-white/40 backdrop-blur-md text-ven-red text-[9px] font-black px-3 py-1 rounded-lg uppercase flex items-center gap-1.5 border border-white/20 shadow-sm">
                       <Flame size={10} fill="currentColor" /> Relámpago
                     </span>
@@ -161,7 +178,18 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                       <Clock size={10} /> Limitado
                     </span>
                   </div>
-                  
+                  {(() => {
+                    const qtys = getComboQuantities(combo.id);
+                    if (!qtys.length) return null;
+                    return (
+                      <div className="flex flex-wrap gap-1 mb-3">
+                        {qtys.map((q, i) => (
+                          <span key={i} className="bg-gray-100 text-gray-600 text-[8px] font-bold px-2 py-0.5 rounded-full">{q}</span>
+                        ))}
+                      </div>
+                    );
+                  })()}
+
                   <div className="flex items-center justify-between mt-auto">
                     <div className="flex flex-col">
                       {combo.oldPrice && (
