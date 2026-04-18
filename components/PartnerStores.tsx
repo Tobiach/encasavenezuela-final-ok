@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { MapPin, Star, ChevronRight, ArrowLeft, Clock, Search, Zap, CheckCircle, Sparkles, Heart } from 'lucide-react';
 import { useFavorites } from '../lib/hooks/useFavorites';
 
+
 // Descuentos deterministas por posición — solo visual en home preview
 const DISCOUNTS_PREMIUM = [20, 25, 30, 15];
 const DISCOUNTS_BASIC   = [10, 12, 15, 18];
@@ -43,7 +44,7 @@ interface PartnerStoresProps {
 const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpenMap, limit = 6, isFullView = false }) => {
   const navigate = useNavigate();
   const orderCounts = useOrderCounts();
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { favorites, isFavorite, toggleFavorite } = useFavorites();
   const [selectedTag, setSelectedTag] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
@@ -103,7 +104,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
         onClick={() => {
           const win = window as unknown as { encasaTrack?: (e: string, d: Record<string, unknown>) => void };
           win.encasaTrack?.('element_clicked', { element_type: 'store', element_id: store.id, element_name: store.name, timestamp: Date.now() });
-          onOpenMap(store);
+          navigate(`/tienda/${store.id}`);
         }}
         className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]'}`}
       >
@@ -188,7 +189,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
     const discount    = getStoreDiscount(store.plan, idx);
     return (
       <div
-        onClick={() => { onOpenMap(store); navigate('/catalog'); }}
+        onClick={() => navigate(`/tienda/${store.id}`)}
         className="group bg-white rounded-2xl overflow-hidden flex flex-col cursor-pointer shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
       >
         {/* Imagen */}
@@ -343,9 +344,15 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
               ))}
             </div>
 
-            {/* Nuevos en EnCasa */}
+            {/* Nuevos en EnCasa — 1 Venefood + resto sin favoritos */}
             {(() => {
-              const nuevos = stores.filter(s => s.plan === 'basic' && (s.review_count ?? 999) < 50);
+              const favIds = new Set(favorites);
+              const isVenefood = (s: { name: string; id: string }) =>
+                s.name.toLowerCase().includes('venefood') || s.id.toLowerCase().includes('venefood');
+              const candidates = stores.filter(s => s.plan === 'basic' && (s.review_count ?? 999) < 50);
+              const venefoodOne = candidates.filter(isVenefood).slice(0, 1);
+              const others = candidates.filter(s => !isVenefood(s) && !favIds.has(s.id));
+              const nuevos = [...venefoodOne, ...others];
               if (nuevos.length === 0) return null;
               return (
                 <div className="mt-8">

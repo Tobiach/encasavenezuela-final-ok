@@ -27,6 +27,7 @@ import RadarDashboardView from '../components/RadarDashboardView';
 import Offers from '../components/Offers';
 import AuthView from '../components/AuthView';
 import FavoritesView from '../components/FavoritesView';
+import StoreDetailView from '../components/StoreDetailView';
 import QRWelcomeModal from '../components/QRWelcomeModal';
 import AIAssistantButton from '../components/AIAssistantButton';
 import ProductAIChat from '../components/ProductAIChat'; // El componente de chat
@@ -96,7 +97,7 @@ const StoreDirectEntry: React.FC<{
     }
 
     onSelectStore(store);
-    navigate('/map', { replace: true });
+    navigate(`/tienda/${store.id}`, { replace: true });
   }, [slug, stores, searchParams, onSelectStore, navigate]);
 
   return null;
@@ -599,6 +600,12 @@ const handlePurchase = (total: number) => {
         } />
         <Route path="/local/:slug" element={<StoreDirectEntry stores={stores} onSelectStore={handleSelectStore} />} />
         <Route path="/favoritos" element={<FavoritesView />} />
+        <Route path="/tienda/:slug" element={
+          <StoreDetailView
+            onAddToCart={handleAddToCart}
+            onSelectStore={handleSelectStore}
+          />
+        } />
       </Routes>
       
       <Footer />

@@ -9,13 +9,6 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ onCatalogClick }) => {
   return (
     <section className="bg-white px-4 pt-8 pb-7 overflow-hidden">
-      {/* Badge */}
-      <div className="flex justify-center mb-5">
-        <span className="bg-[#8B1A1A]/10 text-[#8B1A1A] font-bold text-xs rounded-full px-3 py-1 border border-[#8B1A1A]/20">
-          🇻🇪 La comunidad venezolana en Argentina
-        </span>
-      </div>
-
       {/* Headline */}
       <div className="text-center mb-6">
         <h1 className="text-3xl font-black leading-tight text-[#1F2937] uppercase tracking-tight">
