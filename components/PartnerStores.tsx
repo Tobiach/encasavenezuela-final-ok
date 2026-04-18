@@ -1,6 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
-import { MapPin, Star, ChevronRight, ArrowLeft, Clock, Search, Zap, CheckCircle, Sparkles } from 'lucide-react';
+import { MapPin, Star, ChevronRight, ArrowLeft, Clock, Search, Zap, CheckCircle, Sparkles, Heart } from 'lucide-react';
+import { useFavorites } from '../lib/hooks/useFavorites';
 
 // Descuentos deterministas por posición — solo visual en home preview
 const DISCOUNTS_PREMIUM = [20, 25, 30, 15];
@@ -42,6 +43,7 @@ interface PartnerStoresProps {
 const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpenMap, limit = 6, isFullView = false }) => {
   const navigate = useNavigate();
   const orderCounts = useOrderCounts();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [selectedTag, setSelectedTag] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
@@ -69,12 +71,18 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
     });
   }, [stores, selectedTag, searchQuery]);
 
+  // IDs a excluir/priorizar en la vista home
+  const HOME_EXCLUDED = ['bahareque'];
+  const HOME_PRIORITY = ['margarita-food'];
+
   const displayedLocales = useMemo(() => {
     if (isFullView) return filteredLocales;
-    // Priorizar locales premium en el Home
-    const premium = stores.filter(s => s.plan === 'premium');
-    const prepared = stores.filter(s => s.isPreparedFood && s.plan !== 'premium');
-    return [...premium, ...prepared].slice(0, limit);
+    // Priorizar locales premium en el Home, excluir Bahareque, priorizar Margarita Food
+    const visible = stores.filter(s => !HOME_EXCLUDED.includes(s.id));
+    const priority = visible.filter(s => HOME_PRIORITY.includes(s.id));
+    const premium  = visible.filter(s => s.plan === 'premium' && !HOME_PRIORITY.includes(s.id));
+    const prepared = visible.filter(s => s.isPreparedFood && s.plan !== 'premium' && !HOME_PRIORITY.includes(s.id));
+    return [...priority, ...premium, ...prepared].slice(0, limit);
   }, [stores, isFullView, filteredLocales, limit]);
 
   const MarketplaceCard: React.FC<{ store: PartnerStore }> = ({ store }) => {
@@ -209,7 +217,18 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
 
         {/* Info */}
         <div className="p-3 flex-grow flex flex-col">
-          <h3 className="font-bold text-gray-900 text-sm truncate">{store.name}</h3>
+          <div className="flex items-start justify-between gap-1 mb-0.5">
+            <h3 className="font-bold text-gray-900 text-sm truncate flex-1">{store.name}</h3>
+            <button
+              onClick={e => { e.stopPropagation(); toggleFavorite(store.id); }}
+              className="w-6 h-6 flex items-center justify-center active:scale-90 transition-all shrink-0"
+            >
+              <Heart
+                size={14}
+                className={isFavorite(store.id) ? 'fill-[#8B1A1A] text-[#8B1A1A]' : 'text-gray-300'}
+              />
+            </button>
+          </div>
           <div className="flex items-center gap-1 mt-0.5">
             <Star size={10} className="fill-amber-400 text-amber-400 shrink-0" />
             <span className="text-xs text-gray-500">{store.rating.toFixed(1)} ({store.review_count})</span>

@@ -26,6 +26,7 @@ import GiftsView from '../components/GiftsView';
 import RadarDashboardView from '../components/RadarDashboardView';
 import Offers from '../components/Offers';
 import AuthView from '../components/AuthView';
+import FavoritesView from '../components/FavoritesView';
 import QRWelcomeModal from '../components/QRWelcomeModal';
 import AIAssistantButton from '../components/AIAssistantButton';
 import ProductAIChat from '../components/ProductAIChat'; // El componente de chat
@@ -597,6 +598,7 @@ const handlePurchase = (total: number) => {
           </React.Suspense>
         } />
         <Route path="/local/:slug" element={<StoreDirectEntry stores={stores} onSelectStore={handleSelectStore} />} />
+        <Route path="/favoritos" element={<FavoritesView />} />
       </Routes>
       
       <Footer />

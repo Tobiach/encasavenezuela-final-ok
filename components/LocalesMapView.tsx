@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Search, MapPin, Star, Navigation, ChevronRight, Phone, SlidersHorizontal, X } from 'lucide-react';
+import { Search, MapPin, Star, Navigation, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import { PartnerStore } from '../types';
-import { LOCALES_INVESTIGADOS } from '../data/localesInvestigados';
 
 // Fix Leaflet default icon broken en Vite/Webpack
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
@@ -69,18 +68,6 @@ const PIN_PROXIMO = L.divIcon({
   className: '',
 });
 
-// Pin azul para locales del ecosistema
-const PIN_INVESTIGADO = L.divIcon({
-  html: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 32 40">
-    <path d="M16 0C7.163 0 0 7.163 0 16c0 10 16 24 16 24S32 26 32 16C32 7.163 24.837 0 16 0z"
-      fill="#DBEAFE" stroke="#002FA7" stroke-width="2.5"/>
-    <circle cx="16" cy="16" r="5" fill="#002FA7" opacity="0.85"/>
-  </svg>`,
-  className: '',
-  iconSize: [28, 36],
-  iconAnchor: [14, 36],
-  popupAnchor: [0, -38],
-});
 
 // Pins ficticios "Próximamente" en Boedo y Caballito
 const PROXIMOS_COORDS: [number, number][] = [
@@ -133,9 +120,6 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
   const [searching,      setSearching]      = useState(false);
   const [searchError,    setSearchError]    = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Ecosistema toggle
-  const [showInvestigados, setShowInvestigados] = useState(true);
 
   // CAMBIO 3: drawer de detalle al tocar pin
   const [selectedStore, setSelectedStore] = useState<(PartnerStore & { discount: number }) | null>(null);
@@ -320,7 +304,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
             <p className="text-red-500 text-xs font-medium mt-2 px-1">{searchError}</p>
           )}
 
-          {/* Leyenda + toggle ecosistema */}
+          {/* Leyenda */}
           <div className="flex items-center gap-3 mt-4 flex-wrap">
             <div className="flex items-center gap-0 bg-white border border-gray-100 rounded-xl shadow-sm w-fit px-3 py-2 flex-wrap">
               <div className="flex items-center gap-1.5 pr-3">
@@ -332,23 +316,12 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
                 <span className="w-3 h-3 rounded-full bg-gray-400 inline-block shrink-0" />
                 <span className="text-xs font-semibold text-gray-700">Básico</span>
               </div>
-              <div className="w-px h-4 bg-gray-200" />
-              <div className="flex items-center gap-1.5 pl-3">
-                <span className="w-3 h-3 rounded-full bg-blue-200 border-2 border-blue-500 inline-block shrink-0" />
-                <span className="text-xs font-semibold text-gray-700">Ecosistema</span>
-              </div>
               <div className="w-px h-4 bg-gray-200 mx-3" />
               <div className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-gray-200 border-2 border-white inline-block shrink-0" />
                 <span className="text-xs font-semibold text-gray-400">Próximamente</span>
               </div>
             </div>
-            <button
-              onClick={() => setShowInvestigados(v => !v)}
-              className={`text-xs font-bold px-3 py-2 rounded-xl border transition-all ${showInvestigados ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-gray-200 text-gray-400'}`}
-            >
-              {showInvestigados ? '👁 Ocultar ecosistema' : '👁 Mostrar ecosistema'}
-            </button>
           </div>
         </div>
       </div>
@@ -369,43 +342,6 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
 
             <FlyToLocation coords={flyTo} />
 
-            {/* Pins ecosistema (azul) */}
-            {showInvestigados && LOCALES_INVESTIGADOS.map((local) => (
-              <Marker
-                key={local.id}
-                position={[local.lat, local.lng]}
-                icon={PIN_INVESTIGADO}
-              >
-                <Popup minWidth={210} className="encasa-popup">
-                  <div style={{ fontFamily: 'system-ui, sans-serif', padding: '4px 2px' }}>
-                    <span style={{
-                      display: 'inline-block', marginBottom: 6,
-                      background: '#DBEAFE', color: '#1D4ED8',
-                      fontSize: 9, fontWeight: 900, letterSpacing: '0.15em',
-                      padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase',
-                    }}>🔵 Ecosistema venezolano</span>
-                    <h3 style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 900, color: '#111827', lineHeight: 1.2 }}>
-                      {local.nombre}
-                    </h3>
-                    <p style={{ margin: '0 0 4px', fontSize: 11, color: '#6B7280', fontWeight: 600 }}>
-                      📍 {local.direccion} · {local.barrio}
-                    </p>
-                    {local.telefono && (
-                      <p style={{ margin: '0 0 8px', fontSize: 11, color: '#374151' }}>📞 {local.telefono}</p>
-                    )}
-                    {local.notas && (
-                      <p style={{ margin: '0 0 8px', fontSize: 10, color: '#9CA3AF', fontStyle: 'italic' }}>{local.notas}</p>
-                    )}
-                    <div style={{
-                      background: '#EFF6FF', color: '#1D4ED8', textAlign: 'center',
-                      padding: '6px 0', borderRadius: 10, fontWeight: 800,
-                      fontSize: 10, letterSpacing: '0.06em',
-                    }}>AÚN NO EN ENCASA · POTENCIAL LEAD</div>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-
             {/* Pins "Próximamente" */}
             {PROXIMOS_COORDS.map((coords, i) => (
               <Marker key={`proximo-${i}`} position={coords} icon={PIN_PROXIMO}>
@@ -413,7 +349,23 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
                   <div style={{ fontFamily: 'system-ui, sans-serif', padding: '4px 2px' }}>
                     <b style={{ fontSize: 13, color: '#111827' }}>Próximamente en EnCasa 🇻🇪</b>
                     <br />
-                    <small style={{ color: '#6B7280' }}>Este local aún no está en la plataforma</small>
+                    <small style={{ color: '#6B7280', display: 'block', marginTop: 4 }}>
+                      Este local aún no está en la plataforma
+                    </small>
+                    <a
+                      href={`https://www.google.com/maps?q=${coords[0]},${coords[1]}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-block', marginTop: 8,
+                        background: '#4285F4', color: 'white',
+                        fontSize: 10, fontWeight: 700,
+                        padding: '4px 10px', borderRadius: 8,
+                        textDecoration: 'none',
+                      }}
+                    >
+                      📍 Ver en Google Maps
+                    </a>
                   </div>
                 </Popup>
               </Marker>
@@ -471,39 +423,6 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
         )}
       </div>
 
-      {/* Lista ecosistema investigado */}
-      <div className="px-4 pt-2 pb-10 max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-3 px-1">
-          <h2 className="text-base font-bold text-gray-700">
-            Ecosistema venezolano en CABA ({LOCALES_INVESTIGADOS.length})
-          </h2>
-          <span className="text-xs text-blue-500 font-semibold bg-blue-50 px-2 py-1 rounded-lg">Leads potenciales</span>
-        </div>
-        <div className="bg-white border border-blue-100 rounded-2xl shadow-sm overflow-hidden">
-          <div className="divide-y divide-gray-100">
-            {LOCALES_INVESTIGADOS.map(local => (
-              <div key={local.id} className="flex items-center gap-3 px-4 py-4">
-                <div className="w-3 h-3 rounded-full shrink-0 bg-blue-200 border-2 border-blue-500" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-gray-900 font-bold text-sm truncate">{local.nombre}</p>
-                  <p className="text-gray-500 text-xs flex items-center gap-1.5 mt-0.5">
-                    <MapPin size={10} className="shrink-0" />
-                    {local.direccion} · {local.barrio}
-                    {local.telefono && (
-                      <>
-                        <span className="text-gray-300">·</span>
-                        <Phone size={10} className="shrink-0" />
-                        {local.telefono}
-                      </>
-                    )}
-                  </p>
-                </div>
-                <span className="text-xs text-gray-400 shrink-0 capitalize">{local.tipo}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* ── CAMBIO 3: Drawer de detalle ──────────────────────────────────────── */}
       {/* Overlay */}
