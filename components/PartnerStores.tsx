@@ -43,7 +43,7 @@ interface PartnerStoresProps {
 const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpenMap, limit = 6, isFullView = false }) => {
   const navigate = useNavigate();
   const orderCounts = useOrderCounts();
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { favorites, isFavorite, toggleFavorite } = useFavorites();
   const [selectedTag, setSelectedTag] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
@@ -71,17 +71,20 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
     });
   }, [stores, selectedTag, searchQuery]);
 
-  // IDs a excluir/priorizar en la vista home
+  // IDs a excluir/priorizar en la vista home — orden es significativo
   const HOME_EXCLUDED = ['bahareque'];
-  const HOME_PRIORITY = ['margarita-food'];
+  const HOME_PRIORITY = ['minimarket-vibe', 'margarita-food'];
 
   const displayedLocales = useMemo(() => {
     if (isFullView) return filteredLocales;
-    // Priorizar locales premium en el Home, excluir Bahareque, priorizar Margarita Food
     const visible = stores.filter(s => !HOME_EXCLUDED.includes(s.id));
-    const priority = visible.filter(s => HOME_PRIORITY.includes(s.id));
-    const premium  = visible.filter(s => s.plan === 'premium' && !HOME_PRIORITY.includes(s.id));
-    const prepared = visible.filter(s => s.isPreparedFood && s.plan !== 'premium' && !HOME_PRIORITY.includes(s.id));
+    const priorityIds = new Set(HOME_PRIORITY);
+    // Respetar el orden de HOME_PRIORITY estrictamente
+    const priority = HOME_PRIORITY
+      .map(id => visible.find(s => s.id === id))
+      .filter((s): s is PartnerStore => s != null);
+    const premium  = visible.filter(s => s.plan === 'premium' && !priorityIds.has(s.id));
+    const prepared = visible.filter(s => s.isPreparedFood && s.plan !== 'premium' && !priorityIds.has(s.id));
     return [...priority, ...premium, ...prepared].slice(0, limit);
   }, [stores, isFullView, filteredLocales, limit]);
 
@@ -310,6 +313,53 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           </div>
         ) : (
           <>
+            {/* Mis Favoritos — visible solo cuando hay guardados */}
+            {favorites.length > 0 && (() => {
+              const favStores = stores.filter(s => favorites.includes(s.id));
+              if (favStores.length === 0) return null;
+              return (
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <Heart size={15} className="fill-[#8B1A1A] text-[#8B1A1A]" />
+                      <h2 className="font-bold text-base text-gray-900">Mis Favoritos</h2>
+                    </div>
+                    <button
+                      onClick={() => navigate('/favoritos')}
+                      className="flex items-center gap-1 text-xs font-semibold text-[#8B1A1A] hover:underline transition-colors"
+                    >
+                      Ver todos <ChevronRight size={13} />
+                    </button>
+                  </div>
+                  <div
+                    className="flex gap-3 overflow-x-auto no-scrollbar pb-1"
+                    style={{ scrollbarWidth: 'none' }}
+                  >
+                    {favStores.map(store => (
+                      <div
+                        key={store.id}
+                        onClick={() => { onOpenMap(store); navigate('/catalog'); }}
+                        className="shrink-0 w-28 cursor-pointer group"
+                      >
+                        <div className="relative w-28 h-20 rounded-2xl overflow-hidden mb-1.5 shadow-sm">
+                          <img src={store.img} alt={store.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                          <button
+                            onClick={e => { e.stopPropagation(); toggleFavorite(store.id); }}
+                            className="absolute top-1.5 right-1.5 w-6 h-6 bg-white/90 rounded-full flex items-center justify-center"
+                          >
+                            <Heart size={11} className="fill-[#8B1A1A] text-[#8B1A1A]" />
+                          </button>
+                        </div>
+                        <p className="text-xs font-bold text-gray-900 truncate leading-tight">{store.name}</p>
+                        <p className="text-[10px] text-gray-400 truncate">{store.neighborhood}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Header */}
             <div className="mb-5 flex items-center justify-between">
               <div>

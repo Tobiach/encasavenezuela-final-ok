@@ -3,23 +3,31 @@
 @theme {
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
 
-  /* Fondo y texto */
-  --color-venezuela-dark: #FAFAF8;
+  /* ── PALETA OFICIAL ENCASA VENEZUELA ─────────────────────────── */
+
+  /* Primarios — Bandera Venezuela */
+  --color-ven-yellow: #FFD700;       /* Amarillo bandera — CTAs, highlights */
+  --color-ven-blue:   #002FA7;       /* Azul bandera — links, info */
+  --color-ven-red:    #8B1A1A;       /* Rojo bandera (oscuro) — principal */
+
+  /* Secundarios */
+  --color-ven-gold:       #D4AF37;   /* Dorado — badges premium */
+  --color-ven-blue-dark:  #1E40AF;   /* Azul oscuro — texto, confianza */
+  --color-ven-red-accent: #E53E3E;   /* Rojo acento — urgencia, ofertas */
+
+  /* Neutros */
+  --color-venezuela-brown:  #1F2937; /* Texto oscuro principal */
+  --color-venezuela-dark:   #FAFAF8; /* Fondo claro */
   --color-venezuela-darker: #F0EEE9;
-  --color-venezuela-brown: #1A1A1A;
 
-  /* Naranja legacy — mapeado a rojo venezolano para no romper clases existentes */
-  --color-venezuela-orange: #8B1A1A;
-  --color-venezuela-orange-dark: #6F1414;
-  --color-venezuela-orange-deep: #5A1010;
+  /* Legacy compat — no romper clases existentes */
+  --color-venezuela-orange:       #8B1A1A;
+  --color-venezuela-orange-dark:  #6F1414;
+  --color-venezuela-orange-deep:  #5A1010;
 
-  /* Paleta bandera Venezuela */
-  --color-ven-yellow: #D4AF37;
-  --color-ven-blue: #002FA7;
-  --color-ven-red: #8B1A1A;
-
-  --color-ven-yellow-light: #E5C76B;
-  --color-ven-blue-light: #1A4FD6;
+  /* Lights */
+  --color-ven-yellow-light: #FFE84D;
+  --color-ven-blue-light:   #1A4FD6;
 }
 
 :root {
@@ -28,7 +36,7 @@
   font-weight: 400;
 
   color-scheme: light;
-  color: #1A1A1A;
+  color: #1F2937;
   background-color: #FAFAF8;
 
   font-synthesis: none;
@@ -42,7 +50,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #FAFAF8;
-  color: #1A1A1A;
+  color: #1F2937;
   overflow-x: hidden;
   max-width: 100vw;
 }

@@ -6,7 +6,7 @@ const steps = [
     emoji: '🛍️',
     title: 'Elegí tu local',
     description: 'Explorá los locales venezolanos verificados y elegí tus productos favoritos.',
-    accent: '#D4AF37',
+    accent: '#FFD700',
   },
   {
     number: '2',
