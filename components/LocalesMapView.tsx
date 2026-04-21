@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Search, MapPin, Star, Navigation, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
+import { Search, MapPin, Star, Navigation, ChevronRight, SlidersHorizontal, X, ArrowLeft } from 'lucide-react';
 import { PartnerStore } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 // Fix Leaflet default icon broken en Vite/Webpack
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
@@ -114,6 +115,7 @@ interface LocalesMapViewProps {
 const CABA_CENTER: [number, number] = [-34.6037, -58.3816];
 
 const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
+  const navigate = useNavigate();
   // Búsqueda
   const [searchQuery,    setSearchQuery]    = useState('');
   const [flyTo,          setFlyTo]          = useState<[number, number] | null>(null);
@@ -242,19 +244,28 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
     <div className="min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="bg-white shadow-sm px-4 pt-6 pb-5">
+      <div className="bg-white shadow-sm px-4 pt-5 pb-5 border-b border-gray-100">
         <div className="max-w-5xl mx-auto">
-          <div className="flex items-start gap-3 mb-5">
-            <div className="bg-ven-yellow/10 p-2.5 rounded-xl shrink-0 mt-0.5">
-              <MapPin size={22} className="text-ven-yellow" />
-            </div>
-            <div className="flex-1">
-              <h1 className="text-2xl font-black text-gray-900 tracking-tight leading-tight">
-                Locales Venezolanos en CABA
-              </h1>
-              <p className="text-sm text-gray-500 mt-0.5">
-                {filteredStores.length} locales activos · EnCasa Venezuela
-              </p>
+          {/* Top bar: atrás + título */}
+          <div className="flex items-center gap-3 mb-5">
+            <button
+              onClick={() => navigate(-1)}
+              className="w-10 h-10 bg-gray-100 hover:bg-ven-yellow hover:text-white rounded-2xl flex items-center justify-center transition-all active:scale-90 shrink-0"
+            >
+              <ArrowLeft size={18} className="text-gray-700 group-hover:text-white" />
+            </button>
+            <div className="flex items-center gap-2.5 flex-1">
+              <div className="w-9 h-9 bg-[#8B1A1A]/10 rounded-xl flex items-center justify-center shrink-0">
+                <MapPin size={18} className="text-[#8B1A1A]" />
+              </div>
+              <div>
+                <h1 className="text-lg font-black text-gray-900 tracking-tight leading-tight">
+                  Locales en CABA 🇻🇪
+                </h1>
+                <p className="text-[11px] text-gray-400 font-semibold">
+                  {filteredStores.length} locales activos · EnCasa Venezuela
+                </p>
+              </div>
             </div>
           </div>
 

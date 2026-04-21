@@ -18,7 +18,7 @@ const CategoriesNew: React.FC = () => {
         </div>
 
         <div
-          className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2"
+          className="cat-scroll flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2"
           style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
         >
           {categories.map((cat) => (
@@ -51,6 +51,7 @@ const CategoriesNew: React.FC = () => {
 
       <style>{`
         .cat-scroll::-webkit-scrollbar { display: none; }
+        .cat-scroll { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </section>
   );

@@ -22,11 +22,16 @@ const BottomNav: React.FC = () => {
         const isActive = path !== null && location.pathname === path;
         const isCenter = idx === CENTER_IDX;
 
+        const handleNav = (p: string) => {
+          sessionStorage.removeItem(`encasa_scroll_${p}`);
+          navigate(p);
+        };
+
         if (isCenter) {
           return (
             <button
               key={label}
-              onClick={() => path && navigate(path)}
+              onClick={() => path && handleNav(path)}
               className="flex flex-col items-center justify-center gap-0.5 -mt-6 transition-all active:scale-90"
             >
               <div className="w-14 h-14 bg-[#8B1A1A] rounded-full flex items-center justify-center shadow-xl border-4 border-white transition-all">
@@ -42,7 +47,7 @@ const BottomNav: React.FC = () => {
         return (
           <button
             key={label}
-            onClick={() => path && navigate(path)}
+            onClick={() => path && handleNav(path)}
             className={`flex flex-col items-center justify-center gap-0.5 w-14 py-1 rounded-xl transition-all active:scale-90 ${
               isActive ? 'text-ven-yellow' : 'text-gray-400'
             } ${!path ? 'opacity-40 cursor-default' : ''}`}

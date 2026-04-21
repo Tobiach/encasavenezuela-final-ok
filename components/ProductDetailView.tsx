@@ -35,7 +35,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-[150] bg-black/95 backdrop-blur-xl flex items-center justify-center overflow-hidden animate-in fade-in duration-300 p-0 md:p-6">
+    <div className="fixed inset-0 z-[150] bg-black/90 backdrop-blur-xl flex items-center justify-center overflow-hidden animate-in fade-in duration-300 p-0 md:p-6">
       <div className="w-full h-full md:h-[90vh] md:max-w-4xl md:rounded-[48px] bg-[#0F0A08] border border-white/10 flex flex-col md:flex-row overflow-hidden shadow-2xl relative">
 
         <button
@@ -45,9 +45,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           <X size={20} />
         </button>
 
-        {/* Panel izquierdo — producto */}
-        <div className="w-full md:w-[40%] flex flex-col overflow-y-auto no-scrollbar scroll-smooth bg-gradient-to-b from-venezuela-dark to-black border-r border-white/5 shrink-0 h-[40vh] md:h-full">
-          <div className="relative h-[25vh] md:h-auto md:aspect-square shrink-0 overflow-hidden bg-black/40 flex items-center justify-center">
+        {/* Panel izquierdo — producto (toma toda la pantalla en mobile) */}
+        <div className="w-full md:w-[58%] flex flex-col overflow-y-auto no-scrollbar scroll-smooth bg-gradient-to-b from-venezuela-dark to-black border-r border-white/5 shrink-0 h-full md:h-full">
+          <div className="relative h-[38vh] md:h-auto md:aspect-square shrink-0 overflow-hidden bg-black/40 flex items-center justify-center">
             <img src={product.img} alt={product.name} className="max-w-full max-h-full object-contain md:object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50" />
           </div>
@@ -150,8 +150,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           </div>
         </div>
 
-        {/* Panel derecho — mantenimiento */}
-        <div className="w-full md:w-[60%] flex-grow h-full flex flex-col bg-venezuela-dark relative overflow-hidden border-t md:border-t-0 border-white/5">
+        {/* Panel derecho — PanaChef (oculto en mobile, visible en desktop) */}
+        <div className="hidden md:flex md:w-[42%] flex-grow h-full flex-col bg-venezuela-dark relative overflow-hidden border-t md:border-t-0 border-white/5">
 
           {/* Header — igual al original */}
           <div className="p-3 md:p-5 border-b border-white/5 flex items-center justify-between bg-black/40 backdrop-blur-md shrink-0">

@@ -2,13 +2,14 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Star, MapPin, Clock, Plus, Package, ShoppingBag,
-  X, Zap, Flame, Store, CheckCircle,
+  X, Zap, Flame, Store, CheckCircle, Search,
 } from 'lucide-react';
 import { useStores } from '../lib/hooks/useStores';
 import { useProducts } from '../lib/hooks/useProducts';
 import { Product, PartnerStore } from '../types';
 import { STORE_COMBOS, StoreCombo } from '../data/storeCombos';
 import { getImageUrl } from '../lib/supabase';
+import ProductDetailView from './ProductDetailView';
 
 // ── Variantes ──────────────────────────────────────────────────────────────
 interface ProductVariant { label: string; multiplier: number; }
@@ -233,7 +234,7 @@ const CombosSection: React.FC<{
                 <h3 className="text-sm font-black mb-1.5 group-hover:text-[#8B1A1A] transition-colors leading-tight uppercase tracking-tight text-[#1F2937]">
                   {combo.name}
                 </h3>
-                <div className="flex gap-1.5 mb-3 flex-wrap">
+                <div className="flex gap-1.5 mb-2 flex-wrap">
                   <span className="bg-white/40 backdrop-blur-md text-[#8B1A1A] text-[8px] font-black px-2 py-0.5 rounded-md uppercase flex items-center gap-1 border border-white/20">
                     <Flame size={8} fill="currentColor" /> Relámpago
                   </span>
@@ -241,6 +242,9 @@ const CombosSection: React.FC<{
                     <Clock size={8} /> Limitado
                   </span>
                 </div>
+                {combo.description && (
+                  <p className="text-[9px] text-gray-700 font-medium leading-snug mb-2 line-clamp-2">{combo.description}</p>
+                )}
                 <div className="flex items-center justify-between mt-auto">
                   <div className="flex flex-col">
                     {combo.oldPrice && (
@@ -281,6 +285,9 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
   const { allProducts, loading } = useProducts();
   const [comboModal, setComboModal] = useState<StoreCombo | null>(null);
   const [comboVariants, setComboVariants] = useState<Record<string, string>>({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('Todos');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const store = stores.find(s => s.id === slug);
 
@@ -304,6 +311,19 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
       c.storeType === 'all' || (c.storeType === 'productos' && store.type === 'productos')
     );
   }, [store]);
+
+  const productCategories = useMemo(() => {
+    const cats = Array.from(new Set(storeProducts.map(p => p.category).filter(Boolean)));
+    return ['Todos', ...cats];
+  }, [storeProducts]);
+
+  const filteredProducts = useMemo(() => {
+    return storeProducts.filter(p => {
+      const matchesCat = activeCategory === 'Todos' || p.category === activeCategory;
+      const matchesSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCat && matchesSearch;
+    });
+  }, [storeProducts, activeCategory, searchQuery]);
 
   const openComboModal = (combo: StoreCombo) => {
     const defaults: Record<string, string> = {};
@@ -412,26 +432,62 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
         />
       )}
 
+      {/* Búsqueda + Categorías */}
+      <div className="bg-white border-b border-gray-100 px-4 pt-4 pb-3 sticky top-0 z-20 shadow-sm">
+        {/* Buscador */}
+        <div className="relative mb-3">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder={`Buscar en ${store.name}...`}
+            className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-[#1F2937] placeholder-gray-400 focus:outline-none focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/20 transition-all"
+          />
+        </div>
+        {/* Categorías */}
+        {productCategories.length > 1 && (
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5">
+            {productCategories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`shrink-0 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all border ${
+                  activeCategory === cat
+                    ? 'bg-[#8B1A1A] border-[#8B1A1A] text-white shadow-sm'
+                    : 'bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-300'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Productos */}
       <div className="px-4 pt-5">
-        <h2 className="font-black text-base text-[#1F2937] mb-4">🛒 Catálogo del local</h2>
         {loading ? (
           <div className="grid grid-cols-2 gap-3">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="bg-white rounded-2xl h-48 animate-pulse border border-gray-100" />
             ))}
           </div>
-        ) : storeProducts.length === 0 ? (
+        ) : filteredProducts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <Package size={40} className="text-gray-200 mb-3" />
-            <p className="text-[#6B7280] font-medium text-sm">No hay productos cargados aún</p>
+            <p className="text-[#6B7280] font-medium text-sm">
+              {searchQuery ? 'Sin resultados para esa búsqueda' : 'No hay productos cargados aún'}
+            </p>
           </div>
         ) : (
           <>
-            <p className="text-xs text-[#6B7280] font-medium mb-3">{storeProducts.length} productos disponibles</p>
+            <p className="text-xs text-[#6B7280] font-medium mb-3">{filteredProducts.length} productos disponibles</p>
             <div className="grid grid-cols-2 gap-3">
-              {storeProducts.map(product => (
-                <ProductCard key={product.id} product={product} storeId={slug!} onAddToCart={onAddToCart} />
+              {filteredProducts.map(product => (
+                <div key={product.id} onClick={() => setSelectedProduct(product)} className="cursor-pointer">
+                  <ProductCard product={product} storeId={slug!} onAddToCart={onAddToCart} />
+                </div>
               ))}
             </div>
           </>
@@ -456,6 +512,18 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
           onVariantChange={(name, val) => setComboVariants(v => ({ ...v, [name]: val }))}
           onConfirm={addComboToCart}
           onClose={() => setComboModal(null)}
+        />
+      )}
+
+      {selectedProduct && (
+        <ProductDetailView
+          product={selectedProduct}
+          allProducts={storeProducts}
+          stores={stores}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={(p, sId) => { onAddToCart(p, sId || slug); setSelectedProduct(null); }}
+          onSelectStore={(s) => { onSelectStore(s); setSelectedProduct(null); }}
+          storeId={slug}
         />
       )}
 
