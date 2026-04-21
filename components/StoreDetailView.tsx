@@ -177,97 +177,83 @@ const ComboVariantModal: React.FC<{
   </div>
 );
 
-// ── CombosSection — mismo estilo que Promotions.tsx ────────────────────────
+// ── CombosSection — cards compactas con marquee automático ────────────────
 const CombosSection: React.FC<{
   combos: StoreCombo[];
   storeName: string;
   onOpen: (c: StoreCombo) => void;
   onAddDirectly: (c: StoreCombo) => void;
-}> = ({ combos, storeName, onOpen, onAddDirectly }) => (
-  <div className="py-8 bg-[#2D1618]">
-    <div className="max-w-5xl mx-auto px-4">
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center gap-2 text-[#FFD700] font-bold mb-2 bg-[#FFD700]/10 px-4 py-1.5 rounded-full border border-[#FFD700]/20">
-          <Flame size={16} className="animate-pulse" />
-          <span className="uppercase tracking-[0.2em] text-[10px]">Promociones Especiales</span>
+}> = ({ combos, storeName, onOpen, onAddDirectly }) => {
+  const [paused, setPaused] = React.useState(false);
+  const looped = [...combos, ...combos];
+
+  return (
+    <div className="py-5 bg-[#2D1618]">
+      <div className="mb-3 px-4 flex items-center gap-2">
+        <div className="inline-flex items-center gap-1.5 text-[#FFD700] font-bold bg-[#FFD700]/10 px-3 py-1 rounded-full border border-[#FFD700]/20">
+          <Flame size={12} className="animate-pulse" />
+          <span className="uppercase tracking-[0.2em] text-[9px]">Combos Especiales</span>
         </div>
-        <h2 className="text-2xl font-black mt-1 uppercase tracking-tighter text-[#D4AF37]">
-          Combos <span className="text-[#FFD700]">Especiales</span>
-        </h2>
-        <p className="text-gray-400 mt-2 text-xs font-medium">
-          Los mejores paquetes para ahorrar y disfrutar como en casa.
-        </p>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-        {combos.map((combo) => {
-          const savingsPercent = combo.oldPrice ? Math.round((1 - combo.price / combo.oldPrice) * 100) : 0;
-          return (
-            <div
-              key={combo.id}
-              onClick={() => onOpen(combo)}
-              className="min-w-[300px] bg-white rounded-[32px] border-2 border-black/5 p-4 flex flex-row items-center gap-4 group hover:border-[#FFD700] transition-all duration-500 relative overflow-hidden cursor-pointer shadow-xl hover:-translate-y-1"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#8B1A1A]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-              <div className="relative w-28 h-28 shrink-0 rounded-[24px] overflow-hidden shadow-xl border-2 border-black/5 bg-white">
-                <img
-                  src={getImageUrl(combo.imgPath)}
-                  alt={combo.name}
-                  className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute top-2 left-2 bg-white/40 backdrop-blur-md text-[#1F2937] px-2 py-0.5 rounded-lg text-[8px] font-black uppercase flex items-center gap-1 shadow-sm border border-white/20">
-                  <Zap size={8} fill="currentColor" className="text-[#FFD700]" /> COMBO
+      <div
+        className="overflow-hidden"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onTouchStart={() => setPaused(true)}
+        onTouchEnd={() => setPaused(false)}
+      >
+        <div className={`flex gap-3 w-max px-4 ${paused ? '' : 'animate-combo-marquee'}`}>
+          {looped.map((combo, idx) => {
+            const savingsPercent = combo.oldPrice ? Math.round((1 - combo.price / combo.oldPrice) * 100) : 0;
+            return (
+              <div
+                key={`${combo.id}-${idx}`}
+                onClick={() => onOpen(combo)}
+                className="min-w-[210px] bg-white rounded-2xl border border-black/5 p-3 flex flex-col gap-2 cursor-pointer shadow-md active:scale-[0.97] transition-all"
+              >
+                <div className="relative w-full h-24 rounded-xl overflow-hidden bg-gray-50 shrink-0">
+                  <img
+                    src={getImageUrl(combo.imgPath)}
+                    alt={combo.name}
+                    className="w-full h-full object-contain p-1.5"
+                  />
+                  {savingsPercent > 0 && (
+                    <div className="absolute top-1.5 right-1.5 bg-[#8B1A1A] text-white px-1.5 py-0.5 rounded-lg text-[8px] font-black">
+                      -{savingsPercent}%
+                    </div>
+                  )}
                 </div>
-                {savingsPercent > 0 && (
-                  <div className="absolute bottom-2 right-2 bg-[#8B1A1A]/80 backdrop-blur-sm text-white px-2 py-0.5 rounded-lg text-[9px] font-black shadow-xl border border-white/20">
-                    -{savingsPercent}%
+                <div className="flex flex-col flex-1">
+                  <p className="text-[10px] font-black text-[#1F2937] uppercase leading-tight line-clamp-2 mb-1">
+                    {combo.name}
+                  </p>
+                  {combo.description && (
+                    <p className="text-[9px] text-gray-600 leading-snug line-clamp-2 mb-1.5">{combo.description}</p>
+                  )}
+                  <div className="flex items-center justify-between mt-auto">
+                    <span className="text-sm font-black text-[#1F2937]">${combo.price.toLocaleString('es-AR')}</span>
+                    <button
+                      onClick={e => { e.stopPropagation(); onAddDirectly(combo); }}
+                      className="bg-[#8B1A1A] text-white w-7 h-7 rounded-xl flex items-center justify-center active:scale-90 transition-all shadow-md"
+                    >
+                      <Plus size={14} strokeWidth={3} />
+                    </button>
                   </div>
-                )}
-              </div>
-
-              <div className="flex flex-col flex-grow min-w-0">
-                <div className="flex items-center gap-1.5 text-gray-500 mb-2">
-                  <Store size={11} className="text-[#FFD700] shrink-0" />
-                  <span className="text-[8px] font-black uppercase tracking-[0.15em] truncate">{storeName}</span>
-                </div>
-                <h3 className="text-sm font-black mb-1.5 group-hover:text-[#8B1A1A] transition-colors leading-tight uppercase tracking-tight text-[#1F2937]">
-                  {combo.name}
-                </h3>
-                <div className="flex gap-1.5 mb-2 flex-wrap">
-                  <span className="bg-white/40 backdrop-blur-md text-[#8B1A1A] text-[8px] font-black px-2 py-0.5 rounded-md uppercase flex items-center gap-1 border border-white/20">
-                    <Flame size={8} fill="currentColor" /> Relámpago
-                  </span>
-                  <span className="bg-white/40 backdrop-blur-md text-[#002FA7] text-[8px] font-black px-2 py-0.5 rounded-md uppercase flex items-center gap-1 border border-white/20">
-                    <Clock size={8} /> Limitado
-                  </span>
-                </div>
-                {combo.description && (
-                  <p className="text-[9px] text-gray-700 font-medium leading-snug mb-2 line-clamp-2">{combo.description}</p>
-                )}
-                <div className="flex items-center justify-between mt-auto">
-                  <div className="flex flex-col">
-                    {combo.oldPrice && (
-                      <span className="text-[10px] text-gray-400 line-through font-bold mb-0.5">${combo.oldPrice.toLocaleString('es-AR')}</span>
-                    )}
-                    <span className="text-xl font-black text-[#1F2937] tracking-tighter">${combo.price.toLocaleString('es-AR')}</span>
-                  </div>
-                  <button
-                    onClick={e => { e.stopPropagation(); onAddDirectly(combo); }}
-                    className="bg-[#8B1A1A] text-white p-3 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-xl shadow-[#8B1A1A]/30"
-                  >
-                    <Plus size={20} strokeWidth={4} />
-                  </button>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
+      <style>{`
+        @keyframes combo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-combo-marquee { animation: combo-marquee 28s linear infinite; }
+        @media (prefers-reduced-motion: reduce) { .animate-combo-marquee { animation: none; } }
+      `}</style>
     </div>
-    <style>{`.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}`}</style>
-  </div>
-);
+  );
+};
 
 // ── Main ──────────────────────────────────────────────────────────────────
 interface StoreDetailViewProps {
@@ -492,17 +478,6 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
             </div>
           </>
         )}
-      </div>
-
-      {/* CTA checkout flotante */}
-      <div className="fixed bottom-20 left-4 right-4 z-40 pointer-events-none">
-        <button
-          onClick={() => navigate('/checkout')}
-          className="pointer-events-auto w-full bg-[#8B1A1A] text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 shadow-2xl shadow-[#8B1A1A]/30 active:scale-[0.98] transition-all"
-        >
-          <ShoppingBag size={18} />
-          Confirmar pedido por WhatsApp →
-        </button>
       </div>
 
       {comboModal && (
