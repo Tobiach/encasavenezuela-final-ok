@@ -6,7 +6,7 @@ const CategoriesNew: React.FC = () => {
   const navigate = useNavigate();
 
   const handleCategoryClick = (categoryName: string) => {
-    navigate('/catalog', { state: { category: categoryName } });
+    navigate(`/categoria/${encodeURIComponent(categoryName)}`);
   };
 
   return (

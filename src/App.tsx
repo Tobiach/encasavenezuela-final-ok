@@ -28,6 +28,7 @@ import Offers from '../components/Offers';
 import AuthView from '../components/AuthView';
 import FavoritesView from '../components/FavoritesView';
 import StoreDetailView from '../components/StoreDetailView';
+import CategoryStoresView from '../components/CategoryStoresView';
 import QRWelcomeModal from '../components/QRWelcomeModal';
 import AIAssistantButton from '../components/AIAssistantButton';
 import ProductAIChat from '../components/ProductAIChat'; // El componente de chat
@@ -606,6 +607,7 @@ const handlePurchase = (total: number) => {
             onSelectStore={handleSelectStore}
           />
         } />
+        <Route path="/categoria/:name" element={<CategoryStoresView />} />
       </Routes>
       
       <Footer />
