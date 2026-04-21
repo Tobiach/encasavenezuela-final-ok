@@ -406,10 +406,10 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
           <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
             <div className="divide-y divide-gray-100">
               {filteredStores.map(store => (
-                <a
+                <button
                   key={store.id}
-                  href={`/#/catalog?store=${store.id}`}
-                  className="flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                  onClick={() => navigate(`/tienda/${store.id}`)}
+                  className="w-full flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors text-left"
                 >
                   <div className="w-3 h-3 rounded-full shrink-0"
                     style={{ background: store.plan === 'premium' ? '#FCD34D' : '#9CA3AF' }} />
@@ -427,7 +427,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
                     -{store.discount}%
                   </span>
                   <ChevronRight size={16} className="text-gray-300 shrink-0" />
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -504,13 +504,12 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
                 </div>
               )}
 
-              <a
-                href={`/#/catalog?store=${selectedStore.id}`}
-                onClick={closeDrawer}
-                className="block w-full bg-ven-yellow text-black font-black text-center py-4 rounded-2xl hover:bg-yellow-400 active:scale-98 transition-all text-sm tracking-wide"
+              <button
+                onClick={() => { closeDrawer(); navigate(`/tienda/${selectedStore.id}`); }}
+                className="w-full bg-[#8B1A1A] text-white font-black text-center py-4 rounded-2xl active:scale-[0.98] transition-all text-sm tracking-wide shadow-lg shadow-[#8B1A1A]/25"
               >
                 Ver local y pedir →
-              </a>
+              </button>
             </div>
           </>
         )}

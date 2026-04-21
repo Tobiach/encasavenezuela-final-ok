@@ -268,46 +268,50 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
 
   return (
     <>
-    <section className={`transition-all duration-500 ${isFullView ? 'bg-venezuela-dark min-h-screen pt-4 pb-24' : 'bg-white py-6 px-4'}`}>
-      <div className={`${isFullView ? 'max-w-7xl mx-auto px-4 md:px-6' : 'max-w-5xl mx-auto'}`}>
-        
+    <section className={`transition-all duration-500 ${isFullView ? 'bg-[#FAFAF8] min-h-screen pb-24' : 'bg-white py-6 px-4'}`}>
+      <div className={`${isFullView ? 'max-w-7xl mx-auto' : 'max-w-5xl mx-auto'}`}>
+
         {isFullView ? (
-          <div className="animate-in fade-in duration-700">
-            <div className="mb-8 space-y-6">
-              <div className="flex items-center justify-between">
-                <button 
+          <div className="animate-in fade-in duration-500">
+            {/* Hero header */}
+            <div className="bg-white border-b border-gray-100 px-4 pt-5 pb-4 sticky top-0 z-20 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <button
                   onClick={() => navigate('/')}
-                  className="w-10 h-10 bg-black/5 rounded-2xl flex items-center justify-center text-gray-500 hover:bg-ven-yellow hover:text-white transition-all"
+                  className="w-10 h-10 bg-gray-100 hover:bg-[#8B1A1A] hover:text-white rounded-2xl flex items-center justify-center text-gray-600 transition-all active:scale-90 shrink-0"
                 >
-                  <ArrowLeft size={20} />
+                  <ArrowLeft size={18} />
                 </button>
-                <div className="text-center">
-                  <h2 className="text-xl font-black text-venezuela-brown tracking-tighter uppercase leading-none">Locales <span className="text-ven-yellow">Vene</span></h2>
-                  <p className="text-[8px] font-black text-gray-600 uppercase tracking-[0.3em] mt-1.5">Locales Amigos Verificados</p>
+                <div className="flex-1">
+                  <h1 className="text-lg font-black text-[#1F2937] leading-tight tracking-tight">
+                    Locales venezolanos 🇻🇪
+                  </h1>
+                  <p className="text-[11px] text-gray-400 font-semibold">
+                    {filteredLocales.length} locales verificados en CABA
+                  </p>
                 </div>
-                <div className="w-10" />
               </div>
 
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-                <input 
+              <div className="relative mb-3">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <input
                   type="text"
-                  placeholder="Busca locales o barrios..."
+                  placeholder="Buscá locales o barrios..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-white border border-black/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-ven-yellow transition-all placeholder:text-gray-400 text-venezuela-brown"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/20 transition-all placeholder:text-gray-400 text-[#1F2937]"
                 />
               </div>
 
-              <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5">
                 {allTags.map(tag => (
                   <button
                     key={tag}
                     onClick={() => setSelectedTag(tag)}
-                    className={`shrink-0 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border ${
-                      selectedTag === tag 
-                        ? 'bg-ven-yellow border-ven-yellow text-white shadow-lg shadow-yellow-500/20' 
-                        : 'bg-black/5 border-black/5 text-gray-600 hover:border-black/20'
+                    className={`shrink-0 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all border ${
+                      selectedTag === tag
+                        ? 'bg-[#8B1A1A] border-[#8B1A1A] text-white shadow-sm'
+                        : 'bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-300'
                     }`}
                   >
                     {tag}
@@ -316,20 +320,25 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
               </div>
             </div>
 
-            {filteredLocales.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
-                {filteredLocales.map(store => (
-                  <MarketplaceCard key={store.id} store={store} />
-                ))}
-              </div>
-            ) : (
-              <div className="py-20 text-center space-y-4">
-                <div className="bg-white/5 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-gray-700">
-                  <Search size={32} />
+            <div className="px-4 pt-5">
+              {filteredLocales.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+                  {filteredLocales.map(store => (
+                    <MarketplaceCard key={store.id} store={store} />
+                  ))}
                 </div>
-                <p className="text-gray-500 font-bold text-sm uppercase tracking-widest">No encontramos locales con esa búsqueda</p>
-              </div>
-            )}
+              ) : (
+                <div className="py-20 text-center space-y-3">
+                  <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                    <Search size={28} className="text-gray-400" />
+                  </div>
+                  <p className="text-gray-500 font-bold text-sm">No encontramos locales con esa búsqueda</p>
+                  <button onClick={() => { setSearchQuery(''); setSelectedTag('Todos'); }} className="text-[#8B1A1A] text-xs font-black uppercase tracking-widest">
+                    Limpiar filtros
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <>

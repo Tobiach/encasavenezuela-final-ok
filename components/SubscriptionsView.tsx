@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { ShieldCheck, Zap, Store, X, Upload, Check, Copy, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStores } from '../lib/hooks/useStores';
@@ -182,18 +182,18 @@ const PayModal: React.FC<PayModalProps> = ({ plan, storeName, userName, userEmai
   );
 };
 
-const SubscriptionsView: React.FC = () => {
+interface SubscriptionsViewProps {
+  user?: { name?: string; email?: string; is_logged_in?: boolean } | null;
+}
+
+const SubscriptionsView: React.FC<SubscriptionsViewProps> = ({ user: userProp }) => {
   const navigate = useNavigate();
   const { stores } = useStores();
   const [payingPlan, setPayingPlan] = useState<Plan | null>(null);
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('encasa_user');
-      if (saved) setUser(JSON.parse(saved));
-    } catch { /* ignorar */ }
-  }, []);
+  const user = userProp && userProp.is_logged_in
+    ? { name: userProp.name || 'Cliente', email: userProp.email || '' }
+    : null;
 
   const handleSubscribe = (plan: Plan) => {
     if (!user) {

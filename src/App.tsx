@@ -583,7 +583,7 @@ const handlePurchase = (total: number) => {
         
         <Route path="/loyalty" element={FEATURE_LOYALTY ? <ProtectedRoute user={user}><LoyaltyView points={userPoints} onRedeem={(pts) => { if(userPoints >= pts) { setUserPoints(p => p - pts); return true; } return false; }} /></ProtectedRoute> : <Navigate to="/" />} />
         <Route path="/repeat" element={<ProtectedRoute user={user}><RepeatOrderPanel onAddToCart={handleAddToCart} /></ProtectedRoute>} />
-        <Route path="/subscriptions" element={<ProtectedRoute user={user}><SubscriptionsView /></ProtectedRoute>} />
+        <Route path="/subscriptions" element={<ProtectedRoute user={user}><SubscriptionsView user={user} /></ProtectedRoute>} />
         <Route path="/gifts" element={<GiftsView onAddToCart={handleAddToCart} />} />
         
         {/* MODIFICADO: Checkout accesible sin login */}
