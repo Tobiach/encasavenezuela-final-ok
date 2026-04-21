@@ -169,9 +169,18 @@ const ComboVariantModal: React.FC<{
       )}
 
       <div className="px-5 pt-3 pb-6">
-        <button onClick={onConfirm} className="w-full bg-[#8B1A1A] text-white font-black py-4 rounded-2xl text-sm active:scale-[0.98] transition-all shadow-lg shadow-[#8B1A1A]/20 flex items-center justify-center gap-2">
-          <ShoppingBag size={16} /> Agregar combo al carrito →
-        </button>
+        {(() => {
+          const allSelected = !combo.variantItems?.some(v => !variants[v.name]);
+          return (
+            <button
+              onClick={onConfirm}
+              disabled={!allSelected}
+              className={`w-full font-black py-4 rounded-2xl text-sm transition-all flex items-center justify-center gap-2 ${allSelected ? 'bg-[#8B1A1A] text-white active:scale-[0.98] shadow-lg shadow-[#8B1A1A]/20' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+            >
+              <ShoppingBag size={16} /> {allSelected ? 'Agregar combo al carrito →' : 'Seleccioná todas las opciones'}
+            </button>
+          );
+        })()}
       </div>
     </div>
   </div>
@@ -313,7 +322,7 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
 
   const openComboModal = (combo: StoreCombo) => {
     const defaults: Record<string, string> = {};
-    combo.variantItems?.forEach(v => { defaults[v.name] = v.options[0]; });
+    combo.variantItems?.forEach(v => { defaults[v.name] = v.options[0] || ''; });
     setComboVariants(defaults);
     setComboModal(combo);
   };

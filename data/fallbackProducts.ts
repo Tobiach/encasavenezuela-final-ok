@@ -109,4 +109,4 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: 201, name: 'Combo Arepa Completa',  price: 8900,  oldPrice: 11500, category: 'Promociones', img: getImageUrl('harinas1.png'),           isCombo: true, storeId: 'encasa-venezuela' },
   { id: 202, name: 'Combo Tequeños + Malta',price: 7200,  oldPrice: 9500,  category: 'Promociones', img: getImageUrl('tequenos_y_quesos1.png'), isCombo: true, storeId: 'encasa-venezuela' },
   { id: 203, name: 'Combo Snack Venezolano',price: 5900,  oldPrice: 7800,  category: 'Promociones', img: getImageUrl('snacks1.png'),            isCombo: true, storeId: 'encasa-venezuela' },
-];
+].map(p => ({ ...p, storeId: p.storeId ?? 'minimarket-vibe' }));

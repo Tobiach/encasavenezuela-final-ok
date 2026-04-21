@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, ShoppingBag, Zap, MessageSquare, AlertCircle, Clock, Plus } from 'lucide-react'; import { Product, PartnerStore, User as UserType } from '../types';
 import { supabase } from '../lib/supabase';
+import { MINIMUM_ORDER } from '../lib/constants';
 
 interface OrderConfirmationViewProps {
   stores: PartnerStore[];
@@ -14,7 +15,6 @@ interface OrderConfirmationViewProps {
 }
 
 const WHATSAPP_NUMBER = '5491136026302';
-const MINIMUM_ORDER = 5999;
 
 const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
   stores, cart, user, onFinalizePurchase, onClearCart, allProducts, onAddToCart

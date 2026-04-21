@@ -1,0 +1,2 @@
+export const MINIMUM_ORDER = 5999;
+export const WHATSAPP_NUMBER = '5491136026302';

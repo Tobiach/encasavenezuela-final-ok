@@ -3,6 +3,7 @@ import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Z
 import { Product, User } from '../types';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LOGO_ENCASA_IMAGE } from '../src/assets/imagenes';
+import { MINIMUM_ORDER } from '../lib/constants';
 
 interface NavbarProps {
   onNavHome: () => void;
@@ -21,7 +22,6 @@ interface NavbarProps {
   onLogout: () => void;
 }
 
-const MINIMUM_ORDER = 5999;
 
 const Navbar: React.FC<NavbarProps> = ({
   onNavHome, cart,
