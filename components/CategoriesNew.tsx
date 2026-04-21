@@ -6,6 +6,7 @@ const CategoriesNew: React.FC = () => {
   const navigate = useNavigate();
 
   const handleCategoryClick = (categoryName: string) => {
+    sessionStorage.setItem('encasa_scroll_/', String(window.scrollY));
     navigate(`/categoria/${encodeURIComponent(categoryName)}`);
   };
 

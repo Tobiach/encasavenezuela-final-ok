@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Search, Star, MapPin, Clock, ChevronRight, Zap, SlidersHorizontal } from 'lucide-react';
 import { useStores } from '../lib/hooks/useStores';
 import { useProducts, categories as CAT_LIST } from '../lib/hooks/useProducts';
@@ -25,6 +25,7 @@ const BARRIOS = ['Todos', 'Palermo', 'Caballito', 'Almagro', 'Once', 'Belgrano',
 const CategoryStoresView: React.FC = () => {
   const { name } = useParams<{ name: string }>();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { stores } = useStores();
   const { allProducts } = useProducts();
 
@@ -172,7 +173,10 @@ const CategoryStoresView: React.FC = () => {
           </div>
         ) : (
           filtered.map((store, idx) => (
-            <StoreCard key={store.id} store={store} idx={idx} onSelect={() => navigate(`/tienda/${store.id}`)} />
+            <StoreCard key={store.id} store={store} idx={idx} onSelect={() => {
+              sessionStorage.setItem(`encasa_scroll_${pathname}`, String(window.scrollY));
+              navigate(`/tienda/${store.id}`);
+            }} />
           ))
         )}
       </div>

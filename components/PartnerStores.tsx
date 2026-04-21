@@ -13,7 +13,7 @@ function getStoreDiscount(plan: string, idx: number): number {
     : DISCOUNTS_BASIC[idx % DISCOUNTS_BASIC.length];
 }
 import { PartnerStore } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useOrderCounts } from '../lib/hooks/useOrderCounts';
 import PromoDetailModal, { PromoEntry } from './PromoDetailModal';
 import DeliveryZonesModal from './DeliveryZonesModal';
@@ -43,6 +43,7 @@ interface PartnerStoresProps {
 
 const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpenMap, limit = 6, isFullView = false }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const orderCounts = useOrderCounts();
   const { favorites, isFavorite, toggleFavorite } = useFavorites();
   const [selectedTag, setSelectedTag] = useState('Todos');
@@ -104,6 +105,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
         onClick={() => {
           const win = window as unknown as { encasaTrack?: (e: string, d: Record<string, unknown>) => void };
           win.encasaTrack?.('element_clicked', { element_type: 'store', element_id: store.id, element_name: store.name, timestamp: Date.now() });
+          sessionStorage.setItem(`encasa_scroll_${pathname}`, String(window.scrollY));
           navigate(`/tienda/${store.id}`);
         }}
         className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]'}`}
@@ -189,7 +191,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
     const discount    = getStoreDiscount(store.plan, idx);
     return (
       <div
-        onClick={() => navigate(`/tienda/${store.id}`)}
+        onClick={() => { sessionStorage.setItem(`encasa_scroll_${pathname}`, String(window.scrollY)); navigate(`/tienda/${store.id}`); }}
         className="group bg-white rounded-2xl overflow-hidden flex flex-col cursor-pointer shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
       >
         {/* Imagen */}
