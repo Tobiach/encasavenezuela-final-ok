@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, ShoppingBag, Zap, MessageSquare, AlertCircle, Clock, Plus } from 'lucide-react'; import { Product, PartnerStore, User as UserType } from '../types';
+import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, ShoppingBag, Zap, MessageSquare, AlertCircle, Clock, Plus, X } from 'lucide-react'; import { Product, PartnerStore, User as UserType } from '../types';
 import { supabase } from '../lib/supabase';
 import { MINIMUM_ORDER } from '../lib/constants';
 
@@ -317,8 +317,54 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
     }
   };
 
+  const keepOnlyStore = (storeId: string) => {
+    const toKeep = cart.filter(i => i.product.storeId === storeId);
+    onClearCart();
+    toKeep.forEach(item => {
+      for (let j = 0; j < item.qty; j++) onAddToCart(item.product, storeId);
+    });
+  };
+
   return (
     <div className="min-h-screen bg-venezuela-dark pb-24 animate-in fade-in duration-500">
+
+      {/* Modal bloqueante multi-store */}
+      {isMultiStore && (
+        <div className="fixed inset-0 z-[400] bg-black/70 backdrop-blur-sm flex items-end md:items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-300">
+            <div className="px-5 pt-5 pb-4 border-b border-gray-100 flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-black text-red-500 uppercase tracking-widest mb-1">⚠️ Pedido mixto</p>
+                <h3 className="font-black text-[#1F2937] text-base leading-tight">Productos de {uniqueStoreIds.length} locales distintos</h3>
+                <p className="text-xs text-gray-500 mt-1 leading-relaxed">Cada local procesa su propio pedido. Elegí con cuál continuar — el resto se eliminará del carrito.</p>
+              </div>
+              <button onClick={() => navigate(-1)} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center shrink-0 active:scale-90 transition-all">
+                <X size={14} className="text-gray-500" />
+              </button>
+            </div>
+            <div className="px-5 py-4 space-y-2.5">
+              {uniqueStoreIds.map(sid => {
+                const s = stores.find(st => st.id === sid);
+                const items = cart.filter(i => i.product.storeId === sid);
+                const sub = items.reduce((acc, i) => acc + i.product.price * i.qty, 0);
+                return (
+                  <button key={sid} onClick={() => keepOnlyStore(sid)}
+                    className="w-full text-left bg-gray-50 border-2 border-gray-100 hover:border-[#8B1A1A] hover:bg-[#8B1A1A]/5 rounded-2xl p-4 transition-all active:scale-[0.99]">
+                    <p className="font-black text-[#1F2937] text-sm">{s?.name || sid}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{items.reduce((acc, i) => acc + i.qty, 0)} productos · ${sub.toLocaleString('es-AR')}</p>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="px-5 pb-5">
+              <button onClick={() => navigate(-1)} className="w-full py-3 text-sm font-bold text-gray-500 border border-gray-200 rounded-2xl active:scale-[0.99] transition-all">
+                Volver y editar carrito
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-2xl mx-auto px-4 pt-8">
         <button
           onClick={() => navigate(-1)}
