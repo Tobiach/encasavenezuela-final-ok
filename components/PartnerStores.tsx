@@ -384,7 +384,6 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
 
             <div className="px-4 pt-5">
               {filteredLocales.length > 0 ? (
-                {/* Fix 6: 1col en mobile */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
                   {filteredLocales.map(store => (
                     <MarketplaceCard key={store.id} store={store} />
