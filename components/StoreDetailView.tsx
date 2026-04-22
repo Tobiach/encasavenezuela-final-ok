@@ -270,7 +270,7 @@ interface StoreDetailViewProps {
   onSelectStore: (store: PartnerStore | null) => void;
 }
 
-const DEMO_MODE = true;
+const DEMO_MODE = false;
 
 const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelectStore }) => {
   const { slug } = useParams<{ slug: string }>();
@@ -292,8 +292,10 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
 
   const storeProducts = useMemo(() => {
     if (!slug) return [];
-    if (DEMO_MODE) return allProducts;
-    return allProducts.filter(p => p.storeId === slug || p.availableInStoreIds?.includes(slug));
+    const own = allProducts.filter(p => p.storeId === slug || p.availableInStoreIds?.includes(slug));
+    if (own.length > 0) return own;
+    // Fallback: catálogo general de minimarket para locales sin catálogo propio
+    return allProducts.filter(p => p.storeId === 'minimarket-vibe');
   }, [allProducts, slug]);
 
   const storeCombos = useMemo(() => {
