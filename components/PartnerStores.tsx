@@ -27,6 +27,10 @@ const promoData = storesPromotions as unknown as Record<string, PromoEntry>;
 function hasFreeDelivery(storeId: string): boolean {
   return deliveryData[storeId]?.freeDelivery === true;
 }
+function hasDelivery(storeId: string): boolean {
+  const entry = deliveryData[storeId];
+  return entry != null && (entry.freeDelivery || (entry.zones != null && entry.zones.length > 0));
+}
 function getActivePromo(storeId: string): PromoEntry | null {
   const promo = promoData[storeId];
   if (!promo || !promo.validUntil) return null;
@@ -48,6 +52,8 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
   const { favorites, isFavorite, toggleFavorite } = useFavorites();
   const [selectedTag, setSelectedTag] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterDelivery, setFilterDelivery] = useState(false);
+  const [filterPromo, setFilterPromo] = useState(false);
   const [promoModal, setPromoModal] = useState<{ store: PartnerStore; promo: PromoEntry } | null>(null);
   const [deliveryModal, setDeliveryModal] = useState<PartnerStore | null>(null);
 
@@ -65,13 +71,21 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
   }, [stores]);
 
   const filteredLocales = useMemo(() => {
-    return stores.filter(store => {
+    const result = stores.filter(store => {
       const matchesTag = selectedTag === 'Todos' || store.tags?.includes(selectedTag);
       const matchesSearch = store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            store.neighborhood?.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesTag && matchesSearch;
+      const matchesDelivery = !filterDelivery || hasDelivery(store.id);
+      const matchesPromo = !filterPromo || getActivePromo(store.id) != null;
+      return matchesTag && matchesSearch && matchesDelivery && matchesPromo;
     });
-  }, [stores, selectedTag, searchQuery]);
+    // Fix 8: auto-sort promo → premium → basic
+    return result.sort((a, b) => {
+      const aScore = (getActivePromo(a.id) ? 2 : 0) + (a.plan === 'premium' ? 1 : 0);
+      const bScore = (getActivePromo(b.id) ? 2 : 0) + (b.plan === 'premium' ? 1 : 0);
+      return bScore - aScore;
+    });
+  }, [stores, selectedTag, searchQuery, filterDelivery, filterPromo]);
 
   // Keywords para excluir/priorizar en vista home (coincide contra id Y name, case-insensitive)
   const HOME_EXCLUDE_KEYWORDS = ['bahareque'];
@@ -100,6 +114,9 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
 
   const MarketplaceCard: React.FC<{ store: PartnerStore }> = ({ store }) => {
     const activePromo = getActivePromo(store.id);
+    const storeHasDelivery = hasDelivery(store.id);
+    const storeHasFreeDelivery = hasFreeDelivery(store.id);
+    const visibleTags = (store.tags || []).filter(t => !HIDDEN_TAGS.includes(t)).slice(0, 3);
     return (
       <div
         onClick={() => {
@@ -114,11 +131,13 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           <img src={store.img} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40" />
           <div className="absolute top-2 left-2 flex flex-col gap-1">
-            <div className="bg-black/30 backdrop-blur-sm text-white/55 px-1.5 py-0.5 rounded-md text-[7px] font-bold uppercase tracking-wide flex items-center gap-0.5 border border-white/10">
-              <CheckCircle size={6} /> VERIFICADO
+            {/* Fix 3: VERIFICADO legible */}
+            <div className="bg-black/50 backdrop-blur-sm text-white px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wide flex items-center gap-1 border border-white/20">
+              <CheckCircle size={8} /> VERIFICADO
             </div>
+            {/* Fix 9: RECOMENDADO con gradiente real */}
             {store.plan === 'premium' && (
-              <div className="bg-gradient-to-r from-[#F4C542] via-[#F4C542] to-[#F4C542] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
+              <div className="bg-gradient-to-r from-[#E8B800] via-[#F4C542] to-[#F7D46A] bg-[length:200%_auto] animate-shimmer text-[#2E1A14] px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
                 <Zap size={8} fill="currentColor" /> RECOMENDADO
               </div>
             )}
@@ -131,6 +150,10 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
               </div>
             )}
           </div>
+          {/* Fix 2: badge DELIVERY / SOLO RETIRO */}
+          <div className={`absolute bottom-2 left-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wide flex items-center gap-1 border ${storeHasDelivery ? 'bg-emerald-600 text-white border-emerald-500/30' : 'bg-black/50 text-white/80 border-white/10'}`}>
+            {storeHasDelivery ? '🛵 Delivery' : '🏪 Solo retiro'}
+          </div>
           <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20">
             <Star size={10} className="fill-ven-yellow text-ven-yellow" />
             <span className="text-[11px] font-black text-white">{store.rating.toFixed(1)}</span>
@@ -138,7 +161,8 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
         </div>
 
         <div className="p-5 flex-grow flex flex-col">
-          <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-1 text-sm md:text-base group-hover:text-ven-yellow transition-colors">{store.name}</h3>
+          {/* Fix 5: hover usa ven-red en lugar de ven-yellow (contraste) */}
+          <h3 className="font-black text-venezuela-brown uppercase tracking-tight truncate mb-1 text-sm md:text-base group-hover:text-ven-red transition-colors">{store.name}</h3>
           {activePromo && (
             <div
               className="bg-orange-50 border border-orange-200 rounded-xl px-2.5 py-1.5 mb-2 flex items-center gap-1.5 cursor-pointer hover:bg-orange-100 transition-colors animate-promo-glow active:scale-95"
@@ -158,28 +182,43 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
             <div className="flex items-center gap-1.5 text-[9px] font-black text-gray-500 uppercase tracking-widest">
               <MapPin size={10} className="text-ven-red shrink-0" /> {store.neighborhood}
             </div>
-            <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-500">
-              <Clock size={10} className="text-ven-yellow shrink-0" /> {store.deliveryTime || '30-45 min'}
+            {storeHasDelivery && (
+              <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-500">
+                <Clock size={10} className="text-ven-yellow shrink-0" /> {store.deliveryTime || '30-45 min'}
+              </div>
+            )}
+          </div>
+          {/* Fix 7: tags en MarketplaceCard */}
+          {visibleTags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-3">
+              {visibleTags.map(tag => (
+                <span key={tag} className="bg-gray-100 text-gray-500 text-[8px] font-semibold px-2 py-0.5 rounded-full">{tag}</span>
+              ))}
             </div>
-          </div>
-          <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-lg px-2 py-1.5">
-            <p className="text-[8px] font-black text-ven-yellow uppercase tracking-widest text-center">
-              🛵 {store.coverageArea || 'CABA'}
-            </p>
-          </div>
-          {hasFreeDelivery(store.id) && (
+          )}
+          {/* Fix 10: chip delivery unificado */}
+          {storeHasFreeDelivery ? (
             <div
-              className="bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1.5 mt-1.5 mb-auto cursor-pointer hover:bg-emerald-100 transition-colors animate-delivery-glow flex items-center justify-center gap-1.5 active:scale-95"
+              className="bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1.5 mb-auto cursor-pointer hover:bg-emerald-100 transition-colors animate-delivery-glow flex items-center justify-center gap-1.5 active:scale-95"
               onClick={e => { e.stopPropagation(); setDeliveryModal(store); }}
             >
-              <p className="text-[8px] font-black text-emerald-600 uppercase tracking-widest">🚚 Delivery gratis</p>
+              <p className="text-[8px] font-black text-emerald-600 uppercase tracking-widest">🚚 Delivery gratis · {store.coverageArea || 'CABA'}</p>
               <ChevronRight size={8} className="text-emerald-400" />
+            </div>
+          ) : storeHasDelivery ? (
+            <div className="bg-ven-yellow/10 border border-ven-yellow/20 rounded-lg px-2 py-1.5 mb-auto">
+              <p className="text-[8px] font-black text-ven-yellow uppercase tracking-widest text-center">🛵 {store.coverageArea || 'CABA'}</p>
+            </div>
+          ) : (
+            <div className="bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 mb-auto">
+              <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest text-center">🏪 Solo retiro en local</p>
             </div>
           )}
         </div>
         <div className="px-5 pb-5 mt-auto">
-          <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-ven-yellow group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-[#F4C542] group-hover:text-white transition-all shadow-sm">
-            Ver local
+          {/* Fix 1: CTA más claro */}
+          <div className="w-full bg-[#6B1D1D] py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-white group-hover:bg-[#4A1313] transition-all shadow-sm flex items-center justify-center gap-1">
+            Ver productos <ChevronRight size={12} />
           </div>
         </div>
       </div>
@@ -245,7 +284,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           </div>
           <div className="flex items-center gap-1 mt-0.5">
             <Star size={10} className="fill-amber-400 text-amber-400 shrink-0" />
-            <span className="text-xs text-gray-500">{store.rating.toFixed(1)} ({store.review_count})</span>
+            <span className="text-xs text-gray-500">{store.rating.toFixed(1)}{(store.review_count ?? 0) > 0 ? ` (${store.review_count})` : ''}</span>
             <span className="text-gray-300 mx-1">·</span>
             <span className="text-xs text-gray-400 truncate">🚶 {store.neighborhood}</span>
           </div>
@@ -306,6 +345,27 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
               </div>
 
               <div className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5">
+                {/* Fix 4: filtros delivery + promo */}
+                <button
+                  onClick={() => setFilterDelivery(v => !v)}
+                  className={`shrink-0 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all border flex items-center gap-1 ${
+                    filterDelivery
+                      ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                      : 'bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-300'
+                  }`}
+                >
+                  🛵 Con delivery
+                </button>
+                <button
+                  onClick={() => setFilterPromo(v => !v)}
+                  className={`shrink-0 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all border flex items-center gap-1 ${
+                    filterPromo
+                      ? 'bg-[#6B1D1D] border-[#6B1D1D] text-white shadow-sm'
+                      : 'bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-300'
+                  }`}
+                >
+                  🔥 Con oferta
+                </button>
                 {allTags.map(tag => (
                   <button
                     key={tag}
@@ -324,7 +384,8 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
 
             <div className="px-4 pt-5">
               {filteredLocales.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+                {/* Fix 6: 1col en mobile */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
                   {filteredLocales.map(store => (
                     <MarketplaceCard key={store.id} store={store} />
                   ))}
