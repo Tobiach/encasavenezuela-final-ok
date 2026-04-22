@@ -49,7 +49,7 @@ function mapRowToProduct(row: Record<string, unknown>): Product {
     img: getImageUrl((row.img_path as string | null) ?? ''),
     usageInfo: (row.usage_info as string | null) ?? undefined,
     isCombo: row.is_combo as boolean,
-    storeId: (row.store_id as string | null) ?? undefined,
+    storeId: (row.store_id as string | null) ?? 'minimarket-vibe',
     availableInStoreIds: (row.available_in_store_ids as string[] | null) ?? undefined,
   };
 }
