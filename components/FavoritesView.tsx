@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Heart, MapPin, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStores } from '../lib/hooks/useStores';
@@ -30,7 +30,7 @@ const FavoritesView: React.FC = () => {
             </p>
             <button
               onClick={() => navigate('/partners')}
-              className="mt-6 bg-[#8B1A1A] text-white font-bold text-sm rounded-2xl px-6 py-3 active:scale-95 transition-all shadow-sm"
+              className="mt-6 bg-[#6B1D1D] text-white font-bold text-sm rounded-2xl px-6 py-3 active:scale-95 transition-all shadow-sm"
             >
               Explorar locales →
             </button>
@@ -50,7 +50,7 @@ const FavoritesView: React.FC = () => {
                     className="absolute top-2 right-2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow active:scale-90 transition-all"
                     title="Quitar de favoritos"
                   >
-                    <Heart size={14} className="fill-[#8B1A1A] text-[#8B1A1A]" />
+                    <Heart size={14} className="fill-[#6B1D1D] text-[#6B1D1D]" />
                   </button>
                 </div>
                 <div className="p-3">

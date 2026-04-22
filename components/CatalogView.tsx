@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+﻿import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Plus, Zap, Sparkles, ArrowLeft, LayoutGrid, Utensils, Beaker, IceCream, Pizza, Package, MapPin, ChevronRight, Star, Clock, CheckCircle, Truck, X, MessageCircle } from 'lucide-react';
 import { Product, PartnerStore } from '../types';
 import ProductDetailView from './ProductDetailView';
@@ -270,7 +270,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                 <CheckCircle size={7} /> VERIFICADO
               </div>
               {selectedStore.plan === 'premium' && (
-                <div className="bg-gradient-to-r from-[#D4AF37] to-[#C9A227] text-white px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-wide flex items-center gap-1 border border-white/20 shadow-md">
+                <div className="bg-gradient-to-r from-[#F4C542] to-[#F4C542] text-white px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-wide flex items-center gap-1 border border-white/20 shadow-md">
                   <Zap size={9} fill="currentColor" /> PREMIUM
                 </div>
               )}
@@ -421,7 +421,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                   <div
                     key={`premium-${store.id}`}
                     onClick={() => { track('store', store.id, store.name); selectStore(store); }}
-                    className="group min-w-[280px] md:min-w-[320px] lg:min-w-0 bg-white rounded-[32px] border-2 border-ven-yellow/30 overflow-hidden transition-all duration-300 hover:border-ven-yellow hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(212,175,55,0.25)] cursor-pointer flex flex-col shadow-2xl"
+                    className="group min-w-[280px] md:min-w-[320px] lg:min-w-0 bg-white rounded-[32px] border-2 border-ven-yellow/30 overflow-hidden transition-all duration-300 hover:border-ven-yellow hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(244,197,66,0.25)] cursor-pointer flex flex-col shadow-2xl"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img src={store.img} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -431,7 +431,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                         <div className="bg-black/30 backdrop-blur-sm text-white/55 px-1.5 py-0.5 rounded-md text-[7px] font-bold uppercase tracking-wide flex items-center gap-0.5 border border-white/10">
                           <CheckCircle size={6} /> VERIFICADO
                         </div>
-                        <div className="bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
+                        <div className="bg-gradient-to-r from-[#F4C542] via-[#F4C542] to-[#F4C542] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
                           <Zap size={8} fill="currentColor" /> RECOMENDADO
                         </div>
                         {getActivePromo(store.id) && (
@@ -444,7 +444,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                         )}
                       </div>
                       {/* Rating derecha */}
-                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-[0_0_10px_rgba(212,175,55,0.5)]">
+                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-[0_0_10px_rgba(244,197,66,0.5)]">
                         <Star size={13} className="fill-ven-yellow text-ven-yellow" />
                         <span className="text-base font-black text-white">{store.rating.toFixed(1)}</span>
                       </div>
@@ -521,7 +521,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                   <div
                     key={store.id}
                     onClick={() => { track('store', store.id, store.name); selectStore(store); }}
-                    className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]'}`}
+                    className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(244,197,66,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(244,197,66,0.4)]'}`}
                   >
                     <div className="aspect-[4/3] overflow-hidden relative">
                       <img src={store.img} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -533,7 +533,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                         </div>
                         {/* RECOMENDADO — locales premium */}
                         {store.plan === 'premium' && (
-                          <div className="bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
+                          <div className="bg-gradient-to-r from-[#F4C542] via-[#F4C542] to-[#F4C542] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
                             <Zap size={8} fill="currentColor" /> RECOMENDADO
                           </div>
                         )}
@@ -547,7 +547,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                           </div>
                         )}
                       </div>
-                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-[0_0_10px_rgba(212,175,55,0.5)]">
+                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-[0_0_10px_rgba(244,197,66,0.5)]">
                         <Star size={10} className="fill-ven-yellow text-ven-yellow" />
                         <span className="text-[11px] font-black text-white">{store.rating.toFixed(1)}</span>
                       </div>
@@ -598,7 +598,7 @@ const CatalogView: React.FC<CatalogViewProps> = ({ stores, onAddToCart, selected
                       )}
                     </div>
                     <div className="px-5 pb-5 mt-auto">
-                      <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-ven-yellow group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-[#C9A227] group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-ven-yellow/20">
+                      <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-ven-yellow group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-[#F4C542] group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-ven-yellow/20">
                         Ver local
                       </div>
                     </div>

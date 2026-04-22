@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ChevronRight, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -77,7 +77,7 @@ const QRWelcomeModal: React.FC<QRWelcomeModalProps> = ({ storeId, onDone }) => {
             className="absolute inset-0 opacity-10"
             style={{
               backgroundImage:
-                'radial-gradient(circle at 20% 60%, #FCD34D 0%, transparent 50%), radial-gradient(circle at 80% 20%, #FF6B35 0%, transparent 40%)',
+                'radial-gradient(circle at 20% 60%, #F4C542 0%, transparent 50%), radial-gradient(circle at 80% 20%, #FF6B35 0%, transparent 40%)',
             }}
           />
           <div className="relative">

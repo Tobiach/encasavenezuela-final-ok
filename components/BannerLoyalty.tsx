@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const SLIDES = [
@@ -39,7 +39,7 @@ const BannerLoyalty: React.FC = () => {
         {/* Franja bandera */}
         <div
           className="absolute left-0 top-0 bottom-0 w-1 rounded-l-[24px]"
-          style={{ background: 'linear-gradient(to bottom, #8B1A1A 33%, #D4AF37 33%, #D4AF37 66%, #002FA7 66%)' }}
+          style={{ background: 'linear-gradient(to bottom, #6B1D1D 33%, #F4C542 33%, #F4C542 66%, #1F3C88 66%)' }}
         />
 
         <div
@@ -47,7 +47,7 @@ const BannerLoyalty: React.FC = () => {
           className="flex justify-between items-center px-5 py-4 gap-3 animate-in fade-in duration-400"
         >
           <div className="flex-1 min-w-0">
-            <span className="inline-block text-[10px] font-black uppercase tracking-widest text-[#8B1A1A]/60 mb-1">
+            <span className="inline-block text-[10px] font-black uppercase tracking-widest text-[#6B1D1D]/60 mb-1">
               {slide.label}
             </span>
             <h3 className="font-black text-[#1A1A1A] text-base leading-tight whitespace-pre-line">
@@ -58,7 +58,7 @@ const BannerLoyalty: React.FC = () => {
             </p>
             <button
               onClick={() => navigate(slide.path)}
-              className="mt-3 bg-[#8B1A1A] text-white text-[11px] rounded-full px-4 py-1.5 font-black tracking-wide hover:brightness-110 active:scale-95 transition-all"
+              className="mt-3 bg-[#6B1D1D] text-white text-[11px] rounded-full px-4 py-1.5 font-black tracking-wide hover:brightness-110 active:scale-95 transition-all"
             >
               {slide.cta}
             </button>
@@ -79,7 +79,7 @@ const BannerLoyalty: React.FC = () => {
             <button
               key={i}
               onClick={() => setCurrent(i)}
-              className={`rounded-full transition-all duration-300 ${i === current ? 'w-4 h-1.5 bg-[#8B1A1A]' : 'w-1.5 h-1.5 bg-gray-300'}`}
+              className={`rounded-full transition-all duration-300 ${i === current ? 'w-4 h-1.5 bg-[#6B1D1D]' : 'w-1.5 h-1.5 bg-gray-300'}`}
             />
           ))}
         </div>

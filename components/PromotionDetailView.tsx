@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Zap, Plus, Trophy, PackageCheck, Store, ArrowRight, ImageOff } from 'lucide-react';
@@ -329,7 +329,7 @@ const PromotionDetailView: React.FC<PromotionDetailViewProps> = ({ userPoints, o
             <div className="space-y-3">
               <button
                 onClick={() => { onAddToCart(combo, combo.storeId); alert("¡Combo agregado al pedido!"); }}
-                className="w-full bg-[#8B1A1A] text-white py-5 rounded-2xl font-black text-sm tracking-widest transition-all shadow-xl shadow-[#8B1A1A]/20 active:scale-95 flex items-center justify-center gap-3 uppercase hover:brightness-110"
+                className="w-full bg-[#6B1D1D] text-white py-5 rounded-2xl font-black text-sm tracking-widest transition-all shadow-xl shadow-[#6B1D1D]/20 active:scale-95 flex items-center justify-center gap-3 uppercase hover:brightness-110"
               >
                 <Plus size={20} strokeWidth={3} />
                 Agregar al pedido

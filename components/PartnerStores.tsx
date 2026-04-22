@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState, useMemo } from 'react';
 import { MapPin, Star, ChevronRight, ArrowLeft, Clock, Search, Zap, CheckCircle, Sparkles, Heart } from 'lucide-react';
 import { useFavorites } from '../lib/hooks/useFavorites';
@@ -108,7 +108,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           sessionStorage.setItem(`encasa_scroll_${pathname}`, String(window.scrollY));
           navigate(`/tienda/${store.id}`);
         }}
-        className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(212,175,55,0.4)]'}`}
+        className={`group bg-white rounded-[32px] border-2 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] cursor-pointer flex flex-col shadow-2xl ${store.plan === 'premium' ? 'border-ven-yellow/30 shadow-ven-yellow/10 hover:shadow-[0_16px_40px_rgba(244,197,66,0.4)]' : 'border-black/5 hover:border-ven-yellow/50 hover:shadow-[0_16px_40px_rgba(244,197,66,0.4)]'}`}
       >
         <div className="aspect-[4/3] overflow-hidden relative">
           <img src={store.img} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -118,13 +118,13 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
               <CheckCircle size={6} /> VERIFICADO
             </div>
             {store.plan === 'premium' && (
-              <div className="bg-gradient-to-r from-[#D4AF37] via-[#E5C76B] to-[#D4AF37] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
+              <div className="bg-gradient-to-r from-[#F4C542] via-[#F4C542] to-[#F4C542] bg-[length:200%_auto] animate-shimmer text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-ven-yellow/40 border border-white/30">
                 <Zap size={8} fill="currentColor" /> RECOMENDADO
               </div>
             )}
             {activePromo && (
               <div
-                className="bg-[#8B1A1A] text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-[#8B1A1A]/30 border border-white/20 cursor-pointer"
+                className="bg-[#6B1D1D] text-white px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-lg shadow-[#6B1D1D]/30 border border-white/20 cursor-pointer"
                 onClick={e => { e.stopPropagation(); setPromoModal({ store, promo: activePromo }); }}
               >
                 🔥 OFERTA
@@ -178,7 +178,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           )}
         </div>
         <div className="px-5 pb-5 mt-auto">
-          <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-ven-yellow group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-[#C9A227] group-hover:text-white transition-all shadow-sm">
+          <div className="w-full bg-black/5 py-2.5 rounded-xl text-center text-[10px] font-black uppercase tracking-widest text-ven-yellow group-hover:bg-gradient-to-r group-hover:from-ven-yellow group-hover:to-[#F4C542] group-hover:text-white transition-all shadow-sm">
             Ver local
           </div>
         </div>
@@ -203,7 +203,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
           </div>
           {/* Badge premium */}
           {store.plan === 'premium' && (
-            <div className="absolute top-2 right-2 bg-gradient-to-r from-[#D4AF37] to-[#E5C76B] text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-sm">
+            <div className="absolute top-2 right-2 bg-gradient-to-r from-[#F4C542] to-[#F4C542] text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wide flex items-center gap-1 shadow-sm">
               <Zap size={8} fill="currentColor" /> TOP
             </div>
           )}
@@ -239,7 +239,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
             >
               <Heart
                 size={14}
-                className={isFavorite(store.id) ? 'fill-[#8B1A1A] text-[#8B1A1A]' : 'text-gray-300'}
+                className={isFavorite(store.id) ? 'fill-[#6B1D1D] text-[#6B1D1D]' : 'text-gray-300'}
               />
             </button>
           </div>
@@ -270,7 +270,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
 
   return (
     <>
-    <section className={`transition-all duration-500 ${isFullView ? 'bg-[#FAFAF8] min-h-screen pb-24' : 'bg-white py-6 px-4'}`}>
+    <section className={`transition-all duration-500 ${isFullView ? 'bg-[#F5F1E8] min-h-screen pb-24' : 'bg-white py-6 px-4'}`}>
       <div className={`${isFullView ? 'max-w-7xl mx-auto' : 'max-w-5xl mx-auto'}`}>
 
         {isFullView ? (
@@ -280,12 +280,12 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
               <div className="flex items-center gap-3 mb-4">
                 <button
                   onClick={() => navigate('/')}
-                  className="w-10 h-10 bg-gray-100 hover:bg-[#8B1A1A] hover:text-white rounded-2xl flex items-center justify-center text-gray-600 transition-all active:scale-90 shrink-0"
+                  className="w-10 h-10 bg-gray-100 hover:bg-[#6B1D1D] hover:text-white rounded-2xl flex items-center justify-center text-gray-600 transition-all active:scale-90 shrink-0"
                 >
                   <ArrowLeft size={18} />
                 </button>
                 <div className="flex-1">
-                  <h1 className="text-lg font-black text-[#1F2937] leading-tight tracking-tight">
+                  <h1 className="text-lg font-black text-[#2E1A14] leading-tight tracking-tight">
                     Locales venezolanos 🇻🇪
                   </h1>
                   <p className="text-[11px] text-gray-400 font-semibold">
@@ -301,7 +301,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
                   placeholder="Buscá locales o barrios..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/20 transition-all placeholder:text-gray-400 text-[#1F2937]"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#F4C542] focus:ring-2 focus:ring-[#F4C542]/20 transition-all placeholder:text-gray-400 text-[#2E1A14]"
                 />
               </div>
 
@@ -312,7 +312,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
                     onClick={() => setSelectedTag(tag)}
                     className={`shrink-0 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all border ${
                       selectedTag === tag
-                        ? 'bg-[#8B1A1A] border-[#8B1A1A] text-white shadow-sm'
+                        ? 'bg-[#6B1D1D] border-[#6B1D1D] text-white shadow-sm'
                         : 'bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-300'
                     }`}
                   >
@@ -335,7 +335,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
                     <Search size={28} className="text-gray-400" />
                   </div>
                   <p className="text-gray-500 font-bold text-sm">No encontramos locales con esa búsqueda</p>
-                  <button onClick={() => { setSearchQuery(''); setSelectedTag('Todos'); }} className="text-[#8B1A1A] text-xs font-black uppercase tracking-widest">
+                  <button onClick={() => { setSearchQuery(''); setSelectedTag('Todos'); }} className="text-[#6B1D1D] text-xs font-black uppercase tracking-widest">
                     Limpiar filtros
                   </button>
                 </div>
@@ -385,7 +385,7 @@ const PartnerStores: React.FC<PartnerStoresProps> = ({ stores, onViewAll, onOpen
                     </div>
                     <button
                       onClick={onViewAll}
-                      className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-[#8B1A1A] transition-colors"
+                      className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-[#6B1D1D] transition-colors"
                     >
                       Ver todos <ChevronRight size={14} />
                     </button>

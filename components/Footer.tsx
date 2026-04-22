@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Instagram, Facebook, MessageSquare, Phone, Mail, MapPin, Send, CheckCircle2, Sparkles } from 'lucide-react';
@@ -57,10 +57,10 @@ const Footer: React.FC = () => {
               Conectamos a la comunidad venezolana con los sabores que definen nuestra identidad. Calidad Premium, atención de panas.
             </p>
             <div className="flex gap-5">
-              <a href="https://www.instagram.com/encasavenezuela.ar?igsh=cnVxb2NiM3A2NjRq" target="_blank" rel="noopener noreferrer" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-[#8B1A1A] hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
+              <a href="https://www.instagram.com/encasavenezuela.ar?igsh=cnVxb2NiM3A2NjRq" target="_blank" rel="noopener noreferrer" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-[#6B1D1D] hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
                 <Instagram size={24} />
               </a>
-              <a href="#" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-[#8B1A1A] hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
+              <a href="#" className="w-14 h-14 rounded-2xl bg-venezuela-dark flex items-center justify-center hover:bg-[#6B1D1D] hover:text-white transition-all hover:scale-110 border-2 border-black/5 text-venezuela-brown shadow-lg">
                 <Facebook size={24} />
               </a>
               <a
@@ -82,7 +82,7 @@ const Footer: React.FC = () => {
                 <li key={link.name}>
                   <button 
                     onClick={() => link.path ? navigate(link.path) : link.action?.()}
-                    className="hover:text-[#8B1A1A] transition-colors uppercase tracking-widest flex items-center gap-2 group"
+                    className="hover:text-[#6B1D1D] transition-colors uppercase tracking-widest flex items-center gap-2 group"
                   >
                     <div className="w-1.5 h-1.5 bg-ven-yellow rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     {link.name}
@@ -151,7 +151,7 @@ const Footer: React.FC = () => {
                 <button 
                   disabled={loading}
                   type="submit"
-                  className="w-full bg-[#8B1A1A] hover:brightness-110 py-6 rounded-2xl font-black text-sm tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-4 disabled:opacity-50 text-white shadow-2xl shadow-[#8B1A1A]/30 border-2 border-white/20"
+                  className="w-full bg-[#6B1D1D] hover:brightness-110 py-6 rounded-2xl font-black text-sm tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-4 disabled:opacity-50 text-white shadow-2xl shadow-[#6B1D1D]/30 border-2 border-white/20"
                 >
                   {loading ? 'PROCESANDO...' : 'SUSCRIBIRME'}
                   {!loading && <Send size={18} />}

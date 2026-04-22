@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 const steps = [
   {
@@ -6,32 +6,32 @@ const steps = [
     emoji: '🛍️',
     title: 'Elegí tu local',
     description: 'Explorá los locales venezolanos verificados y elegí tus productos favoritos.',
-    accent: '#FFD700',
+    accent: '#F4C542',
   },
   {
     number: '2',
     emoji: '📱',
     title: 'Confirmá por WhatsApp',
     description: 'Finalizá tu pedido directo por WhatsApp. Sin apps, sin registros, sin vueltas.',
-    accent: '#002FA7',
+    accent: '#1F3C88',
   },
   {
     number: '3',
     emoji: '🏠',
     title: 'Recibí en casa',
     description: 'El local te coordina la entrega. Rápido, simple y con sabor venezolano.',
-    accent: '#8B1A1A',
+    accent: '#6B1D1D',
   },
 ];
 
 const HowItWorks: React.FC = () => {
   return (
-    <section id="how-it-works" className="py-10 bg-[#FAFAF8] border-y border-black/5">
+    <section id="how-it-works" className="py-10 bg-[#F5F1E8] border-y border-black/5">
       <div className="max-w-5xl mx-auto px-4">
 
         {/* Header */}
         <div className="text-center mb-8">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#8B1A1A] mb-2">Así funciona</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#6B1D1D] mb-2">Así funciona</p>
           <h2 className="text-2xl font-black text-gray-900 tracking-tight leading-tight">
             ¿Cómo funciona <span className="text-ven-yellow">EnCasa</span>?
           </h2>

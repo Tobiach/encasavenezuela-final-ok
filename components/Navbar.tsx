@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Menu, X, ShoppingCart, Trash2, Plus, Minus, ExternalLink, UserCircle, Zap, Gift, CalendarCheck, BarChart3, Repeat, Wallet, Banknote, ChevronRight, ArrowLeft, Share2, Check, AlertCircle, MapPin, Search } from 'lucide-react';
 import { Product, User } from '../types';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -131,7 +131,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* CARRITO — Mobile only, izquierda */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className={`lg:hidden relative p-2.5 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-[#8B1A1A] text-white border-[#8B1A1A] shadow-lg' : 'bg-[#8B1A1A] border-[#8B1A1A] text-white'}`}
+            className={`lg:hidden relative p-2.5 rounded-xl transition-all duration-700 border-2 ${bump ? 'scale-125 bg-[#6B1D1D] text-white border-[#6B1D1D] shadow-lg' : 'bg-[#6B1D1D] border-[#6B1D1D] text-white'}`}
           >
             <ShoppingCart size={20} className={bump ? 'animate-bounce' : ''} />
             {cartCount > 0 && (
@@ -188,7 +188,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => setIsCartOpen(true)}
-              className={`relative p-4 rounded-2xl transition-all duration-700 border-2 ${bump ? 'scale-110 bg-[#8B1A1A] text-white border-white/40 shadow-2xl' : 'bg-venezuela-dark border-black/5 text-venezuela-brown hover:bg-black/5'}`}
+              className={`relative p-4 rounded-2xl transition-all duration-700 border-2 ${bump ? 'scale-110 bg-[#6B1D1D] text-white border-white/40 shadow-2xl' : 'bg-venezuela-dark border-black/5 text-venezuela-brown hover:bg-black/5'}`}
             >
               <ShoppingCart size={22} className={bump ? 'animate-bounce' : ''} />
               {cartCount > 0 && (
@@ -220,7 +220,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* HAMBURGUESA — Mobile only, derecha */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2.5 bg-[#8B1A1A] border border-[#8B1A1A] rounded-xl text-white transition-all active:scale-95"
+            className="lg:hidden p-2.5 bg-[#6B1D1D] border border-[#6B1D1D] rounded-xl text-white transition-all active:scale-95"
           >
             {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>

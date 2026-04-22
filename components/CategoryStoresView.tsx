@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Search, Star, MapPin, Clock, ChevronRight, Zap, SlidersHorizontal } from 'lucide-react';
 import { useStores } from '../lib/hooks/useStores';
@@ -73,19 +73,19 @@ const CategoryStoresView: React.FC = () => {
   }, [storesWithCategory, search, barrio, sortBy]);
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] pb-24">
+    <div className="min-h-screen bg-[#F5F1E8] pb-24">
 
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-4 pt-5 pb-4 sticky top-0 z-20 shadow-sm">
         <div className="flex items-center gap-3 mb-4">
           <button
             onClick={() => navigate(-1)}
-            className="w-10 h-10 bg-gray-100 hover:bg-[#8B1A1A] hover:text-white rounded-2xl flex items-center justify-center text-gray-600 transition-all active:scale-90 shrink-0"
+            className="w-10 h-10 bg-gray-100 hover:bg-[#6B1D1D] hover:text-white rounded-2xl flex items-center justify-center text-gray-600 transition-all active:scale-90 shrink-0"
           >
             <ArrowLeft size={18} />
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-black text-[#1F2937] leading-tight tracking-tight truncate">
+            <h1 className="text-lg font-black text-[#2E1A14] leading-tight tracking-tight truncate">
               {categoryName}
             </h1>
             <p className="text-[11px] text-gray-400 font-semibold">
@@ -107,7 +107,7 @@ const CategoryStoresView: React.FC = () => {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar locales..."
-            className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-[#1F2937] placeholder-gray-400 focus:outline-none focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/20 transition-all"
+            className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-[#2E1A14] placeholder-gray-400 focus:outline-none focus:border-[#F4C542] focus:ring-2 focus:ring-[#F4C542]/20 transition-all"
           />
         </div>
 
@@ -119,7 +119,7 @@ const CategoryStoresView: React.FC = () => {
               onClick={() => setSortBy(opt)}
               className={`shrink-0 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all border ${
                 sortBy === opt
-                  ? 'bg-[#8B1A1A] border-[#8B1A1A] text-white'
+                  ? 'bg-[#6B1D1D] border-[#6B1D1D] text-white'
                   : 'bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-300'
               }`}
             >
@@ -130,7 +130,7 @@ const CategoryStoresView: React.FC = () => {
             onClick={() => setShowFilters(v => !v)}
             className={`shrink-0 flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all border ${
               barrio !== 'Todos'
-                ? 'bg-[#FFD700] border-[#FFD700] text-black'
+                ? 'bg-[#F4C542] border-[#F4C542] text-black'
                 : 'bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-300'
             }`}
           >
@@ -147,7 +147,7 @@ const CategoryStoresView: React.FC = () => {
                 onClick={() => { setBarrio(b); setShowFilters(false); }}
                 className={`shrink-0 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all border whitespace-nowrap ${
                   barrio === b
-                    ? 'bg-[#1F2937] border-[#1F2937] text-white'
+                    ? 'bg-[#2E1A14] border-[#2E1A14] text-white'
                     : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'
                 }`}
               >
@@ -166,7 +166,7 @@ const CategoryStoresView: React.FC = () => {
             <p className="font-bold text-gray-500 text-sm">No hay locales disponibles</p>
             <button
               onClick={() => { setSearch(''); setBarrio('Todos'); }}
-              className="text-[#8B1A1A] text-xs font-black uppercase tracking-widest"
+              className="text-[#6B1D1D] text-xs font-black uppercase tracking-widest"
             >
               Limpiar filtros
             </button>
@@ -206,13 +206,13 @@ const StoreCard: React.FC<{ store: PartnerStore; idx: number; onSelect: () => vo
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
         {/* Badge descuento */}
-        <div className="absolute top-3 left-3 bg-white text-[#1F2937] font-black text-xs px-2.5 py-1 rounded-full shadow-md flex items-center gap-1">
+        <div className="absolute top-3 left-3 bg-white text-[#2E1A14] font-black text-xs px-2.5 py-1 rounded-full shadow-md flex items-center gap-1">
           🎁 {discount}% OFF
         </div>
 
         {/* Badge premium */}
         {store.plan === 'premium' && (
-          <div className="absolute top-3 right-3 bg-gradient-to-r from-[#D4AF37] to-[#E5C76B] text-white text-[8px] font-black px-2.5 py-1 rounded-full shadow-md flex items-center gap-1 uppercase tracking-wide">
+          <div className="absolute top-3 right-3 bg-gradient-to-r from-[#F4C542] to-[#F4C542] text-white text-[8px] font-black px-2.5 py-1 rounded-full shadow-md flex items-center gap-1 uppercase tracking-wide">
             <Zap size={8} fill="currentColor" /> Top
           </div>
         )}
@@ -232,7 +232,7 @@ const StoreCard: React.FC<{ store: PartnerStore; idx: number; onSelect: () => vo
 
         <div className="flex-1 min-w-0 pt-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-black text-[#1F2937] text-sm leading-tight truncate">{store.name}</h3>
+            <h3 className="font-black text-[#2E1A14] text-sm leading-tight truncate">{store.name}</h3>
             <ChevronRight size={14} className="text-gray-300 shrink-0 mt-0.5" />
           </div>
 
@@ -246,7 +246,7 @@ const StoreCard: React.FC<{ store: PartnerStore; idx: number; onSelect: () => vo
 
             {/* Distancia */}
             <div className="flex items-center gap-1 text-[10px] text-gray-400 font-semibold">
-              <MapPin size={10} className="text-[#8B1A1A]" />
+              <MapPin size={10} className="text-[#6B1D1D]" />
               {km} km · {store.neighborhood}
             </div>
           </div>

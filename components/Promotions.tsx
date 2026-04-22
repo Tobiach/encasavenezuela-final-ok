@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Zap, Plus, Flame, Store, Clock } from 'lucide-react';
@@ -92,7 +92,7 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                        <Store size={12} className="text-ven-yellow" />
                        <span className="text-[9px] font-black uppercase tracking-[0.2em]">{store?.name || 'Local Aliado'}</span>
                     </div>
-                    <h3 className="text-lg md:text-2xl font-black mb-2 group-hover:text-[#8B1A1A] transition-colors leading-tight uppercase tracking-tight text-gray-900">
+                    <h3 className="text-lg md:text-2xl font-black mb-2 group-hover:text-[#6B1D1D] transition-colors leading-tight uppercase tracking-tight text-gray-900">
                       {combo.name}
                     </h3>
                     <div className="flex flex-wrap gap-2 mb-2">
@@ -124,7 +124,7 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                       </div>
                       <button 
                         onClick={(e) => { e.stopPropagation(); onAddToCart(combo, combo.storeId); }}
-                        className="bg-[#8B1A1A] text-white p-3.5 md:p-4 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-2xl shadow-[#8B1A1A]/30"
+                        className="bg-[#6B1D1D] text-white p-3.5 md:p-4 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-2xl shadow-[#6B1D1D]/30"
                       >
                         <Plus size={24} strokeWidth={4} />
                       </button>
@@ -199,7 +199,7 @@ const Promotions: React.FC<PromotionsProps> = ({ onAddToCart }) => {
                     </div>
                     <button 
                       onClick={(e) => { e.stopPropagation(); onAddToCart(combo, combo.storeId); }}
-                      className="bg-[#8B1A1A] text-white p-3.5 md:p-4 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-2xl shadow-[#8B1A1A]/30"
+                      className="bg-[#6B1D1D] text-white p-3.5 md:p-4 rounded-2xl hover:scale-110 active:scale-90 transition-all shadow-2xl shadow-[#6B1D1D]/30"
                     >
                       <Plus size={24} strokeWidth={4} />
                     </button>

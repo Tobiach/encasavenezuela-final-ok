@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { X, Clock, CheckCircle, AlertCircle, ArrowRight, Zap, Tag, Gift, Package } from 'lucide-react';
 import { PartnerStore } from '../types';
 
@@ -219,7 +219,7 @@ const PromoDetailModal: React.FC<PromoDetailModalProps> = ({ store, promo, onClo
           {/* CTA */}
           <button
             onClick={onGoToStore}
-            className="w-full bg-gradient-to-r from-ven-yellow to-[#C9A227] text-white py-5 rounded-2xl font-black text-sm tracking-widest uppercase transition-all active:scale-95 shadow-xl shadow-yellow-500/20 flex items-center justify-center gap-3"
+            className="w-full bg-gradient-to-r from-ven-yellow to-[#F4C542] text-white py-5 rounded-2xl font-black text-sm tracking-widest uppercase transition-all active:scale-95 shadow-xl shadow-yellow-500/20 flex items-center justify-center gap-3"
           >
             Ir al local y aprovechar
             <ArrowRight size={18} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Percent, Zap, Flame, Store, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../lib/hooks/useProducts';
@@ -114,7 +114,7 @@ const Offers: React.FC = () => {
                 onClick={() => setActiveSection(activeSection === card.key ? null : card.key)}
                 className={`relative rounded-[24px] overflow-hidden h-40 cursor-pointer active:scale-95 transition-all border-2 shadow-xl ${
                   activeSection === card.key
-                    ? 'border-ven-yellow shadow-[0_0_24px_rgba(212,175,55,0.35)]'
+                    ? 'border-ven-yellow shadow-[0_0_24px_rgba(244,197,66,0.35)]'
                     : 'border-transparent'
                 }`}
               >

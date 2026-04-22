@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Star, MapPin, Clock, Plus, Package, ShoppingBag,
@@ -32,7 +32,7 @@ function getVariants(name: string): ProductVariant[] | null {
 // ── Spinner ────────────────────────────────────────────────────────────────
 const Spinner: React.FC = () => (
   <div className="min-h-screen bg-white flex items-center justify-center">
-    <div className="w-10 h-10 border-4 border-[#FFD700] border-t-transparent rounded-full animate-spin" />
+    <div className="w-10 h-10 border-4 border-[#F4C542] border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
@@ -65,13 +65,13 @@ const ProductCard: React.FC<{
           <img src={product.img} alt={product.name} className="w-full h-full object-contain p-2" loading="lazy" />
         </div>
         <div className="p-3 flex flex-col flex-1">
-          <p className="text-xs font-black text-[#1F2937] leading-tight line-clamp-2 flex-1">{product.name}</p>
+          <p className="text-xs font-black text-[#2E1A14] leading-tight line-clamp-2 flex-1">{product.name}</p>
           {product.oldPrice && (
             <p className="text-[10px] text-gray-400 line-through mt-1">${product.oldPrice.toLocaleString('es-AR')}</p>
           )}
           <div className="flex items-center justify-between mt-2">
-            <span className="font-black text-sm text-[#1F2937]">${product.price.toLocaleString('es-AR')}</span>
-            <button onClick={handleAdd} className="w-8 h-8 bg-[#8B1A1A] rounded-xl flex items-center justify-center active:scale-90 transition-all">
+            <span className="font-black text-sm text-[#2E1A14]">${product.price.toLocaleString('es-AR')}</span>
+            <button onClick={handleAdd} className="w-8 h-8 bg-[#6B1D1D] rounded-xl flex items-center justify-center active:scale-90 transition-all">
               <Plus size={16} strokeWidth={3} className="text-white" />
             </button>
           </div>
@@ -83,7 +83,7 @@ const ProductCard: React.FC<{
           <div className="bg-white rounded-3xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="font-black text-[#1F2937] text-base leading-tight">{product.name}</h3>
+                <h3 className="font-black text-[#2E1A14] text-base leading-tight">{product.name}</h3>
                 <p className="text-xs text-[#6B7280] mt-0.5">Seleccioná la cantidad</p>
               </div>
               <button onClick={() => setShowVariant(false)} className="text-gray-400"><X size={20} /></button>
@@ -91,13 +91,13 @@ const ProductCard: React.FC<{
             <div className="flex flex-col gap-2 mb-5">
               {variants.map(v => (
                 <button key={v.label} onClick={() => setSelectedVariant(v)}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all ${selectedVariant?.label === v.label ? 'border-[#8B1A1A] bg-[#8B1A1A]/5' : 'border-gray-100 bg-gray-50'}`}>
-                  <span className="font-bold text-sm text-[#1F2937]">{v.label}</span>
-                  <span className="font-black text-sm text-[#1F2937]">${Math.round(product.price * v.multiplier).toLocaleString('es-AR')}</span>
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all ${selectedVariant?.label === v.label ? 'border-[#6B1D1D] bg-[#6B1D1D]/5' : 'border-gray-100 bg-gray-50'}`}>
+                  <span className="font-bold text-sm text-[#2E1A14]">{v.label}</span>
+                  <span className="font-black text-sm text-[#2E1A14]">${Math.round(product.price * v.multiplier).toLocaleString('es-AR')}</span>
                 </button>
               ))}
             </div>
-            <button onClick={confirmVariant} className="w-full bg-[#8B1A1A] text-white font-black py-4 rounded-2xl text-sm active:scale-[0.98] transition-all">
+            <button onClick={confirmVariant} className="w-full bg-[#6B1D1D] text-white font-black py-4 rounded-2xl text-sm active:scale-[0.98] transition-all">
               Agregar al carrito →
             </button>
           </div>
@@ -124,13 +124,13 @@ const ComboVariantModal: React.FC<{
         </button>
       </div>
       <div className="px-5 pt-4 pb-2">
-        <h3 className="font-black text-[#1F2937] text-lg leading-tight">{combo.name}</h3>
+        <h3 className="font-black text-[#2E1A14] text-lg leading-tight">{combo.name}</h3>
         <p className="text-xs text-[#6B7280] mt-1 leading-relaxed">{combo.description}</p>
         <div className="flex items-center gap-2 mt-2">
           {combo.oldPrice && <span className="text-xs text-gray-400 line-through">${combo.oldPrice.toLocaleString('es-AR')}</span>}
-          <span className="text-2xl font-black text-[#1F2937]">${combo.price.toLocaleString('es-AR')}</span>
+          <span className="text-2xl font-black text-[#2E1A14]">${combo.price.toLocaleString('es-AR')}</span>
           {combo.oldPrice && (
-            <span className="bg-[#8B1A1A]/10 text-[#8B1A1A] text-[10px] font-black px-2 py-0.5 rounded-full">
+            <span className="bg-[#6B1D1D]/10 text-[#6B1D1D] text-[10px] font-black px-2 py-0.5 rounded-full">
               -{Math.round((1 - combo.price / combo.oldPrice) * 100)}%
             </span>
           )}
@@ -158,7 +158,7 @@ const ComboVariantModal: React.FC<{
               <div className="flex gap-2 flex-wrap">
                 {vi.options.map(opt => (
                   <button key={opt} onClick={() => onVariantChange(vi.name, opt)}
-                    className={`px-3 py-2 rounded-xl text-xs font-bold border-2 transition-all ${variants[vi.name] === opt ? 'border-[#8B1A1A] bg-[#8B1A1A] text-white' : 'border-gray-200 text-[#6B7280] bg-gray-50'}`}>
+                    className={`px-3 py-2 rounded-xl text-xs font-bold border-2 transition-all ${variants[vi.name] === opt ? 'border-[#6B1D1D] bg-[#6B1D1D] text-white' : 'border-gray-200 text-[#6B7280] bg-gray-50'}`}>
                     {opt}
                   </button>
                 ))}
@@ -175,7 +175,7 @@ const ComboVariantModal: React.FC<{
             <button
               onClick={onConfirm}
               disabled={!allSelected}
-              className={`w-full font-black py-4 rounded-2xl text-sm transition-all flex items-center justify-center gap-2 ${allSelected ? 'bg-[#8B1A1A] text-white active:scale-[0.98] shadow-lg shadow-[#8B1A1A]/20' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+              className={`w-full font-black py-4 rounded-2xl text-sm transition-all flex items-center justify-center gap-2 ${allSelected ? 'bg-[#6B1D1D] text-white active:scale-[0.98] shadow-lg shadow-[#6B1D1D]/20' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
             >
               <ShoppingBag size={16} /> {allSelected ? 'Agregar combo al carrito →' : 'Seleccioná todas las opciones'}
             </button>
@@ -199,7 +199,7 @@ const CombosSection: React.FC<{
   return (
     <div className="py-5 bg-[#2D1618]">
       <div className="mb-3 px-4 flex items-center gap-2">
-        <div className="inline-flex items-center gap-1.5 text-[#FFD700] font-bold bg-[#FFD700]/10 px-3 py-1 rounded-full border border-[#FFD700]/20">
+        <div className="inline-flex items-center gap-1.5 text-[#F4C542] font-bold bg-[#F4C542]/10 px-3 py-1 rounded-full border border-[#F4C542]/20">
           <Flame size={12} className="animate-pulse" />
           <span className="uppercase tracking-[0.2em] text-[9px]">Combos Especiales</span>
         </div>
@@ -228,23 +228,23 @@ const CombosSection: React.FC<{
                     className="w-full h-full object-contain p-1.5"
                   />
                   {savingsPercent > 0 && (
-                    <div className="absolute top-1.5 right-1.5 bg-[#8B1A1A] text-white px-1.5 py-0.5 rounded-lg text-[8px] font-black">
+                    <div className="absolute top-1.5 right-1.5 bg-[#6B1D1D] text-white px-1.5 py-0.5 rounded-lg text-[8px] font-black">
                       -{savingsPercent}%
                     </div>
                   )}
                 </div>
                 <div className="flex flex-col flex-1">
-                  <p className="text-[10px] font-black text-[#1F2937] uppercase leading-tight line-clamp-2 mb-1">
+                  <p className="text-[10px] font-black text-[#2E1A14] uppercase leading-tight line-clamp-2 mb-1">
                     {combo.name}
                   </p>
                   {combo.description && (
                     <p className="text-[9px] text-gray-600 leading-snug line-clamp-2 mb-1.5">{combo.description}</p>
                   )}
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="text-sm font-black text-[#1F2937]">${combo.price.toLocaleString('es-AR')}</span>
+                    <span className="text-sm font-black text-[#2E1A14]">${combo.price.toLocaleString('es-AR')}</span>
                     <button
                       onClick={e => { e.stopPropagation(); onAddDirectly(combo); }}
-                      className="bg-[#8B1A1A] text-white w-7 h-7 rounded-xl flex items-center justify-center active:scale-90 transition-all shadow-md"
+                      className="bg-[#6B1D1D] text-white w-7 h-7 rounded-xl flex items-center justify-center active:scale-90 transition-all shadow-md"
                     >
                       <Plus size={14} strokeWidth={3} />
                     </button>
@@ -356,9 +356,9 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 text-center pb-24">
         <div className="text-6xl mb-4">🏪</div>
-        <h2 className="text-xl font-black text-[#1F2937] mb-2">Local no encontrado</h2>
+        <h2 className="text-xl font-black text-[#2E1A14] mb-2">Local no encontrado</h2>
         <p className="text-[#6B7280] text-sm mb-6 max-w-xs">Este local no está disponible o el link no es válido.</p>
-        <button onClick={() => navigate('/')} className="bg-[#8B1A1A] text-white font-bold px-8 py-3 rounded-2xl">
+        <button onClick={() => navigate('/')} className="bg-[#6B1D1D] text-white font-bold px-8 py-3 rounded-2xl">
           Volver al inicio
         </button>
       </div>
@@ -368,7 +368,7 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
   if (!store) return <Spinner />;
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] pb-28">
+    <div className="min-h-screen bg-[#F5F1E8] pb-28">
 
       {/* Hero */}
       <div className="relative h-56 bg-gray-200 overflow-hidden">
@@ -378,7 +378,7 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
           <ArrowLeft size={20} className="text-white" />
         </button>
         {store.plan === 'premium' && (
-          <div className="absolute top-4 right-4 bg-[#D4AF37] text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
+          <div className="absolute top-4 right-4 bg-[#F4C542] text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
             ⭐ Premium
           </div>
         )}
@@ -386,7 +386,7 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
           <h1 className="text-2xl font-black text-white leading-tight tracking-tight">{store.name}</h1>
           <div className="flex items-center gap-3 mt-1.5 flex-wrap">
             <div className="flex items-center gap-1">
-              <Star size={12} className="fill-[#FFD700] text-[#FFD700]" />
+              <Star size={12} className="fill-[#F4C542] text-[#F4C542]" />
               <span className="text-white text-xs font-bold">{store.rating.toFixed(1)}</span>
               <span className="text-white/60 text-xs">({store.review_count})</span>
             </div>
@@ -409,7 +409,7 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
         <div className="px-4 py-3 bg-white border-b border-gray-100">
           <div className="flex gap-2 overflow-x-auto no-scrollbar">
             {store.tags.map(tag => (
-              <span key={tag} className="shrink-0 bg-[#FFD700]/15 text-[#1F2937] text-[10px] font-bold px-3 py-1 rounded-full border border-[#FFD700]/25">
+              <span key={tag} className="shrink-0 bg-[#F4C542]/15 text-[#2E1A14] text-[10px] font-bold px-3 py-1 rounded-full border border-[#F4C542]/25">
                 {tag}
               </span>
             ))}
@@ -437,7 +437,7 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder={`Buscar en ${store.name}...`}
-            className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-[#1F2937] placeholder-gray-400 focus:outline-none focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/20 transition-all"
+            className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-[#2E1A14] placeholder-gray-400 focus:outline-none focus:border-[#F4C542] focus:ring-2 focus:ring-[#F4C542]/20 transition-all"
           />
         </div>
         {/* Categorías */}
@@ -449,7 +449,7 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
                 onClick={() => setActiveCategory(cat)}
                 className={`shrink-0 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all border ${
                   activeCategory === cat
-                    ? 'bg-[#8B1A1A] border-[#8B1A1A] text-white shadow-sm'
+                    ? 'bg-[#6B1D1D] border-[#6B1D1D] text-white shadow-sm'
                     : 'bg-gray-100 border-gray-100 text-gray-500 hover:border-gray-300'
                 }`}
               >

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   X,
   Gift,
@@ -161,7 +161,7 @@ const LeadCaptureModal: React.FC<LeadCaptureModalProps> = ({
             className="absolute inset-0 opacity-20"
             style={{
               backgroundImage:
-                'radial-gradient(circle at 20% 30%, #FCD34D 0%, transparent 28%), radial-gradient(circle at 80% 20%, #FF6B35 0%, transparent 24%), radial-gradient(circle at 50% 85%, rgba(255,255,255,0.16) 0%, transparent 30%)',
+                'radial-gradient(circle at 20% 30%, #F4C542 0%, transparent 28%), radial-gradient(circle at 80% 20%, #FF6B35 0%, transparent 24%), radial-gradient(circle at 50% 85%, rgba(255,255,255,0.16) 0%, transparent 30%)',
             }}
           />
           <div className="absolute -top-8 -left-10 w-40 h-40 bg-ven-yellow/15 rounded-full blur-2xl animate-pulse" />

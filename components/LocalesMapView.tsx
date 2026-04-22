@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+﻿import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -30,7 +30,7 @@ function createPinIcon(plan: 'premium' | 'basic', discount: number): L.DivIcon {
   return L.divIcon({
     html: `<div style="position:relative;width:40px;height:44px">
       <div style="
-        background:${isP ? 'linear-gradient(135deg,#D4AF37,#C9A227)' : 'linear-gradient(135deg,#8B1A1A,#6F1414)'};
+        background:${isP ? 'linear-gradient(135deg,#F4C542,#F4C542)' : 'linear-gradient(135deg,#6B1D1D,#4A1313)'};
         width:36px;height:36px;
         border-radius:50% 50% 50% 0;
         transform:rotate(-45deg);
@@ -39,7 +39,7 @@ function createPinIcon(plan: 'premium' | 'basic', discount: number): L.DivIcon {
       "></div>
       <span style="
         position:absolute;top:-8px;right:-4px;
-        background:#8B1A1A;color:white;
+        background:#6B1D1D;color:white;
         font-size:8px;font-weight:900;
         padding:2px 4px;border-radius:6px;
         box-shadow:0 1px 4px rgba(0,0,0,0.25);
@@ -255,8 +255,8 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
               <ArrowLeft size={18} className="text-gray-700 group-hover:text-white" />
             </button>
             <div className="flex items-center gap-2.5 flex-1">
-              <div className="w-9 h-9 bg-[#8B1A1A]/10 rounded-xl flex items-center justify-center shrink-0">
-                <MapPin size={18} className="text-[#8B1A1A]" />
+              <div className="w-9 h-9 bg-[#6B1D1D]/10 rounded-xl flex items-center justify-center shrink-0">
+                <MapPin size={18} className="text-[#6B1D1D]" />
               </div>
               <div>
                 <h1 className="text-lg font-black text-gray-900 tracking-tight leading-tight">
@@ -412,7 +412,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
                   className="w-full flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors text-left"
                 >
                   <div className="w-3 h-3 rounded-full shrink-0"
-                    style={{ background: store.plan === 'premium' ? '#FCD34D' : '#9CA3AF' }} />
+                    style={{ background: store.plan === 'premium' ? '#F4C542' : '#9CA3AF' }} />
                   <div className="min-w-0 flex-1">
                     <p className="text-gray-900 font-bold text-base truncate">{store.name}</p>
                     <p className="text-gray-500 text-sm flex items-center gap-1.5 mt-0.5">
@@ -506,7 +506,7 @@ const LocalesMapView: React.FC<LocalesMapViewProps> = ({ stores }) => {
 
               <button
                 onClick={() => { closeDrawer(); navigate(`/tienda/${selectedStore.id}`); }}
-                className="w-full bg-[#8B1A1A] text-white font-black text-center py-4 rounded-2xl active:scale-[0.98] transition-all text-sm tracking-wide shadow-lg shadow-[#8B1A1A]/25"
+                className="w-full bg-[#6B1D1D] text-white font-black text-center py-4 rounded-2xl active:scale-[0.98] transition-all text-sm tracking-wide shadow-lg shadow-[#6B1D1D]/25"
               >
                 Ver local y pedir →
               </button>

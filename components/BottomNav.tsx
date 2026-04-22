@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Home, Users, MapPin, Heart, UserCircle } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -34,10 +34,10 @@ const BottomNav: React.FC = () => {
               onClick={() => path && handleNav(path)}
               className="flex flex-col items-center justify-center gap-0.5 -mt-6 transition-all active:scale-90"
             >
-              <div className="w-14 h-14 bg-[#8B1A1A] rounded-full flex items-center justify-center shadow-xl border-4 border-white transition-all">
+              <div className="w-14 h-14 bg-[#6B1D1D] rounded-full flex items-center justify-center shadow-xl border-4 border-white transition-all">
                 <Icon size={22} className="text-white stroke-[2.5]" />
               </div>
-              <span className="text-[9px] font-black uppercase tracking-wider leading-none mt-0.5 text-[#8B1A1A]">
+              <span className="text-[9px] font-black uppercase tracking-wider leading-none mt-0.5 text-[#6B1D1D]">
                 {label}
               </span>
             </button>

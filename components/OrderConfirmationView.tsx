@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Phone, MapPin, Banknote, Wallet, Send, ShoppingBag, Zap, MessageSquare, AlertCircle, Clock, Plus, X } from 'lucide-react'; import { Product, PartnerStore, User as UserType } from '../types';
 import { supabase } from '../lib/supabase';
@@ -335,7 +335,7 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
             <div className="px-5 pt-5 pb-4 border-b border-gray-100 flex items-start justify-between gap-3">
               <div>
                 <p className="text-[10px] font-black text-red-500 uppercase tracking-widest mb-1">⚠️ Pedido mixto</p>
-                <h3 className="font-black text-[#1F2937] text-base leading-tight">Productos de {uniqueStoreIds.length} locales distintos</h3>
+                <h3 className="font-black text-[#2E1A14] text-base leading-tight">Productos de {uniqueStoreIds.length} locales distintos</h3>
                 <p className="text-xs text-gray-500 mt-1 leading-relaxed">Cada local procesa su propio pedido. Elegí con cuál continuar — el resto se eliminará del carrito.</p>
               </div>
               <button onClick={() => navigate(-1)} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center shrink-0 active:scale-90 transition-all">
@@ -349,8 +349,8 @@ const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
                 const sub = items.reduce((acc, i) => acc + i.product.price * i.qty, 0);
                 return (
                   <button key={sid} onClick={() => keepOnlyStore(sid)}
-                    className="w-full text-left bg-gray-50 border-2 border-gray-100 hover:border-[#8B1A1A] hover:bg-[#8B1A1A]/5 rounded-2xl p-4 transition-all active:scale-[0.99]">
-                    <p className="font-black text-[#1F2937] text-sm">{s?.name || sid}</p>
+                    className="w-full text-left bg-gray-50 border-2 border-gray-100 hover:border-[#6B1D1D] hover:bg-[#6B1D1D]/5 rounded-2xl p-4 transition-all active:scale-[0.99]">
+                    <p className="font-black text-[#2E1A14] text-sm">{s?.name || sid}</p>
                     <p className="text-xs text-gray-400 mt-0.5">{items.reduce((acc, i) => acc + i.qty, 0)} productos · ${sub.toLocaleString('es-AR')}</p>
                   </button>
                 );
