@@ -270,7 +270,6 @@ interface StoreDetailViewProps {
   onSelectStore: (store: PartnerStore | null) => void;
 }
 
-const STRICT_STORES = new Set(['minimarket-vibe', 'crispric', 'real-3', 'real-13']);
 const DEMO_MODE = true;
 
 const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelectStore }) => {
@@ -293,11 +292,8 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({ onAddToCart, onSelect
 
   const storeProducts = useMemo(() => {
     if (!slug) return [];
-    const isStrict = STRICT_STORES.has(slug);
-    if (!DEMO_MODE || isStrict) {
-      return allProducts.filter(p => p.storeId === slug || p.availableInStoreIds?.includes(slug));
-    }
-    return allProducts;
+    if (DEMO_MODE) return allProducts;
+    return allProducts.filter(p => p.storeId === slug || p.availableInStoreIds?.includes(slug));
   }, [allProducts, slug]);
 
   const storeCombos = useMemo(() => {
